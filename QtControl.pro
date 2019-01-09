@@ -27,13 +27,15 @@ SOURCES += \
         main.cpp \
         MainWindow.cpp \
     SerialPortDialog.cpp \
-    SerialInfoDialog.cpp
+    SerialInfoDialog.cpp \
+    PaintWidget.cpp
 
 HEADERS += \
         MainWindow.h \
     SerialPortDialog.h \
     RingBuffer.h \
-    SerialInfoDialog.h
+    SerialInfoDialog.h \
+    PaintWidget.h
 
 FORMS += \
         MainWindow.ui \

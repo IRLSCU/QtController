@@ -2,12 +2,11 @@
 #ifndef RING_BUFFER
 #define RING_BUFFER
 #include <boost/atomic.hpp>
-
+#include <QDebug>
 template<typename T, size_t Size>
 class RingBuffer {
 public:
 	RingBuffer() : head_(0), tail_(0) {}
-
 	bool push(const T & value)
 	{
 		size_t head = head_.load(boost::memory_order_relaxed);
