@@ -15,6 +15,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     setWindowTitle(tr("Main Window"));
 
+
+    setCentralWidget(paintWidget=new PaintWidget());
+    connect(this,&MainWindow::sendQPointToPaintWidget,paintWidget,&PaintWidget::acceptQPoint);
+
     setSerialAction=new QAction(tr("串口设置"),this);
     setSerialAction->setShortcuts(QKeySequence::Open);
     setSerialAction->setStatusTip(tr("打开设置串口界面"));
@@ -49,6 +53,7 @@ MainWindow::MainWindow(QWidget *parent) :
     toolBar->addAction(setScaleAction);
 
     statusBar();
+
 }
 
 MainWindow::~MainWindow()
@@ -66,7 +71,7 @@ void MainWindow::openFile()
 {
     QString path = QFileDialog::getOpenFileName(this,
                                                 tr("Open File"),
-                                                ".",
+                                                "./../QtControl/route",
                                                 tr("Text Files(*.txt)"));
     if(!path.isEmpty()) {
         QFile file(path);
@@ -76,7 +81,14 @@ void MainWindow::openFile()
             return;
         }
         QTextStream in(&file);
-        qDebug()<<in.readAll();
+        while (!in.atEnd()) {
+            qreal x=0;
+            qreal y=0;
+            in>>x>>y;
+            QPoint point(x,y);
+            sendQPointToPaintWidget(point);
+        }
+
         file.close();
     } else {
         QMessageBox::warning(this, tr("Path"),

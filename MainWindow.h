@@ -1,8 +1,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 #include "SerialPortDialog.h"
+#include "PaintWidget.h"
 #include <QMainWindow>
-
+#include <QDataStream>
 namespace Ui {
 class MainWindow;
 }
@@ -26,6 +27,11 @@ private:
     QAction* startRunningAction;//延预计路径行驶
     QAction* loadGPSDataAction; //加载GPS数据到界面，并且作为初始化路径
     QAction* setScaleAction;    //设置比例尺
+
+    PaintWidget* paintWidget;
+
+signals:
+    void sendQPointToPaintWidget(QPoint&);
 };
 
 #endif // MAINWINDOW_H
