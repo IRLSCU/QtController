@@ -85,8 +85,10 @@ void MainWindow::openFile()
             qreal x=0;
             qreal y=0;
             in>>x>>y;
-            QPoint point(x,y);
-            sendQPointToPaintWidget(point);
+            qDebug("%.10f", x);
+            qDebug("%.10f", y);
+            QPointF point(x,y);
+            sendQPointToPaintWidget(point);//signal
         }
 
         file.close();

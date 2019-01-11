@@ -31,7 +31,7 @@ private:
     PaintWidget* paintWidget;
 
 signals:
-    void sendQPointToPaintWidget(QPoint&);
+    void sendQPointToPaintWidget(QPointF&);
 };
 
 #endif // MAINWINDOW_H
