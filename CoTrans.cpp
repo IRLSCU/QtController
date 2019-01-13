@@ -20,7 +20,7 @@ const qreal   EibSiLon = 0.0818191;                     ///<地球第一偏心�
 CCoordinate::CCoordinate()
 {
     m_fixedScale = 1;
-	m_scale = 1;
+    m_scale = 1;
     m_DspCenter.setX(0);
     m_DspCenter.setY(0);
 }
@@ -162,28 +162,28 @@ QPointF CCoordinate::XY2Screen(const qlonglong &x,const qlonglong &y)
     QPointF xyp;
     xyp.setX(x);
     xyp.setY(y);
-	return XY2Screen(xyp);
+    return XY2Screen(xyp);
 }
 
 QPointF CCoordinate::XY2Screen(QPointF pos)
 {
     qreal f_tempX,f_tempY;
-    f_tempX = (pos.x() -m_DspCenter.x())/m_fixedScale * m_scale;
-    f_tempY = (pos.y()-m_DspCenter.y())/m_fixedScale * m_scale;
-    m_screen.setX((long)(f_tempX+0.5));
-    m_screen.setY(-(long)(f_tempY+0.5));
-	return m_screen;
+    f_tempX = (pos.x() -m_DspCenter.x())*m_fixedScale * m_scale;
+    f_tempY = (pos.y()-m_DspCenter.y())*m_fixedScale * m_scale;
+    m_screen.setX((long)(f_tempX));
+    m_screen.setY(-(long)(f_tempY));
+    return m_screen;
 }
 
 QPointF CCoordinate::Screen2XY(QPointF pos)
 {
     qreal f_tempX,f_tempY;
-    f_tempX =(qreal)(( pos.x() * m_fixedScale / m_scale+0.5)+ m_DspCenter.x());
-    f_tempY =(qreal)((-pos.y() * m_fixedScale / m_scale+0.5) + m_DspCenter.y());
-	
-    m_XYPos.setX((qlonglong)f_tempX);
-    m_XYPos.setY((qlonglong)f_tempY);
-	return m_XYPos;
+    f_tempX =(qreal)(( pos.x() / m_fixedScale / m_scale)+ m_DspCenter.x());
+    f_tempY =(qreal)((-pos.y() / m_fixedScale / m_scale) + m_DspCenter.y());
+
+    m_XYPos.setX(f_tempX);
+    m_XYPos.setY(f_tempY);
+    return m_XYPos;
 }
 
 QPointF CCoordinate::Screen2XY(const qlonglong &x,const qlonglong &y)
@@ -192,23 +192,23 @@ QPointF CCoordinate::Screen2XY(const qlonglong &x,const qlonglong &y)
     xyp.setX(x);
     xyp.setY(y);
 
-	return Screen2XY(xyp);
+    return Screen2XY(xyp);
 }
 
 QPointF CCoordinate::LongLat2Screen(LongLat pos)
 {
     m_XYPos = LongLat2XY(pos);
-    qDebug("LongLat2Screen:(:%.10f,%.10f)",m_XYPos.x(),m_XYPos.y());
-	m_screen = XY2Screen(m_XYPos);
-	return m_screen;
+    //qDebug("LongLat2Screen:(:%.10f,%.10f)",m_XYPos.x(),m_XYPos.y());
+    m_screen = XY2Screen(m_XYPos);
+    return m_screen;
 }
 
 LongLat CCoordinate::Screen2LongLat(QPointF pos)
 {
-	m_XYPos = Screen2XY(pos);
-    qDebug("Screen2LongLat:(%.10f,%.10f)",m_XYPos.x(),m_XYPos.y());
+    m_XYPos = Screen2XY(pos);
+    //qDebug("Screen2LongLat:(%.10f,%.10f)",m_XYPos.x(),m_XYPos.y());
     m_LLPos = XY2LongLat(m_XYPos);
-	return m_LLPos;
+    return m_LLPos;
 }
 
 LongLat CCoordinate::Screen2LongLat(const qlonglong &x,const qlonglong &y)

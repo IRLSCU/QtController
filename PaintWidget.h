@@ -18,11 +18,14 @@ public:
     void translate(QPointF delta);  // 平移
     void acceptQPoint(QPointF point);
     void addQPoint(QPointF point);
+    void clear();
     ~PaintWidget();
 private:
     QList<QPointF> pointList;
     QList<QPointF> passWay;
     QPointF currenGPS;
+//    QPointF center;//高斯坐标表示
+//    QPointF centerScreen;//屏幕坐标表示
     qreal horizontalOffset;
     qreal verticalOffset;
 
@@ -46,5 +49,8 @@ protected:
 
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
     void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
+
+//    QPointF XY2Screen(QPointF);
+//    QPointF Screen2XY(QPointF);
 };
 #endif // PAINTWIDGET_H

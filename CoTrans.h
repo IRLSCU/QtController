@@ -66,7 +66,7 @@ public:
     QPointF	LongLat2Screen(LongLat pos);
     LongLat Screen2LongLat(QPointF pos);
     LongLat Screen2LongLat(const qlonglong &x,const qlonglong &y);
-	
+
 };
 
 #endif
