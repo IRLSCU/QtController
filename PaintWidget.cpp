@@ -10,7 +10,7 @@ PaintWidget::PaintWidget(QWidget *parent)
     horizontalOffset(0),
     verticalOffset(0),
     scaleFactor(1),
-    currentStepScaleFactor(1),
+    currentStepScaleFactor(3.4),
     m_translateButton(Qt::LeftButton),
     m_bMouseTranslate(false),
     m_zoomDelta(0.2)
@@ -18,17 +18,17 @@ PaintWidget::PaintWidget(QWidget *parent)
     this->setFocusPolicy(Qt::ClickFocus);
     this->resize(600,400);
     coordinate=CCoordinate();
+    //todo
     coordinate.InitRadarPara(500, 103.9588080550,30.7852871117);
     QPointF temp=coordinate.LongLat2XY(103.9588080550,30.7852871117);
+
     coordinate.m_DspCenter.setX(temp.x());
     coordinate.m_DspCenter.setY(temp.y());
-//    center=coordinate.LongLat2XY(103.9588080550,30.7852871117);
-//    centerScreen=QPointF(0,0);
     mousePosInfoLabel=new QLabel("");
     mousePosInfoLabel->setParent(this);
     QPushButton* addPointButton=new QPushButton("add point");
     connect(addPointButton,&QPushButton::clicked,[this](){
-        //addQPoint(QPointF(qrand()%width()-width()/2,qrand()%height()-height()/2));
+        addQPoint(QPointF(qrand()%width()-width()/2,qrand()%height()-height()/2));
     });
     QPushButton* clearPointButton=new QPushButton("clear all");
     connect(clearPointButton,&QPushButton::clicked,this,&PaintWidget::clear);
@@ -62,34 +62,46 @@ void PaintWidget::paintEvent(QPaintEvent*)
            <<"放大倍数"<<currentStepScaleFactor * scaleFactor;
 
     QPen mypen;
-    mypen.setWidth(1);                     // 1 表示点的大小
-    mypen.setColor(Qt::black);
+    QVector<qreal> dashes;
+    dashes<<1<<2;
+    mypen.setDashPattern(dashes);
     mypen.setCapStyle(Qt::RoundCap);
-    painter.setPen(mypen);
-    QPointF tmep1=coordinate.LongLat2Screen(LongLat(103.9588080550,30.7852871117));
-    painter.drawPoint((qint64)tmep1.x(),(qint64)tmep1.y());
-    QPointF tmep2=coordinate.LongLat2Screen(LongLat(103.9587750583,30.7852852883));
-    painter.drawPoint((qint64)tmep2.x(),(qint64)tmep2.y());
+//    QPointF tmep1=coordinate.LongLat2Screen(LongLat(103.9588080550,30.7852871117));
+//    painter.drawPoint((qint64)tmep1.x(),(qint64)tmep1.y());
+//    QPointF tmep2=coordinate.LongLat2Screen(LongLat(103.9587750583,30.7852852883));
+//    painter.drawPoint((qint64)tmep2.x(),(qint64)tmep2.y());
 
-//    QPointF last;
-//    for(int i=0;i<pointList.size();i++){
-//        QPointF temp=XY2Screen(pointList.at(i));
-//        painter.drawPoint((qint64)temp.x(),(qint64)temp.y());
-//        if(i!=0){
-//            mypen.setColor(Qt::green);
-//            painter.setPen(mypen);
-//            painter.drawLine(last,temp);
-//            mypen.setColor(Qt::green);
-//            painter.setPen(mypen);
-//        }
-//        last=temp;
-//    }
-//    mypen.setColor(Qt::green);
-//    painter.setPen(mypen);
-//    for(auto it:passWay){
-//        QPointF tmep=XY2Screen(it);
-//        painter.drawPoint((qint64)tmep.x(),(qint64)tmep.y());
-//    }
+    QPointF last;
+    for(int i=0;i<routePointList.size();i++){
+        QPointF temp=coordinate.XY2Screen(routePointList.at(i));
+        if(i!=0){
+            mypen.setColor(Qt::black);
+            mypen.setWidth(0);
+            painter.setPen(mypen);
+            painter.drawLine(last,temp);
+        }
+        mypen.setWidth(1);                     // 1 表示点的大小
+        mypen.setColor(Qt::green);
+        painter.setPen(mypen);
+        painter.drawPoint((qint64)temp.x(),(qint64)temp.y());
+        last=temp;
+    }
+    mypen.setColor(Qt::green);
+    painter.setPen(mypen);
+    for(int i=0;i<passWayPointList.size();i++){
+        QPointF temp=coordinate.XY2Screen(passWayPointList.at(i));
+        if(i!=0){
+            mypen.setColor(Qt::black);
+            mypen.setWidth(0);
+            painter.setPen(mypen);
+            painter.drawLine(last,temp);
+        }
+        mypen.setWidth(1);                     // 1 表示点的大小
+        mypen.setColor(Qt::green);
+        painter.setPen(mypen);
+        painter.drawPoint((qint64)temp.x(),(qint64)temp.y());
+        last=temp;
+    }
 
 }
 //双击初始化
@@ -225,15 +237,15 @@ void PaintWidget::translate(QPointF delta)
 
 void PaintWidget::acceptQPoint(QPointF point){
     QPointF screenPoint=coordinate.LongLat2XY(LongLat(point.x(),point.y()));
-    pointList.push_back(screenPoint);
+    routePointList.push_back(screenPoint);
 }
 void PaintWidget::addQPoint(QPointF point){
-    passWay.push_back(point);
+    passWayPointList.push_back(point);
     update();
 }
 void PaintWidget::clear(){
-    passWay.clear();
-    pointList.clear();
+    passWayPointList.clear();
+    routePointList.clear();
     update();
 }
 //QPointF PaintWidget::XY2Screen(QPointF XY){

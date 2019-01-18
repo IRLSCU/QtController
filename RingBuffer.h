@@ -2,7 +2,6 @@
 #ifndef RING_BUFFER
 #define RING_BUFFER
 #include <boost/atomic.hpp>
-#include <QDebug>
 template<typename T, size_t Size>
 class RingBuffer {
 public:

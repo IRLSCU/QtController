@@ -1,6 +1,6 @@
 ﻿#include "MainWindow.h"
 #include "ui_MainWindow.h"
-
+#include "BufferProcessThread.h"
 #include <QAction>
 #include <QMenuBar>
 #include <QMessageBox>
@@ -102,7 +102,6 @@ void MainWindow::openSerialDialog(){
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->setWindowTitle(tr("Hello, dialog!"));
     dialog->show();
-    //开启线程解析ringbuffer中的内容
 }
 
 void MainWindow::print(const QString& title){

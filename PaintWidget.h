@@ -21,8 +21,8 @@ public:
     void clear();
     ~PaintWidget();
 private:
-    QList<QPointF> pointList;
-    QList<QPointF> passWay;
+    QList<QPointF> routePointList;
+    QList<QPointF> passWayPointList;
     QPointF currenGPS;
 //    QPointF center;//高斯坐标表示
 //    QPointF centerScreen;//屏幕坐标表示

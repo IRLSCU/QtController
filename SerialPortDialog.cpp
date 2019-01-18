@@ -10,6 +10,18 @@ SerialPortDialog::SerialPortDialog(QWidget* parent):
     //this->resize(260, 70);
     this->setWindowTitle("串口设置");
 
+    ringBuffer1=new RingBuffer<QChar, 20480>();
+    ringBuffer2=new RingBuffer<QChar, 20480>();
+    ringBuffer3=new RingBuffer<QChar, 20480>();
+
+    bufferProcessThread1=new BufferProcessThread(ringBuffer1,this,"GPS 第1路");
+    bufferProcessThread1->start();
+
+    bufferProcessThread2=new BufferProcessThread(ringBuffer2,this,"GPS 第2路");
+    bufferProcessThread2->start();
+
+    bufferProcessThread3=new BufferProcessThread(ringBuffer3,this,"GPS 第3路");
+    bufferProcessThread3->start();
     QGridLayout* layout=new QGridLayout(this);
     layout->addWidget(new QLabel("端口号"),0,1);
     layout->addWidget(new QLabel("波特率"),0,2);
@@ -150,13 +162,13 @@ SerialPortDialog::SerialPortDialog(QWidget* parent):
     comboBoxFlowBit3->addItem(tr("RTS/CTS"), QSerialPort::HardwareControl);
     comboBoxFlowBit3->addItem(tr("XON/XOFF"), QSerialPort::SoftwareControl);
 
-    SerialInfoDialog* infoDialog1=new SerialInfoDialog();
+    SerialInfoDialog* infoDialog1=new SerialInfoDialog(this);
     connect(this,&SerialPortDialog::serialPort1ContentChanged,infoDialog1,&SerialInfoDialog::updateBroswerText);
 
-    SerialInfoDialog* infoDialog2=new SerialInfoDialog();
+    SerialInfoDialog* infoDialog2=new SerialInfoDialog(this);
     connect(this,&SerialPortDialog::serialPort2ContentChanged,infoDialog2,&SerialInfoDialog::updateBroswerText);
 
-    SerialInfoDialog* infoDialog3=new SerialInfoDialog();
+    SerialInfoDialog* infoDialog3=new SerialInfoDialog(this);
     connect(this,&SerialPortDialog::serialPort3ContentChanged,infoDialog3,&SerialInfoDialog::updateBroswerText);
 
     openButton1=new QPushButton("打开串口",this);
@@ -164,11 +176,12 @@ SerialPortDialog::SerialPortDialog(QWidget* parent):
     connect(openButton1,&QPushButton::clicked,[this,infoDialog1](){
         this->fillSerialPortInfo(serialPort1,comboBoxPortName1,comboBoxBaudRate1,
                                  comboBoxDataBits1,comboBoxParity1,comboBoxStopBit1,comboBoxFlowBit1);
-        if(this->openSerialPort(serialPort1,&ringBuffer1)){
+        if(this->openSerialPort(serialPort1,ringBuffer1)){
             infoDialog1->setWindowTitle(serialPort1->portName());
             infoDialog1->show();
             openButton1->setDisabled(true);
             closeButton1->setEnabled(true);
+            showButton1->setEnabled(true);
         }else{
             QMessageBox* msgBox=new QMessageBox(this);
             msgBox->setAttribute(Qt::WA_DeleteOnClose);
@@ -182,15 +195,21 @@ SerialPortDialog::SerialPortDialog(QWidget* parent):
     connect(closeButton1,&QPushButton::clicked,[this](){
         openButton1->setEnabled(true);
         closeButton1->setDisabled(true);
-        closeSerialPort(serialPort1,&ringBuffer1);
+        showButton1->setDisabled(true);
+        closeSerialPort(serialPort1,ringBuffer1);
     });
-
+    showButton1=new QPushButton("显示信息",this);
+    showButton1->setDisabled(true);
+    connect(showButton1,&QPushButton::clicked,[this,infoDialog1](){
+        infoDialog1->setWindowTitle(serialPort1->portName());
+        infoDialog1->show();
+    });
 
     openButton2=new QPushButton("打开串口",this);
     connect(openButton2,&QPushButton::clicked,[this,infoDialog2](){
         this->fillSerialPortInfo(serialPort2,comboBoxPortName2,comboBoxBaudRate2,
                                  comboBoxDataBits2,comboBoxParity2,comboBoxStopBit2,comboBoxFlowBit2);
-        if(this->openSerialPort(serialPort2,&ringBuffer2)){
+        if(this->openSerialPort(serialPort2,ringBuffer2)){
             infoDialog2->setWindowTitle(serialPort2->portName());
             infoDialog2->show();
             openButton2->setDisabled(true);
@@ -208,14 +227,20 @@ SerialPortDialog::SerialPortDialog(QWidget* parent):
     connect(closeButton2,&QPushButton::clicked,[this](){
         openButton2->setEnabled(true);
         closeButton2->setDisabled(true);
-        closeSerialPort(serialPort2,&ringBuffer2);
+        closeSerialPort(serialPort2,ringBuffer2);
+    });
+    showButton2=new QPushButton("显示信息",this);
+    showButton2->setDisabled(true);
+    connect(showButton2,&QPushButton::clicked,[this,infoDialog2](){
+        infoDialog2->setWindowTitle(serialPort2->portName());
+        infoDialog2->show();
     });
 
     openButton3=new QPushButton("打开串口",this);
     connect(openButton3,&QPushButton::clicked,[this,infoDialog3](){
         this->fillSerialPortInfo(serialPort3,comboBoxPortName3,comboBoxBaudRate3,
                                  comboBoxDataBits3,comboBoxParity3,comboBoxStopBit3,comboBoxFlowBit3);
-        if(this->openSerialPort(serialPort3,&ringBuffer3)){
+        if(this->openSerialPort(serialPort3,ringBuffer3)){
             infoDialog3->setWindowTitle(serialPort2->portName());
             infoDialog3->show();
             openButton3->setDisabled(true);
@@ -233,7 +258,13 @@ SerialPortDialog::SerialPortDialog(QWidget* parent):
     connect(closeButton3,&QPushButton::clicked,[this](){
         openButton3->setEnabled(true);
         closeButton3->setDisabled(true);
-        closeSerialPort(serialPort3,&ringBuffer3);
+        closeSerialPort(serialPort3,ringBuffer3);
+    });
+    showButton3=new QPushButton("显示信息",this);
+    showButton3->setDisabled(true);
+    connect(showButton3,&QPushButton::clicked,[this,infoDialog3](){
+        infoDialog3->setWindowTitle(serialPort3->portName());
+        infoDialog3->show();
     });
 
     layout->addWidget(comboBoxPortName1,1,1);
@@ -259,13 +290,35 @@ SerialPortDialog::SerialPortDialog(QWidget* parent):
 
     layout->addWidget(openButton1,1,7);
     layout->addWidget(closeButton1,1,8);
+    layout->addWidget(showButton1,1,9);
     layout->addWidget(openButton2,2,7);
     layout->addWidget(closeButton2,2,8);
+    layout->addWidget(showButton2,2,9);
     layout->addWidget(openButton3,3,7);
     layout->addWidget(closeButton3,3,8);
+    layout->addWidget(showButton3,3,9);
 }
 
 SerialPortDialog::~SerialPortDialog(){
+
+    qDebug() << "start destroy widget SerialPortDialog";
+    bufferProcessThread1->stopImmediately();
+    bufferProcessThread1->wait();
+
+    bufferProcessThread2->stopImmediately();
+    bufferProcessThread2->wait();
+
+    bufferProcessThread3->stopImmediately();
+    bufferProcessThread3->wait();
+    closeSerialPort(serialPort1,ringBuffer1);
+    closeSerialPort(serialPort2,ringBuffer2);
+    closeSerialPort(serialPort3,ringBuffer3);
+
+    delete ringBuffer1;
+    delete ringBuffer2;
+    delete ringBuffer3;
+
+    qDebug() << "end destroy widget SerialPortDialog";
 }
 
 void SerialPortDialog::send(QByteArray content,const QSerialPort* serialPort){
@@ -281,13 +334,14 @@ void SerialPortDialog::closeSerialPort(QSerialPort* serialPort,RingBuffer<QChar,
     if(serialPort->isOpen()){
         serialPort->clear();
         serialPort->close();
+        qDebug()<<serialPort->portName()<<"has been closed";
     }
     QChar temp=NULL;
     while(!ringBuffer->pop(temp)){
         if(temp==NULL)
             break;
     }
-    qDebug()<<serialPort->portName()<<"has been closed";
+
 }
 bool SerialPortDialog::openSerialPort(QSerialPort* serialPort,RingBuffer<QChar, 20480>* ringBuffer){
     if(serialPort->open(QSerialPort::OpenModeFlag::ReadOnly)){

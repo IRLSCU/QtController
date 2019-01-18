@@ -3,6 +3,7 @@
 
 #include "RingBuffer.h"
 #include "SerialInfoDialog.h"
+#include "BufferProcessThread.h"
 #include <QDialog>
 #include <QLineEdit>
 #include <QComboBox>
@@ -15,9 +16,9 @@ class SerialPortDialog : public QDialog{
 public:
     explicit SerialPortDialog(QWidget *parent = 0);
     ~SerialPortDialog();
-    RingBuffer<QChar, 20480> ringBuffer1;
-    RingBuffer<QChar, 20480> ringBuffer2;
-    RingBuffer<QChar, 20480> ringBuffer3;
+    RingBuffer<QChar, 20480>* ringBuffer1;
+    RingBuffer<QChar, 20480>* ringBuffer2;
+    RingBuffer<QChar, 20480>* ringBuffer3;
 signals:
     void userAgeChanged(const QString&);
     void serialPort1ContentChanged(const QString&);
@@ -65,6 +66,14 @@ private:
     QPushButton * closeButton1;
     QPushButton * closeButton2;
     QPushButton * closeButton3;
+
+    QPushButton * showButton1;
+    QPushButton * showButton2;
+    QPushButton * showButton3;
+
+    BufferProcessThread* bufferProcessThread1;
+    BufferProcessThread* bufferProcessThread2;
+    BufferProcessThread* bufferProcessThread3;
 
     void send(QByteArray,const QSerialPort*);
     void closeSerialPort(QSerialPort*,RingBuffer<QChar, 20480>*);
