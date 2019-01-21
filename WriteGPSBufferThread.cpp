@@ -1,8 +1,8 @@
-#include "BufferProcessThread.h"
+#include "WriteGPSBufferThread.h"
 
 #include <QDebug>
 #include <string.h>
-BufferProcessThread::BufferProcessThread(RingBuffer<QChar, 20480>* ringBuffer, QObject *parent = 0, QString name=tr("")):QThread(parent){
+WriteGPSBufferThread::WriteGPSBufferThread(RingBuffer<QChar, 20480>* ringBuffer, QObject *parent = 0, QString name=tr("")):QThread(parent){
     this->ringBuffer=ringBuffer;
     this->name=name;
     NewParser = new NmeaPres();
@@ -11,9 +11,9 @@ BufferProcessThread::BufferProcessThread(RingBuffer<QChar, 20480>* ringBuffer, Q
         delete NewParser;
     }
 }
-void BufferProcessThread::run(){
+void WriteGPSBufferThread::run(){
     m_isCanRun = true;
-    qDebug()<<name<<"BufferProcessThread has started";
+    qDebug()<<name<<"WriteGPSBufferThread has started";
     QString stringBuffer;
     QChar receive_char;
     while(true){
@@ -37,16 +37,16 @@ void BufferProcessThread::run(){
         }
     }
 }
-BufferProcessThread::~BufferProcessThread(){
+WriteGPSBufferThread::~WriteGPSBufferThread(){
     qDebug()<<name<<" is being destory";
     delete NewParser;
 }
-void BufferProcessThread::stopImmediately()
+void WriteGPSBufferThread::stopImmediately()
 {
     QMutexLocker locker(&m_lock);
     m_isCanRun = false;
 }
-bool BufferProcessThread::haveStartAndIsGGA(QString s) {
+bool WriteGPSBufferThread::haveStartAndIsGGA(QString s) {
     if (s.size() < 8) return false;
     QString hex=s.mid(1, 5);
     if (hex.compare("GPGGA")!=0)

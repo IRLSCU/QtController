@@ -58,6 +58,7 @@ public:
     quint8 getGear() { return gear; }
     quint8 getSignal() { return signal; }
     quint8 getHorn() { return horn; }
+    quint8* getCharOrder();//转化成实际的指令
     void printInfo();
 
 private:

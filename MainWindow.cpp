@@ -1,6 +1,6 @@
 ﻿#include "MainWindow.h"
 #include "ui_MainWindow.h"
-#include "BufferProcessThread.h"
+#include "WriteGPSBufferThread.h"
 #include <QAction>
 #include <QMenuBar>
 #include <QMessageBox>
@@ -102,6 +102,7 @@ void MainWindow::openSerialDialog(){
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->setWindowTitle(tr("Hello, dialog!"));
     dialog->show();
+
 }
 
 void MainWindow::print(const QString& title){

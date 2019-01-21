@@ -14,14 +14,14 @@ SerialPortDialog::SerialPortDialog(QWidget* parent):
     ringBuffer2=new RingBuffer<QChar, 20480>();
     ringBuffer3=new RingBuffer<QChar, 20480>();
 
-    bufferProcessThread1=new BufferProcessThread(ringBuffer1,this,"GPS 第1路");
-    bufferProcessThread1->start();
+    WriteGPSBufferThread1=new WriteGPSBufferThread(ringBuffer1,this,"GPS 第1路");
+    WriteGPSBufferThread1->start();
 
-    bufferProcessThread2=new BufferProcessThread(ringBuffer2,this,"GPS 第2路");
-    bufferProcessThread2->start();
+    WriteGPSBufferThread2=new WriteGPSBufferThread(ringBuffer2,this,"GPS 第2路");
+    WriteGPSBufferThread2->start();
 
-    bufferProcessThread3=new BufferProcessThread(ringBuffer3,this,"GPS 第3路");
-    bufferProcessThread3->start();
+    WriteGPSBufferThread3=new WriteGPSBufferThread(ringBuffer3,this,"GPS 第3路");
+    WriteGPSBufferThread3->start();
     QGridLayout* layout=new QGridLayout(this);
     layout->addWidget(new QLabel("端口号"),0,1);
     layout->addWidget(new QLabel("波特率"),0,2);
@@ -302,14 +302,14 @@ SerialPortDialog::SerialPortDialog(QWidget* parent):
 SerialPortDialog::~SerialPortDialog(){
 
     qDebug() << "start destroy widget SerialPortDialog";
-    bufferProcessThread1->stopImmediately();
-    bufferProcessThread1->wait();
+    WriteGPSBufferThread1->stopImmediately();
+    WriteGPSBufferThread1->wait();
 
-    bufferProcessThread2->stopImmediately();
-    bufferProcessThread2->wait();
+    WriteGPSBufferThread2->stopImmediately();
+    WriteGPSBufferThread2->wait();
 
-    bufferProcessThread3->stopImmediately();
-    bufferProcessThread3->wait();
+    WriteGPSBufferThread3->stopImmediately();
+    WriteGPSBufferThread3->wait();
     closeSerialPort(serialPort1,ringBuffer1);
     closeSerialPort(serialPort2,ringBuffer2);
     closeSerialPort(serialPort3,ringBuffer3);

@@ -3,7 +3,7 @@
 
 #include "RingBuffer.h"
 #include "SerialInfoDialog.h"
-#include "BufferProcessThread.h"
+#include "WriteGPSBufferThread.h"
 #include <QDialog>
 #include <QLineEdit>
 #include <QComboBox>
@@ -71,9 +71,9 @@ private:
     QPushButton * showButton2;
     QPushButton * showButton3;
 
-    BufferProcessThread* bufferProcessThread1;
-    BufferProcessThread* bufferProcessThread2;
-    BufferProcessThread* bufferProcessThread3;
+    WriteGPSBufferThread* WriteGPSBufferThread1;
+    WriteGPSBufferThread* WriteGPSBufferThread2;
+    WriteGPSBufferThread* WriteGPSBufferThread3;
 
     void send(QByteArray,const QSerialPort*);
     void closeSerialPort(QSerialPort*,RingBuffer<QChar, 20480>*);

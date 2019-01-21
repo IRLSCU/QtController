@@ -33,10 +33,10 @@ SOURCES += \
     nmeaparser.cpp \
     nmeaPres.cpp \
     nmeautils.cpp \
-    BufferProcessThread.cpp \
     ControlOrder.cpp \
     TinyCarCO.cpp \
-    LargeCarCO.cpp
+    LargeCarCO.cpp \
+    WriteGPSBufferThread.cpp
 
 HEADERS += \
         MainWindow.h \
@@ -45,13 +45,14 @@ HEADERS += \
     SerialInfoDialog.h \
     PaintWidget.h \
     CoTrans.h \
-    BufferProcessThread.h \
     nmeaparser.h \
     nmeaPres.h \
     nmeautils.h \
     ControlOrder.h \
     TinyCarCO.h \
-    LargeCarCO.h
+    LargeCarCO.h \
+    WriteGPSBufferThread.h \
+    ControlMessageStruct.h
 
 FORMS += \
         MainWindow.ui \
