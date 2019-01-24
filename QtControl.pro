@@ -29,7 +29,14 @@ SOURCES += \
     SerialPortDialog.cpp \
     SerialInfoDialog.cpp \
     PaintWidget.cpp \
-    CoTrans.cpp
+    CoTrans.cpp \
+    nmeaparser.cpp \
+    nmeaPres.cpp \
+    nmeautils.cpp \
+    ControlOrder.cpp \
+    TinyCarCO.cpp \
+    LargeCarCO.cpp \
+    WriteGPSBufferThread.cpp
 
 HEADERS += \
         MainWindow.h \
@@ -37,7 +44,15 @@ HEADERS += \
     RingBuffer.h \
     SerialInfoDialog.h \
     PaintWidget.h \
-    CoTrans.h
+    CoTrans.h \
+    nmeaparser.h \
+    nmeaPres.h \
+    nmeautils.h \
+    ControlOrder.h \
+    TinyCarCO.h \
+    LargeCarCO.h \
+    WriteGPSBufferThread.h \
+    ControlMessageStruct.h
 
 FORMS += \
         MainWindow.ui \
