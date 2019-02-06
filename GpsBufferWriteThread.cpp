@@ -1,9 +1,10 @@
-#include "WriteGPSBufferThread.h"
+#include "GpsBufferWriteThread.h"
 
 #include <QDebug>
 #include <string.h>
-WriteGPSBufferThread::WriteGPSBufferThread(RingBuffer<QChar, 20480>* ringBuffer, QObject *parent = 0, QString name=tr("")):QThread(parent){
-    this->ringBuffer=ringBuffer;
+GpsBufferWriteThread::GpsBufferWriteThread(CharRingBuffer* ringBuffer,GpsRingBuffer* gpsRingBuffer, QObject *parent = 0, QString name=tr("")):QThread(parent){
+    this->charRingBuffer=ringBuffer;
+    this->gpsRingBuffer=gpsRingBuffer;
     this->name=name;
     NewParser = new NmeaPres();
     if (NewParser->NmeaInitParsers() == false){
@@ -11,13 +12,13 @@ WriteGPSBufferThread::WriteGPSBufferThread(RingBuffer<QChar, 20480>* ringBuffer,
         delete NewParser;
     }
 }
-void WriteGPSBufferThread::run(){
+void GpsBufferWriteThread::run(){
     m_isCanRun = true;
-    qDebug()<<name<<"WriteGPSBufferThread has started";
+    qDebug()<<name<<"GpsBufferWriteThread has started";
     QString stringBuffer;
-    QChar receive_char;
+    char receive_char;
     while(true){
-        if (ringBuffer->pop(receive_char)) {
+        if (charRingBuffer->pop(receive_char)) {
             stringBuffer.append(receive_char);
             if (receive_char == 10) {
                 std::string gpsData;
@@ -25,28 +26,34 @@ void WriteGPSBufferThread::run(){
                     NewParser->ParseNmea0183Sentence(gpsData);
                     GlobalGpsStruct globalGps;
                     NewParser->getGpsGlobalStruct(globalGps);
+                    gpsRingBuffer->push(GpsInfo(globalGps.fLongitude,globalGps.fLatitude,globalGps.fAltitude));
                 }
                 qDebug()<<stringBuffer;
                 stringBuffer.clear();
             }
+        }else{
+            this->msleep(GPSBUFFERWIRTETHREAD_BOLCKTIME);//阻塞否则cpu占用太高
         }
         QMutexLocker locker(&m_lock);
         if(!m_isCanRun)//在每次循环判断是否可以运行，如果不行就退出循环
         {
             return;
+        }else{
+            locker.unlock();
         }
     }
 }
-WriteGPSBufferThread::~WriteGPSBufferThread(){
-    qDebug()<<name<<" is being destory";
+GpsBufferWriteThread::~GpsBufferWriteThread(){
+    qDebug()<<name<<" has been destoried";
     delete NewParser;
 }
-void WriteGPSBufferThread::stopImmediately()
+void GpsBufferWriteThread::stopImmediately()
 {
     QMutexLocker locker(&m_lock);
     m_isCanRun = false;
+    locker.unlock();
 }
-bool WriteGPSBufferThread::haveStartAndIsGGA(QString s) {
+bool GpsBufferWriteThread::haveStartAndIsGGA(QString s) {
     if (s.size() < 8) return false;
     QString hex=s.mid(1, 5);
     if (hex.compare("GPGGA")!=0)

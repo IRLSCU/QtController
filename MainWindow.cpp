@@ -1,6 +1,6 @@
 ﻿#include "MainWindow.h"
 #include "ui_MainWindow.h"
-#include "WriteGPSBufferThread.h"
+#include "GpsBufferWriteThread.h"
 #include <QAction>
 #include <QMenuBar>
 #include <QMessageBox>
@@ -15,7 +15,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     setWindowTitle(tr("Main Window"));
 
+    gpsRingBuffer=new GpsRingBuffer();
 
+    gpsBufferReadInitRouteThread=new GpsBufferReadInitRouteThread(gpsRingBuffer,this);
+//    gpsBufferReadThread=new GpsBufferReadThread(gpsRingBuffer,parent);
+//    gpsBufferReadThread->start();
     setCentralWidget(paintWidget=new PaintWidget());
     connect(this,&MainWindow::sendQPointToPaintWidget,paintWidget,&PaintWidget::acceptQPoint);
 
@@ -27,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent) :
     initRouteAction=new QAction(tr("初始化路径"),this);
     initRouteAction->setShortcuts(QKeySequence::Open);
     initRouteAction->setStatusTip(tr("打开初始化路径界面"));
-    connect(initRouteAction, &QAction::triggered, this, &MainWindow::open);
+    connect(initRouteAction, &QAction::triggered, this, &MainWindow::openInitRouteDialog);
 
     startRunningAction=new QAction(tr("开始行驶"),this);
     startRunningAction->setShortcuts(QKeySequence::Open);
@@ -58,6 +62,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    gpsBufferReadInitRouteThread->stopImmediately();
+    gpsBufferReadInitRouteThread->wait();
+
+//    gpsBufferReadThread->stopImmediately();
+//    gpsBufferReadThread->wait();
+//    delete gpsRingBuffer;
+//    delete gpsBufferReadThread;
     delete ui;
 }
 
@@ -66,6 +77,19 @@ void MainWindow::open(){
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->setWindowTitle(tr("Hello, dialog!"));
     dialog->show();
+}
+void MainWindow::openInitRouteDialog(){
+    InitRouteDialog* initRouteDialog=new InitRouteDialog(this);
+    initRouteDialog->setAttribute(Qt::WA_DeleteOnClose);
+    initRouteDialog->show();
+
+
+    gpsBufferReadInitRouteThread->start();
+
+    connect(gpsBufferReadInitRouteThread,&GpsBufferReadInitRouteThread::sendGpsInfo,paintWidget,&PaintWidget::acceptQPoint);
+    connect(initRouteDialog,&InitRouteDialog::sendInitSignal,gpsBufferReadInitRouteThread,&GpsBufferReadInitRouteThread::startInit);
+    qRegisterMetaType<GpsInfo>("GpsInfo");
+    connect(gpsBufferReadInitRouteThread,&GpsBufferReadInitRouteThread::sendInitGpsInfo,initRouteDialog,&InitRouteDialog::updateBroswerText);
 }
 void MainWindow::openFile()
 {
@@ -85,8 +109,8 @@ void MainWindow::openFile()
             qreal x=0;
             qreal y=0;
             in>>x>>y;
-            qDebug("%.10f", x);
-            qDebug("%.10f", y);
+            if(x==0&&y==0)
+                continue;
             QPointF point(x,y);
             sendQPointToPaintWidget(point);//signal
         }
@@ -98,9 +122,8 @@ void MainWindow::openFile()
     }
 }
 void MainWindow::openSerialDialog(){
-    SerialPortDialog* dialog=new SerialPortDialog(this);
+    SerialPortDialog* dialog=new SerialPortDialog(this,gpsRingBuffer);
     dialog->setAttribute(Qt::WA_DeleteOnClose);
-    dialog->setWindowTitle(tr("Hello, dialog!"));
     dialog->show();
 
 }

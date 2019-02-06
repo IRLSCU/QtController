@@ -24,7 +24,7 @@ void SerialInfoDialog::saveFile()
 {
     QString path = QFileDialog::getSaveFileName(this,
                                                 tr("Open File"),
-                                                ".",
+                                                "./../QtControl/GnnNema",
                                                 tr("Text Files(*.txt)"));
     if(!path.isEmpty()) {
         QFile file(path);
@@ -36,8 +36,5 @@ void SerialInfoDialog::saveFile()
         QTextStream out(&file);
         out << ui->textBrowser->toPlainText();
         file.close();
-    } else {
-        QMessageBox::warning(this, tr("Path"),
-                             tr("You did not select any file."));
     }
 }
