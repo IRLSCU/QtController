@@ -2,6 +2,7 @@
 #ifndef RING_BUFFER
 #define RING_BUFFER
 #include <boost/atomic.hpp>
+#include "GpsInfo.h"
 template<typename T, size_t Size>
 class RingBuffer {
 public:
@@ -33,5 +34,6 @@ private:
 	T ring_[Size];
 	boost::atomic<size_t> head_, tail_;
 };
-
+typedef RingBuffer<char,20480> CharRingBuffer;
+typedef RingBuffer<GpsInfo,2048> GpsRingBuffer;
 #endif

@@ -3,22 +3,21 @@
 
 #include "RingBuffer.h"
 #include "SerialInfoDialog.h"
-#include "WriteGPSBufferThread.h"
+#include "GpsBufferWriteThread.h"
 #include <QDialog>
 #include <QLineEdit>
 #include <QComboBox>
 #include <QDebug>
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
-
 class SerialPortDialog : public QDialog{
     Q_OBJECT
 public:
-    explicit SerialPortDialog(QWidget *parent = 0);
+    explicit SerialPortDialog(QWidget *parent = 0,GpsRingBuffer* gpsRingBuffer=0);
     ~SerialPortDialog();
-    RingBuffer<QChar, 20480>* ringBuffer1;
-    RingBuffer<QChar, 20480>* ringBuffer2;
-    RingBuffer<QChar, 20480>* ringBuffer3;
+    CharRingBuffer* ringBuffer1;
+    CharRingBuffer* ringBuffer2;
+    CharRingBuffer* ringBuffer3;
 signals:
     void userAgeChanged(const QString&);
     void serialPort1ContentChanged(const QString&);
@@ -71,14 +70,14 @@ private:
     QPushButton * showButton2;
     QPushButton * showButton3;
 
-    WriteGPSBufferThread* WriteGPSBufferThread1;
-    WriteGPSBufferThread* WriteGPSBufferThread2;
-    WriteGPSBufferThread* WriteGPSBufferThread3;
+    GpsBufferWriteThread* GpsBufferWriteThread1;
+    GpsBufferWriteThread* GpsBufferWriteThread2;
+    GpsBufferWriteThread* GpsBufferWriteThread3;
 
     void send(QByteArray,const QSerialPort*);
-    void closeSerialPort(QSerialPort*,RingBuffer<QChar, 20480>*);
-    void readCom(QSerialPort*,RingBuffer<QChar, 20480>*);
-    bool openSerialPort(QSerialPort*,RingBuffer<QChar, 20480>*);//通过槽函数实现，未开启线程
+    void closeSerialPort(QSerialPort*,CharRingBuffer*);
+    void readCom(QSerialPort*,CharRingBuffer*);
+    bool openSerialPort(QSerialPort*,CharRingBuffer*);//通过槽函数实现，未开启线程
     void fillSerialPortInfo(QSerialPort*,const QComboBox*,const QComboBox*,const QComboBox*,const QComboBox*,const QComboBox*,const QComboBox*);
 };
 #endif // SERIALPORTDIALOG_H

@@ -170,8 +170,8 @@ QPointF CCoordinate::XY2Screen(QPointF pos)
     qreal f_tempX,f_tempY;
     f_tempX = (pos.x() -m_DspCenter.x())*m_fixedScale * m_scale;
     f_tempY = (pos.y()-m_DspCenter.y())*m_fixedScale * m_scale;
-    m_screen.setX((long)(f_tempX));
-    m_screen.setY(-(long)(f_tempY));
+    m_screen.setX((long)(f_tempX+0.5));
+    m_screen.setY(-(long)(f_tempY+0.5));
     return m_screen;
 }
 

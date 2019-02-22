@@ -36,7 +36,11 @@ SOURCES += \
     ControlOrder.cpp \
     TinyCarCO.cpp \
     LargeCarCO.cpp \
-    WriteGPSBufferThread.cpp
+    GpsBufferWriteThread.cpp \
+    GpsBufferReadThread.cpp \
+    GpsBufferReadInitRouteThread.cpp \
+    RouteSparseDialog.cpp \
+    InitRouteDialog.cpp
 
 HEADERS += \
         MainWindow.h \
@@ -51,12 +55,19 @@ HEADERS += \
     ControlOrder.h \
     TinyCarCO.h \
     LargeCarCO.h \
-    WriteGPSBufferThread.h \
-    ControlMessageStruct.h
+    ControlMessageStruct.h \
+    GpsInfo.h \
+    GpsBufferWriteThread.h \
+    GpsBufferReadThread.h \
+    GpsBufferReadInitRouteThread.h \
+    RouteSparseDialog.h \
+    InitRouteDialog.h
 
 FORMS += \
         MainWindow.ui \
-    SerialInfoDialog.ui
+    SerialInfoDialog.ui \
+    RouteSparseDialog.ui \
+    InitRouteDialog.ui
 
 RESOURCES += \
     res.qrc

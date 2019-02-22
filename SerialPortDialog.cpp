@@ -5,23 +5,26 @@
 #include <QTextEdit>
 #include <QMessageBox>
 static const char blankString[] = QT_TRANSLATE_NOOP("SettingsDialog", "N/A");
-SerialPortDialog::SerialPortDialog(QWidget* parent):
+SerialPortDialog::SerialPortDialog(QWidget* parent,GpsRingBuffer* gpsRingBuffer):
     QDialog(parent){
     //this->resize(260, 70);
     this->setWindowTitle("串口设置");
+    if(gpsRingBuffer==0){
+        qDebug()<<"GpsRingBuffer is not init";
+        gpsRingBuffer=new GpsRingBuffer;
+    }
+    ringBuffer1=new CharRingBuffer();
+    ringBuffer2=new CharRingBuffer();
+    ringBuffer3=new CharRingBuffer();
 
-    ringBuffer1=new RingBuffer<QChar, 20480>();
-    ringBuffer2=new RingBuffer<QChar, 20480>();
-    ringBuffer3=new RingBuffer<QChar, 20480>();
+    GpsBufferWriteThread1=new GpsBufferWriteThread(ringBuffer1,gpsRingBuffer,this,"GPS 第1路");
+    GpsBufferWriteThread1->start();
 
-    WriteGPSBufferThread1=new WriteGPSBufferThread(ringBuffer1,this,"GPS 第1路");
-    WriteGPSBufferThread1->start();
+    GpsBufferWriteThread2=new GpsBufferWriteThread(ringBuffer2,gpsRingBuffer,this,"GPS 第2路");
+    GpsBufferWriteThread2->start();
 
-    WriteGPSBufferThread2=new WriteGPSBufferThread(ringBuffer2,this,"GPS 第2路");
-    WriteGPSBufferThread2->start();
-
-    WriteGPSBufferThread3=new WriteGPSBufferThread(ringBuffer3,this,"GPS 第3路");
-    WriteGPSBufferThread3->start();
+    GpsBufferWriteThread3=new GpsBufferWriteThread(ringBuffer3,gpsRingBuffer,this,"GPS 第3路");
+    GpsBufferWriteThread3->start();
     QGridLayout* layout=new QGridLayout(this);
     layout->addWidget(new QLabel("端口号"),0,1);
     layout->addWidget(new QLabel("波特率"),0,2);
@@ -302,14 +305,14 @@ SerialPortDialog::SerialPortDialog(QWidget* parent):
 SerialPortDialog::~SerialPortDialog(){
 
     qDebug() << "start destroy widget SerialPortDialog";
-    WriteGPSBufferThread1->stopImmediately();
-    WriteGPSBufferThread1->wait();
+    GpsBufferWriteThread1->stopImmediately();
+    GpsBufferWriteThread1->wait();
 
-    WriteGPSBufferThread2->stopImmediately();
-    WriteGPSBufferThread2->wait();
+    GpsBufferWriteThread2->stopImmediately();
+    GpsBufferWriteThread2->wait();
 
-    WriteGPSBufferThread3->stopImmediately();
-    WriteGPSBufferThread3->wait();
+    GpsBufferWriteThread3->stopImmediately();
+    GpsBufferWriteThread3->wait();
     closeSerialPort(serialPort1,ringBuffer1);
     closeSerialPort(serialPort2,ringBuffer2);
     closeSerialPort(serialPort3,ringBuffer3);
@@ -330,20 +333,20 @@ void SerialPortDialog::send(QByteArray content,const QSerialPort* serialPort){
         emit serialPort3ContentChanged(content);
     }
 }
-void SerialPortDialog::closeSerialPort(QSerialPort* serialPort,RingBuffer<QChar, 20480>* ringBuffer){
+void SerialPortDialog::closeSerialPort(QSerialPort* serialPort,CharRingBuffer* ringBuffer){
     if(serialPort->isOpen()){
         serialPort->clear();
         serialPort->close();
         qDebug()<<serialPort->portName()<<"has been closed";
     }
-    QChar temp=NULL;
+    char temp=NULL;
     while(!ringBuffer->pop(temp)){
         if(temp==NULL)
             break;
     }
 
 }
-bool SerialPortDialog::openSerialPort(QSerialPort* serialPort,RingBuffer<QChar, 20480>* ringBuffer){
+bool SerialPortDialog::openSerialPort(QSerialPort* serialPort,CharRingBuffer* ringBuffer){
     if(serialPort->open(QSerialPort::OpenModeFlag::ReadOnly)){
         qDebug()<<serialPort->portName()<<"open success!!";
     }else{
@@ -356,10 +359,10 @@ bool SerialPortDialog::openSerialPort(QSerialPort* serialPort,RingBuffer<QChar, 
     });
     return true;
 }
-void SerialPortDialog::readCom(QSerialPort* serialPort,RingBuffer<QChar, 20480>* ringBuffer){
+void SerialPortDialog::readCom(QSerialPort* serialPort,CharRingBuffer* ringBuffer){
     QByteArray temp = serialPort->readAll();
     send(temp,serialPort);
-    foreach (QChar var, temp) {
+    foreach (char var, temp) {
         ringBuffer->push(var);
     }
 }

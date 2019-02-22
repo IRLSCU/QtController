@@ -5,27 +5,36 @@
 #include<QPainter>
 #include<QPen>
 #include<QDebug>
+
+void PaintWidget::initScreenCenter(QPointF lonlat){
+    coordinate.InitRadarPara(500,lonlat.x(),lonlat.y());
+    QPointF temp=coordinate.LongLat2XY(lonlat.x(),lonlat.y());
+    coordinate.m_DspCenter.setX(temp.x());
+    coordinate.m_DspCenter.setY(temp.y());
+}
 PaintWidget::PaintWidget(QWidget *parent)
     : QWidget(parent),
     horizontalOffset(0),
     verticalOffset(0),
-    scaleFactor(1),
-    currentStepScaleFactor(3.4),
+    m_zoomDelta(6),
+    scaleFactor(5),
+    currentStepScaleFactor(1),
     m_translateButton(Qt::LeftButton),
-    m_bMouseTranslate(false),
-    m_zoomDelta(0.2)
+    m_bMouseTranslate(false)
 {
     this->setFocusPolicy(Qt::ClickFocus);
     this->resize(600,400);
     coordinate=CCoordinate();
-    //todo
-    coordinate.InitRadarPara(500, 103.9588080550,30.7852871117);
-    QPointF temp=coordinate.LongLat2XY(103.9588080550,30.7852871117);
+//    coordinate.InitRadarPara(500, 103.9588080550,30.7852871117);
+//    QPointF temp=coordinate.LongLat2XY(103.9588080550,30.7852871117);
 
-    coordinate.m_DspCenter.setX(temp.x());
-    coordinate.m_DspCenter.setY(temp.y());
+//    initScreenCenter(QPointF(103.9583595900,30.7830247100));
+    initScreenCenter(QPointF(103.9585726017,30.7838652900));
+
     mousePosInfoLabel=new QLabel("");
     mousePosInfoLabel->setParent(this);
+    scaleInfoLabel=new QLabel("");
+    scaleInfoLabel->setParent(this);
     QPushButton* addPointButton=new QPushButton("add point");
     connect(addPointButton,&QPushButton::clicked,[this](){
         addQPoint(QPointF(qrand()%width()-width()/2,qrand()%height()-height()/2));
@@ -39,6 +48,7 @@ PaintWidget::PaintWidget(QWidget *parent)
     layout->addLayout(layout2);
     layout2->addWidget(clearPointButton);
     layout2->addWidget(addPointButton);
+    layout2->addWidget(scaleInfoLabel);
     layout2->addWidget(mousePosInfoLabel);
     this->setLayout(layout);
 }
@@ -48,6 +58,10 @@ PaintWidget::~PaintWidget(){
 
 void PaintWidget::paintEvent(QPaintEvent*)
 {
+    if(routePointList.size()!=0){
+        //qDebug("routePointList.at(0):%.10f,%.10f",routePointList.at(0).x(),routePointList.at(0).y());
+        this->initScreenCenter(routePointList.at(0));
+    }
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
     const qreal wh = height();
@@ -73,14 +87,14 @@ void PaintWidget::paintEvent(QPaintEvent*)
 
     QPointF last;
     for(int i=0;i<routePointList.size();i++){
-        QPointF temp=coordinate.XY2Screen(routePointList.at(i));
+        QPointF temp=coordinate.LongLat2Screen(LongLat(routePointList.at(i).x(),routePointList.at(i).y()));
         if(i!=0){
             mypen.setColor(Qt::black);
             mypen.setWidth(0);
             painter.setPen(mypen);
             painter.drawLine(last,temp);
         }
-        mypen.setWidth(1);                     // 1 表示点的大小
+        mypen.setWidth(0);                     // 1 表示点的大小
         mypen.setColor(Qt::green);
         painter.setPen(mypen);
         painter.drawPoint((qint64)temp.x(),(qint64)temp.y());
@@ -96,7 +110,7 @@ void PaintWidget::paintEvent(QPaintEvent*)
             painter.setPen(mypen);
             painter.drawLine(last,temp);
         }
-        mypen.setWidth(1);                     // 1 表示点的大小
+        mypen.setWidth(0);                     // 1 表示点的大小
         mypen.setColor(Qt::green);
         painter.setPen(mypen);
         painter.drawPoint((qint64)temp.x(),(qint64)temp.y());
@@ -107,7 +121,8 @@ void PaintWidget::paintEvent(QPaintEvent*)
 //双击初始化
 void PaintWidget::mouseDoubleClickEvent(QMouseEvent *)
 {
-    scaleFactor = 1;
+    m_zoomDelta=6;
+    scaleFactor = DELTA[m_zoomDelta];
     currentStepScaleFactor = 1;
     verticalOffset = 0;
     horizontalOffset = 0;
@@ -211,19 +226,26 @@ void PaintWidget::wheelEvent(QWheelEvent *event)
 // 放大
 void PaintWidget::zoomIn()
 {
-    zoom(1 + m_zoomDelta);
+    if(m_zoomDelta<PAINTWIDGET_DELTA_MAX){
+        m_zoomDelta++;
+        zoom(DELTA[m_zoomDelta]);
+    }
+
 }
 
 // 缩小
 void PaintWidget::zoomOut()
 {
-    zoom(1 - m_zoomDelta);
+    if(m_zoomDelta>PAINTWIDGET_DELTA_MIN){
+        m_zoomDelta--;
+        zoom(DELTA[m_zoomDelta]);
+    }
 }
 
 // 缩放 - scaleFactor：缩放的比例因子
 void PaintWidget::zoom(qreal scale)
 {
-    scaleFactor *= scale;
+    scaleFactor = scale;
     update();
 }
 
@@ -236,8 +258,8 @@ void PaintWidget::translate(QPointF delta)
 }
 
 void PaintWidget::acceptQPoint(QPointF point){
-    QPointF screenPoint=coordinate.LongLat2XY(LongLat(point.x(),point.y()));
-    routePointList.push_back(screenPoint);
+    routePointList.push_back(point);
+    update();
 }
 void PaintWidget::addQPoint(QPointF point){
     passWayPointList.push_back(point);
