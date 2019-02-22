@@ -16,8 +16,8 @@ PaintWidget::PaintWidget(QWidget *parent)
     : QWidget(parent),
     horizontalOffset(0),
     verticalOffset(0),
-    m_zoomDelta(scaleFactor+8),
-    scaleFactor(20),
+    m_zoomDelta(6),
+    scaleFactor(5),
     currentStepScaleFactor(1),
     m_translateButton(Qt::LeftButton),
     m_bMouseTranslate(false)
@@ -121,7 +121,7 @@ void PaintWidget::paintEvent(QPaintEvent*)
 //双击初始化
 void PaintWidget::mouseDoubleClickEvent(QMouseEvent *)
 {
-    m_zoomDelta=8;
+    m_zoomDelta=6;
     scaleFactor = DELTA[m_zoomDelta];
     currentStepScaleFactor = 1;
     verticalOffset = 0;

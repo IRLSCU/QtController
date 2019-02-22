@@ -1,6 +1,7 @@
 ﻿#include "MainWindow.h"
 #include "ui_MainWindow.h"
 #include "GpsBufferWriteThread.h"
+#include "RouteSparseDialog.h"
 #include <QAction>
 #include <QMenuBar>
 #include <QMessageBox>
@@ -38,10 +39,15 @@ MainWindow::MainWindow(QWidget *parent) :
     startRunningAction->setStatusTip(tr("打开开始行驶界面"));
     connect(startRunningAction, &QAction::triggered, this, &MainWindow::open);
 
-    loadGPSDataAction=new QAction(tr("加载GPS"),this);
+    loadGPSDataAction=new QAction(tr("加载路径"),this);
     loadGPSDataAction->setShortcuts(QKeySequence::Open);
-    loadGPSDataAction->setStatusTip(tr("打开加载GPS界面"));
+    loadGPSDataAction->setStatusTip(tr("打开加载路径界面"));
     connect(loadGPSDataAction, &QAction::triggered, this, &MainWindow::openFile);
+
+    routeSparseAction=new QAction(tr("稀疏路径"),this);
+    routeSparseAction->setShortcuts(QKeySequence::Open);
+    routeSparseAction->setStatusTip(tr("打开稀疏路径界面"));
+    connect(routeSparseAction, &QAction::triggered, this, &MainWindow::openRouteSparseDialog);
 
     setScaleAction=new QAction(tr("比例尺"),this);
     setScaleAction->setShortcuts(QKeySequence::Open);
@@ -54,6 +60,7 @@ MainWindow::MainWindow(QWidget *parent) :
     toolBar->addAction(initRouteAction);
     toolBar->addAction(startRunningAction);
     toolBar->addAction(loadGPSDataAction);
+    toolBar->addAction(routeSparseAction);
     toolBar->addAction(setScaleAction);
 
     statusBar();
@@ -83,13 +90,17 @@ void MainWindow::openInitRouteDialog(){
     initRouteDialog->setAttribute(Qt::WA_DeleteOnClose);
     initRouteDialog->show();
 
-
     gpsBufferReadInitRouteThread->start();
 
     connect(gpsBufferReadInitRouteThread,&GpsBufferReadInitRouteThread::sendGpsInfo,paintWidget,&PaintWidget::acceptQPoint);
     connect(initRouteDialog,&InitRouteDialog::sendInitSignal,gpsBufferReadInitRouteThread,&GpsBufferReadInitRouteThread::startInit);
     qRegisterMetaType<GpsInfo>("GpsInfo");
     connect(gpsBufferReadInitRouteThread,&GpsBufferReadInitRouteThread::sendInitGpsInfo,initRouteDialog,&InitRouteDialog::updateBroswerText);
+}
+void MainWindow::openRouteSparseDialog(){
+    RouteSparseDialog* routeSparseDialog=new RouteSparseDialog(this);
+    routeSparseDialog->setAttribute(Qt::WA_DeleteOnClose);
+    routeSparseDialog->show();
 }
 void MainWindow::openFile()
 {

@@ -39,6 +39,7 @@ SOURCES += \
     GpsBufferWriteThread.cpp \
     GpsBufferReadThread.cpp \
     GpsBufferReadInitRouteThread.cpp \
+    RouteSparseDialog.cpp \
     InitRouteDialog.cpp
 
 HEADERS += \
@@ -59,11 +60,13 @@ HEADERS += \
     GpsBufferWriteThread.h \
     GpsBufferReadThread.h \
     GpsBufferReadInitRouteThread.h \
+    RouteSparseDialog.h \
     InitRouteDialog.h
 
 FORMS += \
         MainWindow.ui \
     SerialInfoDialog.ui \
+    RouteSparseDialog.ui \
     InitRouteDialog.ui
 
 RESOURCES += \

@@ -26,11 +26,13 @@ private:
     void open();
     void openSerialDialog();
     void openInitRouteDialog();
+    void openRouteSparseDialog();
     void openFile();
     QAction* setSerialAction;   //打开端口设置
     QAction* initRouteAction;   //初始化路径
     QAction* startRunningAction;//延预计路径行驶
     QAction* loadGPSDataAction; //加载GPS数据到界面，并且作为初始化路径
+    QAction* routeSparseAction; //加载GPS数据到界面，并且作为初始化路径
     QAction* setScaleAction;    //设置比例尺
     GpsRingBuffer* gpsRingBuffer;
     PaintWidget* paintWidget;
