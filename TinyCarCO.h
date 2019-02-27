@@ -9,7 +9,7 @@
  * @brief The TinyCarCO class
  * tiny car control order
  */
-#include "ControlOrder.h"
+#include<QObject>
 class TinyCarCO{
 private:
     /**
@@ -40,7 +40,7 @@ public:
     quint8 getRightSpeed(){return rightSpeed;}
     qint8 getLeftOrientation(){return leftOrientation;}
     qint8 getRightOrientation(){return rightOrientation;}
-
+    void printInfo();
     TinyCarCO& setLeftSpeed(quint8);
     TinyCarCO& setRightSpeed(quint8);
     TinyCarCO& setLeftOrientation(qint8);

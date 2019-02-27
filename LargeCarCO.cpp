@@ -62,7 +62,7 @@ LargeCarCO& LargeCarCO::setGear(quint8 gear) {//24~31，第3个字节
 （1）代表鸣笛；(0)代表静音
 */
 LargeCarCO& LargeCarCO::setHorn(quint8 horn) {//40-47,第5个字节
-    if (horn == LARGECARCO_HORN_OFF || horn == LARGECARCO_HORN_OFF) {
+    if (horn == LARGECARCO_HORN_OFF || horn == LARGECARCO_HORN_ON) {
         this->horn = horn;
     }else{
         qDebug("horn=%d,setting error（鸣笛设置异常",horn);

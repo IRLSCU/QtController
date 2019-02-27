@@ -13,6 +13,9 @@
 #define CONTROLORDER_LIGHT_LEFT_ON 2
 #define CONTROLORDER_HORN_OFF 0
 #define CONTROLORDER_HORN_ON 1
+
+#include "LargeCarCO.h"
+#include "TinyCarCO.h"
 #include<QObject>
 /**
  * @brief The ControlOrder class
@@ -32,6 +35,7 @@ private:
      * range from -32768 to 32767
      */
     qint16 turnRange=0;
+    qint16 lastTurnRange=0;
     /**
      * @brief gear
      * range :0空挡，1前进挡，2后退档
@@ -58,6 +62,7 @@ public:
         转向范围（-32768，32767）负代表左转，正代表右转。数值仅表示程度
     */
     ControlOrder& setTurnRange(qint16);
+    ControlOrder& setLastTurnRange(qint16);
     /*
         三种挡位0空挡，1表示前进挡，2表示后退挡
     */
@@ -73,11 +78,15 @@ public:
 
     void init();
     qint16 getSpeed() { return speed; }
+    qint16 getLastTurnRange() { return lastTurnRange; }
     qint16 getTurnRange() { return turnRange; }
     qint8 getGear() { return gear; }
     qint8 getLightSignal() { return lightSignal; }
     qint8 getHorn() { return horn; }
-
+    static void NormalCO2TinyCarCO(ControlOrder&,TinyCarCO&);
+    static void NormalCO2LargeCarCO(ControlOrder&,LargeCarCO&);
+    static void TinyCarCO2NormalCO(TinyCarCO&,ControlOrder&);
+    static void LargeCarCO2NormalCO(LargeCarCO&,ControlOrder&);
     void printInfo();
 };
 #endif // CONTROLORDERINTERFACE_H

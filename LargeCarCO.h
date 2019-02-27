@@ -62,7 +62,7 @@ public:
     void printInfo();
 
 private:
-    quint8 speed = 128;//速度，占第0，1字节
+    quint8 speed = 127;//速度，占第0，1字节
     qint16 turnRange = 0;//转向，占第2字节
     quint8 gear = 0;//挡位，占第3字节
     quint8 signal = 0;//灯光,占第四字节
