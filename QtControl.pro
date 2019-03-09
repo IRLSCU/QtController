@@ -40,7 +40,11 @@ SOURCES += \
     GpsBufferReadThread.cpp \
     GpsBufferReadInitRouteThread.cpp \
     RouteSparseDialog.cpp \
-    InitRouteDialog.cpp
+    InitRouteDialog.cpp \
+    GpsBufferConsumeRunThread.cpp \
+    ProcessRunDialog.cpp \
+    PID.cpp \
+    GPSProcesser.cpp
 
 HEADERS += \
         MainWindow.h \
@@ -58,16 +62,22 @@ HEADERS += \
     ControlMessageStruct.h \
     GpsInfo.h \
     GpsBufferWriteThread.h \
-    GpsBufferReadThread.h \
     GpsBufferReadInitRouteThread.h \
     RouteSparseDialog.h \
-    InitRouteDialog.h
+    InitRouteDialog.h \
+    GpsBufferReadThread.h \
+    GpsBufferConsumeRunThread.h \
+    ProcessRunDialog.h \
+    PID.h \
+    PID.h \
+    GPSProcesser.h
 
 FORMS += \
         MainWindow.ui \
     SerialInfoDialog.ui \
     RouteSparseDialog.ui \
-    InitRouteDialog.ui
+    InitRouteDialog.ui \
+    ProcessRunDialog.ui
 
 RESOURCES += \
     res.qrc

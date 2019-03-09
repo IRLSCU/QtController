@@ -1,7 +1,8 @@
 ﻿#include "MainWindow.h"
 #include "ui_MainWindow.h"
-#include "GpsBufferWriteThread.h"
+#include "InitRouteDialog.h"
 #include "RouteSparseDialog.h"
+#include "ProcessRunDialog.h"
 #include <QAction>
 #include <QMenuBar>
 #include <QMessageBox>
@@ -18,9 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     gpsRingBuffer=new GpsRingBuffer();
 
-    gpsBufferReadInitRouteThread=new GpsBufferReadInitRouteThread(gpsRingBuffer,this);
-//    gpsBufferReadThread=new GpsBufferReadThread(gpsRingBuffer,parent);
-//    gpsBufferReadThread->start();
+
     setCentralWidget(paintWidget=new PaintWidget());
     connect(this,&MainWindow::sendQPointToPaintWidget,paintWidget,&PaintWidget::acceptQPoint);
 
@@ -37,7 +36,7 @@ MainWindow::MainWindow(QWidget *parent) :
     startRunningAction=new QAction(tr("开始行驶"),this);
     startRunningAction->setShortcuts(QKeySequence::Open);
     startRunningAction->setStatusTip(tr("打开开始行驶界面"));
-    connect(startRunningAction, &QAction::triggered, this, &MainWindow::open);
+    connect(startRunningAction, &QAction::triggered, this, &MainWindow::openProcessRun);
 
     loadGPSDataAction=new QAction(tr("加载路径"),this);
     loadGPSDataAction->setShortcuts(QKeySequence::Open);
@@ -69,33 +68,32 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    gpsBufferReadInitRouteThread->stopImmediately();
-    gpsBufferReadInitRouteThread->wait();
-
-//    gpsBufferReadThread->stopImmediately();
-//    gpsBufferReadThread->wait();
-//    delete gpsRingBuffer;
-//    delete gpsBufferReadThread;
     delete ui;
 }
-
 void MainWindow::open(){
     QDialog* dialog=new QDialog;
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->setWindowTitle(tr("Hello, dialog!"));
     dialog->show();
 }
+void MainWindow::openProcessRun(){
+    if(paintWidget->getRoutePointList().size()==0){
+        QMessageBox::warning(this, tr("Empty Route"),
+                             tr("please load route firstly"));
+        return;
+    }
+    ProcessRunDialog* dialog=new ProcessRunDialog(gpsRingBuffer,this);
+    dialog->copySetInitRouteList(paintWidget->getRoutePointList());
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
+    dialog->setWindowTitle(tr("Process Run"));
+    dialog->show();
+    connect(dialog->getGpsBufferConsumeRunThread(),&GpsBufferConsumeRunThread::sendGpsInfo,paintWidget,&PaintWidget::acceptQPoint);
+}
 void MainWindow::openInitRouteDialog(){
-    InitRouteDialog* initRouteDialog=new InitRouteDialog(this);
+    InitRouteDialog* initRouteDialog=new InitRouteDialog(gpsRingBuffer,this);
     initRouteDialog->setAttribute(Qt::WA_DeleteOnClose);
     initRouteDialog->show();
-
-    gpsBufferReadInitRouteThread->start();
-
-    connect(gpsBufferReadInitRouteThread,&GpsBufferReadInitRouteThread::sendGpsInfo,paintWidget,&PaintWidget::acceptQPoint);
-    connect(initRouteDialog,&InitRouteDialog::sendInitSignal,gpsBufferReadInitRouteThread,&GpsBufferReadInitRouteThread::startInit);
-    qRegisterMetaType<GpsInfo>("GpsInfo");
-    connect(gpsBufferReadInitRouteThread,&GpsBufferReadInitRouteThread::sendInitGpsInfo,initRouteDialog,&InitRouteDialog::updateBroswerText);
+    connect(initRouteDialog->getGpsBufferReadInitRouteThread(),&GpsBufferReadInitRouteThread::sendGpsInfo,paintWidget,&PaintWidget::acceptQPoint);
 }
 void MainWindow::openRouteSparseDialog(){
     RouteSparseDialog* routeSparseDialog=new RouteSparseDialog(this);

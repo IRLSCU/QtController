@@ -1,6 +1,6 @@
-#ifndef GPSBUFFERREADINITROUTETHREAD_H
-#define GPSBUFFERREADINITROUTETHREAD_H
-#define GPSBUFFERREADINITROUTETHREAD_BOLCKTIME 50
+#ifndef GPSBUFFERREADRUNTHREAD_H
+#define GPSBUFFERREADRUNTHREAD_H
+#define GPSBUFFERREADRUNTHREAD_BOLCKTIME 50
 #include "RingBuffer.h"
 #include<QThread>
 #include<QMutex>
@@ -8,7 +8,7 @@
 /**
  * @brief The GpsBufferReadInitRouteThread class
  * consume gpsBuffer to init route thread
- * 消费者线程去初始化路径
+ * 消费者线程、开始
  */
 class GpsBufferReadInitRouteThread : public QThread
 {
@@ -24,7 +24,7 @@ public:
     GpsBufferReadInitRouteThread(GpsRingBuffer*,QObject *parent);
     ~GpsBufferReadInitRouteThread();
     void stopImmediately();
-    void initSignal(bool signal);
+    void startInit(bool signal);
     void run();
 
 signals:

@@ -23,6 +23,7 @@ public:
     void addQPoint(QPointF point);
     void clear();
     void initScreenCenter(QPointF);
+    QList<QPointF> getRoutePointList(){return routePointList;}
     ~PaintWidget();
 private:
     QList<QPointF> routePointList;

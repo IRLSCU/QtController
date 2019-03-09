@@ -12,10 +12,12 @@ GpsBufferReadInitRouteThread::~GpsBufferReadInitRouteThread(){
 void GpsBufferReadInitRouteThread::stopImmediately(){
     QMutexLocker locker(&m_lock);
     m_isCanRun = false;
+    qDebug()<<"stop init";
     locker.unlock();
 }
-void GpsBufferReadInitRouteThread::startInit(bool signal){
+void GpsBufferReadInitRouteThread::initSignal(bool signal){
     QMutexLocker locker(&m_Initlock);
+    qDebug()<<"initSignal"<<(signal?"start":"end");
     m_startInit=signal;
     locker.unlock();
 }
@@ -24,13 +26,13 @@ void GpsBufferReadInitRouteThread::run(){
     int i=0;
     while(true){ 
         GpsInfo gpsInfo;
-        if(gpsRingBuffer->pop(gpsInfo)){
+        if(gpsRingBuffer->pop(gpsInfo)){//一直在读取里面的数据，相当于在start线程的时候会把缓冲区清空；当开始初始化后，会将gpsInfo传到初始化的list中
             qDebug()<<(++i);
             gpsInfo.printInfo();
-            emit sendGpsInfo(QPointF(gpsInfo.longitude,gpsInfo.latitude));
+            emit sendGpsInfo(QPointF(gpsInfo.longitude,gpsInfo.latitude));//绘图
             if(m_startInit){//双重判断，由于加锁费时间
                 QMutexLocker locker2(&m_Initlock);
-                if(m_startInit){
+                if(m_startInit){//同时将数据发往初始化列表
                     //qDebug()<<"start init";
                     //emit sendInitGpsInfo(gpsInfo);
                     emit sendInitGpsInfo(gpsInfo);

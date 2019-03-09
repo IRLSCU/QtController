@@ -77,7 +77,7 @@ void PaintWidget::paintEvent(QPaintEvent*)
 
     QPen mypen;
     QVector<qreal> dashes;
-    dashes<<1<<2;
+    dashes<<1<<3;
     mypen.setDashPattern(dashes);
     mypen.setCapStyle(Qt::RoundCap);
 //    QPointF tmep1=coordinate.LongLat2Screen(LongLat(103.9588080550,30.7852871117));
@@ -94,7 +94,7 @@ void PaintWidget::paintEvent(QPaintEvent*)
             painter.setPen(mypen);
             painter.drawLine(last,temp);
         }
-        mypen.setWidth(0);                     // 1 表示点的大小
+        mypen.setWidth(1);                     // 1 表示点的大小
         mypen.setColor(Qt::green);
         painter.setPen(mypen);
         painter.drawPoint((qint64)temp.x(),(qint64)temp.y());
