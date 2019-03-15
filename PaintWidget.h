@@ -4,6 +4,7 @@
 #define PAINTWIDGET_DELTA_MAX  18
 #define PAINTWIDGET_DELTA_MIN  0
 #include"CoTrans.h"
+#include "GpsInfo.h"
 #include <QPoint>
 #include<QLabel>
 #include <QWidget>
@@ -42,6 +43,10 @@ private:
     QPoint m_lastMousePos;  // 鼠标最后按下的位置
 
     CCoordinate coordinate;
+
+    QPointF startPointGPS;
+    QPointF nextTargetPointGPS;
+
     QLabel* mousePosInfoLabel;
     QLabel* scaleInfoLabel;
     qreal DELTA[PAINTWIDGET_DELTA_MAX+1]={0.05,0.1,0.2,0.5,1,2,5,10,20,50,100,200,500,1000,2000,5000,10000,50000,100000};
@@ -57,7 +62,9 @@ protected:
 
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
     void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
-
+public:
+    void paintStartPoint(QPointF GpsInfo);
+    void paintTargetPoint(int target);
 //    QPointF XY2Screen(QPointF);
 //    QPointF Screen2XY(QPointF);
 

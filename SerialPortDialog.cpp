@@ -1,4 +1,4 @@
-#include "SerialPortDialog.h"
+﻿#include "SerialPortDialog.h"
 #include <QPushButton>
 #include <QGridLayout>
 #include <QLabel>
@@ -8,7 +8,7 @@ static const char blankString[] = QT_TRANSLATE_NOOP("SettingsDialog", "N/A");
 SerialPortDialog::SerialPortDialog(QWidget* parent,GpsRingBuffer* gpsRingBuffer):
     QDialog(parent){
     //this->resize(260, 70);
-    this->setWindowTitle("串口设置");
+    this->setWindowTitle(QStringLiteral("串口设置"));
     if(gpsRingBuffer==0){
         qDebug()<<"GpsRingBuffer is not init";
         gpsRingBuffer=new GpsRingBuffer;
@@ -17,23 +17,23 @@ SerialPortDialog::SerialPortDialog(QWidget* parent,GpsRingBuffer* gpsRingBuffer)
     ringBuffer2=new CharRingBuffer();
     ringBuffer3=new CharRingBuffer();
 
-    GpsBufferWriteThread1=new GpsBufferWriteThread(ringBuffer1,gpsRingBuffer,this,"GPS 第1路");
+    GpsBufferWriteThread1=new GpsBufferWriteThread(ringBuffer1,gpsRingBuffer,this,QStringLiteral("GPS 第1路"));
     GpsBufferWriteThread1->start();
 
-    GpsBufferWriteThread2=new GpsBufferWriteThread(ringBuffer2,gpsRingBuffer,this,"GPS 第2路");
+    GpsBufferWriteThread2=new GpsBufferWriteThread(ringBuffer2,gpsRingBuffer,this,QStringLiteral("GPS 第2路"));
     GpsBufferWriteThread2->start();
 
-    GpsBufferWriteThread3=new GpsBufferWriteThread(ringBuffer3,gpsRingBuffer,this,"GPS 第3路");
+    GpsBufferWriteThread3=new GpsBufferWriteThread(ringBuffer3,gpsRingBuffer,this,QStringLiteral("GPS 第3路"));
     GpsBufferWriteThread3->start();
     QGridLayout* layout=new QGridLayout(this);
-    layout->addWidget(new QLabel("端口号"),0,1);
-    layout->addWidget(new QLabel("波特率"),0,2);
-    layout->addWidget(new QLabel("数据位"),0,3);
-    layout->addWidget(new QLabel("奇偶校验"),0,4);
-    layout->addWidget(new QLabel("停止位"),0,5);
-    layout->addWidget(new QLabel("流控"),0,6);
-    layout->addWidget(new QLabel("操作"),0,7);
-    layout->addWidget(new QLabel("操作"),0,8);
+    layout->addWidget(new QLabel(QStringLiteral("端口号")),0,1);
+    layout->addWidget(new QLabel(QStringLiteral("波特率")),0,2);
+    layout->addWidget(new QLabel(QStringLiteral("数据位")),0,3);
+    layout->addWidget(new QLabel(QStringLiteral("奇偶校验")),0,4);
+    layout->addWidget(new QLabel(QStringLiteral("停止位")),0,5);
+    layout->addWidget(new QLabel(QStringLiteral("流控")),0,6);
+    layout->addWidget(new QLabel(QStringLiteral("操作")),0,7);
+    layout->addWidget(new QLabel(QStringLiteral("操作")),0,8);
     comboBoxPortName1=new QComboBox(this);
     comboBoxBaudRate1=new QComboBox(this);
     comboBoxDataBits1=new QComboBox(this);
@@ -174,7 +174,7 @@ SerialPortDialog::SerialPortDialog(QWidget* parent,GpsRingBuffer* gpsRingBuffer)
     SerialInfoDialog* infoDialog3=new SerialInfoDialog(this);
     connect(this,&SerialPortDialog::serialPort3ContentChanged,infoDialog3,&SerialInfoDialog::updateBroswerText);
 
-    openButton1=new QPushButton("打开串口",this);
+    openButton1=new QPushButton(QStringLiteral("打开串口"),this);
     //点击按照界面打开对应的串口，并且显示新打开窗口显示串口接收的数据，将数据存储到双端队列中
     connect(openButton1,&QPushButton::clicked,[this,infoDialog1](){
         this->fillSerialPortInfo(serialPort1,comboBoxPortName1,comboBoxBaudRate1,
@@ -188,12 +188,12 @@ SerialPortDialog::SerialPortDialog(QWidget* parent,GpsRingBuffer* gpsRingBuffer)
         }else{
             QMessageBox* msgBox=new QMessageBox(this);
             msgBox->setAttribute(Qt::WA_DeleteOnClose);
-            msgBox->setText(tr("串口打开失败"));
+            msgBox->setText(QStringLiteral("串口打开失败"));
             msgBox->show();
         }
 
     });
-    closeButton1=new QPushButton("关闭串口",this);
+    closeButton1=new QPushButton(QStringLiteral("关闭串口"),this);
     closeButton1->setDisabled(true);
     connect(closeButton1,&QPushButton::clicked,[this](){
         openButton1->setEnabled(true);
@@ -201,14 +201,14 @@ SerialPortDialog::SerialPortDialog(QWidget* parent,GpsRingBuffer* gpsRingBuffer)
         showButton1->setDisabled(true);
         closeSerialPort(serialPort1,ringBuffer1);
     });
-    showButton1=new QPushButton("显示信息",this);
+    showButton1=new QPushButton(QStringLiteral("显示信息"),this);
     showButton1->setDisabled(true);
     connect(showButton1,&QPushButton::clicked,[this,infoDialog1](){
         infoDialog1->setWindowTitle(serialPort1->portName());
         infoDialog1->show();
     });
 
-    openButton2=new QPushButton("打开串口",this);
+    openButton2=new QPushButton(QStringLiteral("打开串口"),this);
     connect(openButton2,&QPushButton::clicked,[this,infoDialog2](){
         this->fillSerialPortInfo(serialPort2,comboBoxPortName2,comboBoxBaudRate2,
                                  comboBoxDataBits2,comboBoxParity2,comboBoxStopBit2,comboBoxFlowBit2);
@@ -220,26 +220,26 @@ SerialPortDialog::SerialPortDialog(QWidget* parent,GpsRingBuffer* gpsRingBuffer)
         }else{
             QMessageBox* msgBox=new QMessageBox(this);
             msgBox->setAttribute(Qt::WA_DeleteOnClose);
-            msgBox->setText(tr("串口打开失败"));
+            msgBox->setText(QStringLiteral("串口打开失败"));
             msgBox->show();
         }
     });
 
-    closeButton2=new QPushButton("关闭串口",this);
+    closeButton2=new QPushButton(QStringLiteral("关闭串口"),this);
     closeButton2->setDisabled(true);
     connect(closeButton2,&QPushButton::clicked,[this](){
         openButton2->setEnabled(true);
         closeButton2->setDisabled(true);
         closeSerialPort(serialPort2,ringBuffer2);
     });
-    showButton2=new QPushButton("显示信息",this);
+    showButton2=new QPushButton(QStringLiteral("显示信息"),this);
     showButton2->setDisabled(true);
     connect(showButton2,&QPushButton::clicked,[this,infoDialog2](){
         infoDialog2->setWindowTitle(serialPort2->portName());
         infoDialog2->show();
     });
 
-    openButton3=new QPushButton("打开串口",this);
+    openButton3=new QPushButton(QStringLiteral("打开串口"),this);
     connect(openButton3,&QPushButton::clicked,[this,infoDialog3](){
         this->fillSerialPortInfo(serialPort3,comboBoxPortName3,comboBoxBaudRate3,
                                  comboBoxDataBits3,comboBoxParity3,comboBoxStopBit3,comboBoxFlowBit3);
@@ -251,19 +251,19 @@ SerialPortDialog::SerialPortDialog(QWidget* parent,GpsRingBuffer* gpsRingBuffer)
         }else{
             QMessageBox* msgBox=new QMessageBox(this);
             msgBox->setAttribute(Qt::WA_DeleteOnClose);
-            msgBox->setText(tr("串口打开失败"));
+            msgBox->setText(QStringLiteral("串口打开失败"));
             msgBox->show();
         }
     });
 
-    closeButton3=new QPushButton("关闭串口",this);
+    closeButton3=new QPushButton(QStringLiteral("关闭串口"),this);
     closeButton3->setDisabled(true);
     connect(closeButton3,&QPushButton::clicked,[this](){
         openButton3->setEnabled(true);
         closeButton3->setDisabled(true);
         closeSerialPort(serialPort3,ringBuffer3);
     });
-    showButton3=new QPushButton("显示信息",this);
+    showButton3=new QPushButton(QStringLiteral("显示信息"),this);
     showButton3->setDisabled(true);
     connect(showButton3,&QPushButton::clicked,[this,infoDialog3](){
         infoDialog3->setWindowTitle(serialPort3->portName());
@@ -375,7 +375,7 @@ void SerialPortDialog::fillSerialPortInfo(QSerialPort* serialPort,const QComboBo
     serialPort->setParity(comboBoxParity->currentData().value<QSerialPort::Parity>());
     serialPort->setStopBits(comboBoxStopBit->currentData().value<QSerialPort::StopBits>());
     serialPort->setFlowControl(comboBoxFlowBit->currentData().value<QSerialPort::FlowControl>());
-    qDebug()<<"端口号:"<<serialPort->portName()<<";波特率:"<<serialPort->baudRate()
-           <<";数据位:"<<serialPort->dataBits()<<";奇偶校验位:"<<serialPort->parity()
-          <<";停止位:"<<serialPort->stopBits()<<";流控:"<<serialPort->flowControl();
+    qDebug()<<QStringLiteral("端口号:")<<serialPort->portName()<<QStringLiteral(";波特率:")<<serialPort->baudRate()
+           <<QStringLiteral(";数据位:")<<serialPort->dataBits()<<QStringLiteral(";奇偶校验位:")<<serialPort->parity()
+          <<QStringLiteral(";停止位:")<<serialPort->stopBits()<<QStringLiteral(";流控:")<<serialPort->flowControl();
 }

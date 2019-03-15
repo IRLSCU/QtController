@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    setWindowTitle(tr("Main Window"));
+    setWindowTitle(QStringLiteral("主窗口"));
 
     gpsRingBuffer=new GpsRingBuffer();
 
@@ -23,34 +23,34 @@ MainWindow::MainWindow(QWidget *parent) :
     setCentralWidget(paintWidget=new PaintWidget());
     connect(this,&MainWindow::sendQPointToPaintWidget,paintWidget,&PaintWidget::acceptQPoint);
 
-    setSerialAction=new QAction(tr("串口设置"),this);
+    setSerialAction=new QAction(QStringLiteral("串口设置"),this);
     setSerialAction->setShortcuts(QKeySequence::Open);
-    setSerialAction->setStatusTip(tr("打开设置串口界面"));
+    setSerialAction->setStatusTip(QStringLiteral("打开设置串口界面"));
     connect(setSerialAction, &QAction::triggered, this, &MainWindow::openSerialDialog);
 
-    initRouteAction=new QAction(tr("初始化路径"),this);
+    initRouteAction=new QAction(QStringLiteral("初始化路径"),this);
     initRouteAction->setShortcuts(QKeySequence::Open);
-    initRouteAction->setStatusTip(tr("打开初始化路径界面"));
+    initRouteAction->setStatusTip(QStringLiteral("打开初始化路径界面"));
     connect(initRouteAction, &QAction::triggered, this, &MainWindow::openInitRouteDialog);
 
-    startRunningAction=new QAction(tr("开始行驶"),this);
+    startRunningAction=new QAction(QStringLiteral("开始行驶"),this);
     startRunningAction->setShortcuts(QKeySequence::Open);
-    startRunningAction->setStatusTip(tr("打开开始行驶界面"));
+    startRunningAction->setStatusTip(QStringLiteral("打开开始行驶界面"));
     connect(startRunningAction, &QAction::triggered, this, &MainWindow::openProcessRun);
 
-    loadGPSDataAction=new QAction(tr("加载路径"),this);
+    loadGPSDataAction=new QAction(QStringLiteral("加载路径"),this);
     loadGPSDataAction->setShortcuts(QKeySequence::Open);
-    loadGPSDataAction->setStatusTip(tr("打开加载路径界面"));
+    loadGPSDataAction->setStatusTip(QStringLiteral("打开加载路径界面"));
     connect(loadGPSDataAction, &QAction::triggered, this, &MainWindow::openFile);
 
-    routeSparseAction=new QAction(tr("稀疏路径"),this);
+    routeSparseAction=new QAction(QStringLiteral("稀疏路径"),this);
     routeSparseAction->setShortcuts(QKeySequence::Open);
-    routeSparseAction->setStatusTip(tr("打开稀疏路径界面"));
+    routeSparseAction->setStatusTip(QStringLiteral("打开稀疏路径界面"));
     connect(routeSparseAction, &QAction::triggered, this, &MainWindow::openRouteSparseDialog);
 
-    setScaleAction=new QAction(tr("比例尺"),this);
+    setScaleAction=new QAction(QStringLiteral("比例尺"),this);
     setScaleAction->setShortcuts(QKeySequence::Open);
-    setScaleAction->setStatusTip(tr("打开比例尺界面"));
+    setScaleAction->setStatusTip(QStringLiteral("打开比例尺界面"));
     connect(setScaleAction, &QAction::triggered, this, &MainWindow::open);
 
     QToolBar *toolBar = addToolBar(tr("&File"));
@@ -88,6 +88,8 @@ void MainWindow::openProcessRun(){
     dialog->setWindowTitle(tr("Process Run"));
     dialog->show();
     connect(dialog->getGpsBufferConsumeRunThread(),&GpsBufferConsumeRunThread::sendGpsInfo,paintWidget,&PaintWidget::acceptQPoint);
+    connect(dialog,&ProcessRunDialog::sendStartPointGPSToPaintWidget,paintWidget,&PaintWidget::paintStartPoint);
+    connect(dialog,&ProcessRunDialog::sendNextTargetPointToPaintWidget,paintWidget,&PaintWidget::paintTargetPoint);
 }
 void MainWindow::openInitRouteDialog(){
     InitRouteDialog* initRouteDialog=new InitRouteDialog(gpsRingBuffer,this);

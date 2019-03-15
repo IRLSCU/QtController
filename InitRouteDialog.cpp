@@ -1,4 +1,4 @@
-#include "InitRouteDialog.h"
+﻿#include "InitRouteDialog.h"
 #include "ui_InitRouteDialog.h"
 
 #include<QFileDialog>
@@ -8,7 +8,7 @@ InitRouteDialog::InitRouteDialog(GpsRingBuffer* gpsRingBuffer, QWidget *parent) 
     ui(new Ui::InitRouteDialog)
 {
     ui->setupUi(this);
-    this->setWindowTitle(tr("初始化路径"));
+    this->setWindowTitle(QStringLiteral("初始化路径"));
     this->ui->speed->setText("0");
     this->ui->course->setText("0");
     gpsBufferReadInitRouteThread=new GpsBufferReadInitRouteThread(gpsRingBuffer,this);

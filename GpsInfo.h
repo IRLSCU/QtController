@@ -1,6 +1,7 @@
-#ifndef GPSINFO_H
+﻿#ifndef GPSINFO_H
 #define GPSINFO_H
-#define KNOTS2KPH 1.852    //一海里=1.852公里
+//一海里=1.852公里
+#define KNOTS2KPH 1.852
 #include<QDebug>
 struct GpsInfo
 {

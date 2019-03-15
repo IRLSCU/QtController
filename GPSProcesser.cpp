@@ -1,4 +1,5 @@
 ﻿#include "GPSProcesser.h"
+#include<QDebug>
 #include<limits>
 CCoordinate GPSProcesser::cCoordinate;
 
@@ -10,17 +11,31 @@ GPSProcesser::~GPSProcesser() {
 }
 void GPSProcesser::initCCoordinate(double gpsheight, double gpslongitude, double gpslatitude) {
 	cCoordinate.InitRadarPara(gpsheight, gpslongitude, gpslatitude);
-	std::cout << "初始化原点成功\n";
+    qDebug() << "初始化原点成功";
 }
+/**
+ * @brief GPSProcesser::initRoute
+ * @param route  gps类型数据，需要转化成XY坐标系下
+ * @return
+ */
 bool GPSProcesser::initRoute(QList<QPointF> route){
     for(int i=0;i<route.size();i++){
-        gps_route.push_back(GaussGPSData(route.at(i).x(),route.at(i).y()));
+        QPointF temp=cCoordinate.LongLat2XY(route.at(i).x(),route.at(i).y());
+        gps_route.push_back(GaussGPSData(temp.x(),temp.y()));
+    }
+    sum_gps_point=gps_route.size();
+    if(sum_gps_point==0){
+        qDebug()<<QStringLiteral("初始化路径失败，可能未加载路径，或路径无数据点");
+        return false;
+    }else{
+        qDebug()<<QStringLiteral("初始化路径成功，共有点数（个）:")<<sum_gps_point;
+        return true;
     }
 }
 bool GPSProcesser::initRoute(std::string path) {
 	std::fstream fin(path);
 	if (fin.fail()) {
-		std::cout << "初始化路径失败，打开文件失败\n";
+        qDebug()<<QStringLiteral("初始化路径失败，打开文件失败\n");
 		return false;
 	}
 	double height=0;
@@ -36,31 +51,43 @@ bool GPSProcesser::initRoute(std::string path) {
 	}
 	sum_gps_point = gps_route.size();
 	if (sum_gps_point == 0) {
-		std::cout << "初始化路径失败，无路径输入\n";
+        qDebug()<< QStringLiteral("初始化路径失败，无路径输入\n");
 		return false;
 	}
-	std::cout << "初始化路径成功，输入路径GPS高斯点数目："<<sum_gps_point<<std::endl;
+    qDebug()<< QStringLiteral("初始化路径成功，输入路径GPS高斯点数目：")<<sum_gps_point;
 	return true;
+}
+int GPSProcesser::setNextTargetPoint(int i){
+    i=i%gps_route.size();
+    next_route_gps=gps_route[i];
+    if(i==0){
+        qDebug()<<QStringLiteral("gps processer setNextTargetPoint is setting 0");
+        current_point_count=-1;
+        current_route_gps=current_gps;
+    }
+    if(i!=0){
+        current_route_gps=gps_route[i-1];
+        current_point_count=i-1;
+    }
+    return i;
 }
 int GPSProcesser::initStartPoint(GaussGPSData current) {
 	current_gps = current;
-	current_point_count = 0;
-	current_route_gps = current;
-	next_route_gps = gps_route[0];
     for (unsigned int i = 0; i < gps_route.size();i++) {
-		if (isInArea(gps_route[i], current, IN_DISTANCE)) {
-			if (i + 1 == sum_gps_point ) {
-				std::cout << "初始化车辆起始位置失败，车辆已在道路终点\n";
-				return -1;
-			}
-			next_route_gps = gps_route[i +1];
-			current_point_count = i;
-			std::cout << "初始化车辆起始位置成功，车辆位置靠近第" << i << "个路径的GPS高斯点\n";
-			return i;
-		}
-	}
-	std::cout << "初始化起始车辆位置失败，车辆偏离道路太远\n";
-	return -1;
+        if (isInArea(gps_route[i], current, IN_DISTANCE)) {
+            if (i + 1 == sum_gps_point ) {
+                //std::cout << "初始化车辆起始位置失败，车辆已在道路终点\n";
+                qDebug()<<QStringLiteral("初始化车辆起始位置失败，车辆已在道路终点");
+                return 0;
+            }
+            //std::cout << "初始化车辆起始位置成功，车辆位置靠近第" << i << "个路径的GPS高斯点\n";
+            qDebug()<<QStringLiteral("初始化车辆起始位置成功，车辆位置靠近第") << i << QStringLiteral("个路径的GPS高斯点");
+            return i;
+        }
+    }
+    //std::cout << "初始化起始车辆位置为路径起点，车辆偏离道路太远\n";
+    qDebug()<<QStringLiteral("初始化起始车辆位置为路径起点，车辆偏离道路太远");
+    return 0;
 }
 //double GPSProcesser::startProcess(GaussGPSData current) {
 //	last_gps = current_gps;
@@ -86,22 +113,36 @@ int GPSProcesser::initStartPoint(GaussGPSData current) {
 //	double director = calPointFromLineDirector(current, Line(gps_route[current_point_count], gps_route[current_point_count + 1]));
 //	return distance*director;
 //}
-double GPSProcesser::startProcess(GaussGPSData current) {
+/**
+ * @brief GPSProcesser::startProcess
+ * @param current 传入当前gps坐标
+ * @param target 传出目标点坐标
+ * @param status 传出状态(1：到达终点；0：未达终点)
+ * @return
+ */
+double GPSProcesser::startProcess(GaussGPSData current,int* target,int* status) {
 	last_gps = current_gps;
 	current_gps = current;
 	Line corssLine = getCorssLine(Line(current_route_gps, next_route_gps), next_route_gps);
 	if (pointsInSameSide(current,current_route_gps , corssLine)) {
-		std::cout << "车辆未经过任意一高斯点(过垂线),"<<"，上一个经过的高斯点为第" << current_point_count << "个\n";
+        //std::cout << "车辆未经过任意一高斯点(过垂线),"<<"上一个经过的高斯点为第" << current_point_count << "个\n";
+        qDebug()<< QStringLiteral("车辆未经过任意一高斯点(过垂线),上一个经过的高斯点为:")<< current_point_count;
+
 	}else {
 		current_point_count += 1;
-		if (current_point_count >= sum_gps_point-1) {
-			std::cout << "车辆已在道路终点\n";
-			return -1;
-		}
+        if (current_point_count >= sum_gps_point-1) {
+            *status=1;
+            current_point_count=current_point_count%sum_gps_point;
+            qDebug()<< QStringLiteral("车辆已在道路终点,重置当前点为起始点。");
+        }else{
+            *status=0;
+        }
+        *target=current_point_count+1;
 		current_route_gps = gps_route[current_point_count];
 		next_route_gps = gps_route[current_point_count + 1];
-		std::cout << "车辆已经过第"<<current_point_count<<"个高斯点，车辆目标为第" << current_point_count+1 << "个路径的GPS高斯点\n";
+        qDebug()<< QStringLiteral("车辆已经过第")<<current_point_count<<QStringLiteral("个高斯点，车辆目标为第") << current_point_count+1 << QStringLiteral("个路径的GPS高斯点");
 	}
+    *target = current_point_count+1;
 	double distance = calPointFromLineDistance(current, Line(gps_route[current_point_count], gps_route[current_point_count + 1]));
 	double director = calPointFromLineDirector(current, Line(gps_route[current_point_count], gps_route[current_point_count + 1]));
 	return distance * director;
@@ -113,13 +154,13 @@ double GPSProcesser::startProcess2(GaussGPSData current) {
 	for (int i = current_point_count; i < sum_gps_point; i++) {
 		if (isInArea(current, gps_route[i], IN_DISTANCE)) {//判断是否到了下一个GPSRoute上的点，方法一：通过是否靠近下个点IN_DISTANCE距离。
 			if (i >= sum_gps_point - 1) {
-				std::cout << "车辆已在道路终点\n";
+                qDebug()<< QStringLiteral("车辆已在道路终点");
 				return -1;
 			}
 			current_point_count = i;
 			current_route_gps = gps_route[i];
 			next_route_gps = gps_route[i + 1];
-			std::cout << "通过方法一(距离)，车辆经过第" << i << "个路径的GPS高斯点\n";
+            qDebug()<< QStringLiteral("通过方法一(距离)，车辆经过第") << i << QStringLiteral("个路径的GPS高斯点");
 			flag = 1;
 			break;
 		}
@@ -133,11 +174,11 @@ double GPSProcesser::startProcess2(GaussGPSData current) {
 				next_route_gps = gps_route[current_point_count + 1];
 			}
 			else {
-				std::cout << "未经过任意高斯点，车辆未靠近任意一高斯点" << IN_DISTANCE << "米，上一个靠近的高斯点为第" << current_point_count << "个\n";
+                 qDebug()<< QStringLiteral("未经过任意高斯点，车辆未靠近任意一高斯点") << IN_DISTANCE << QStringLiteral("米，上一个靠近的高斯点为第" )<< current_point_count << QStringLiteral("个");
 			}
 		}
 		else {
-			std::cout << "正在向终点前进，无法通过方法二(点同侧)判断是否到终点。\n";
+             qDebug()<< QStringLiteral("正在向终点前进，无法通过方法二(点同侧)判断是否到终点。");
 		}
 	}
 	double distance = calPointFromLineDistance(current, Line(gps_route[current_point_count], gps_route[current_point_count + 1]));

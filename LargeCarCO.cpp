@@ -1,4 +1,4 @@
-#include "LargeCarCO.h"
+﻿#include "LargeCarCO.h"
 
 LargeCarCO::LargeCarCO() {}
 LargeCarCO::~LargeCarCO(){}
@@ -43,7 +43,7 @@ LargeCarCO& LargeCarCO::setGear(quint8 gear) {//24~31，第3个字节
     if (gear == LARGECARCO_GEAR_ZERO || gear == LARGECARCO_GEAR_FORWARD || gear == LARGECARCO_GEAR_BACKWARD) {
         this->gear = gear;
     }else{
-        qDebug("geal=%d,setting error（挡位设置异常",gear);
+        qDebug("geal=%d,setting error",gear);
     }
     return *this;
 }
@@ -54,7 +54,7 @@ LargeCarCO& LargeCarCO::setGear(quint8 gear) {//24~31，第3个字节
      if (signal==LARGECARCO_LIGHT_ALL_OFF||signal==LARGECARCO_LIGHT_LEFT_ON||signal==LARGECARCO_LIGHT_RIGHT_ON) {
          this->signal = signal;
      }else{
-         qDebug("signal=%d,setting error（转向灯设置异常",signal);
+         qDebug("signal=%d,setting error",signal);
      }
      return *this;
  }
@@ -65,7 +65,7 @@ LargeCarCO& LargeCarCO::setHorn(quint8 horn) {//40-47,第5个字节
     if (horn == LARGECARCO_HORN_OFF || horn == LARGECARCO_HORN_ON) {
         this->horn = horn;
     }else{
-        qDebug("horn=%d,setting error（鸣笛设置异常",horn);
+        qDebug("horn=%d,setting error",horn);
     }
     return *this;
 }
@@ -74,7 +74,7 @@ LargeCarCO& LargeCarCO::setHorn(quint8 horn) {//40-47,第5个字节
 void LargeCarCO::emergencyBraking() {
     init();
     setBrake(LARGECARCO_MAX_BRAKE);
-    qDebug()<<"紧急刹车";
+    qDebug()<<QStringLiteral("紧急刹车");
 }
 
 void LargeCarCO::init() {
@@ -106,8 +106,8 @@ quint8* LargeCarCO::getCharOrder() {
 void LargeCarCO::printInfo(){
     qDebug("Large Car Control Order: speed:%d,turnRange:%d,gear:%d%s,lightSignal:%d%s,hore:%d%s",
            speed,turnRange,
-           gear,gear==0?("空挡"):gear==1?("前进挡"):("后退档"),
-           signal,signal==0?("所有灯光关闭"):signal==1?("右转向灯亮"):("左转向灯亮"),
-           horn,horn==0?("静音"):("鸣笛")
+           gear,gear==0?QStringLiteral("空挡"):gear==1?QStringLiteral("前进挡"):QStringLiteral("后退档"),
+           signal,signal==0?QStringLiteral("所有灯光关闭"):signal==1?QStringLiteral("右转向灯亮"):QStringLiteral("左转向灯亮"),
+           horn,horn==0?QStringLiteral("静音"):QStringLiteral("鸣笛")
            );
 }

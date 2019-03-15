@@ -27,17 +27,17 @@ void GpsBufferConsumeRunThread::setSendStartGpsInfoSignal(){
 void GpsBufferConsumeRunThread::run(){
     m_isCanRun=true;
     m_isSendStartGpsInfo=false;
-    int i=0;
+
+    //int i=0;
     while(true){ 
         GpsInfo gpsInfo;
         if(gpsRingBuffer->pop(gpsInfo)){
-            qDebug()<<(++i);
-            gpsInfo.printInfo();
+            //qDebug()<<(++i);
+            //gpsInfo.printInfo();
             emit sendGpsInfo(QPointF(gpsInfo.longitude,gpsInfo.latitude));//绘图
             if(m_startInit){//双重判断，由于加锁费时间
                 QMutexLocker locker2(&m_Initlock);
                 if(m_startInit){
-                    qDebug()<<"start run and process";
                     emit sendRunGpsInfo(gpsInfo);//同时将数据发往ProcessRunDialog
                 }
                 locker2.unlock();
@@ -45,7 +45,6 @@ void GpsBufferConsumeRunThread::run(){
             if(m_isSendStartGpsInfo){//发送起始坐标给ProcessRunDialog
                 QMutexLocker locker3(&m_sendStartGpsInfoLock);
                 if(m_isSendStartGpsInfo){
-                    qDebug()<<"send start gps info******";
                     emit sendStartGpsInfo(gpsInfo);
                     m_isSendStartGpsInfo=false;
                 }

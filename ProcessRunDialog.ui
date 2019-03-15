@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>791</width>
-    <height>472</height>
+    <width>851</width>
+    <height>505</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -39,8 +39,8 @@
   <widget class="QPushButton" name="start">
    <property name="geometry">
     <rect>
-     <x>90</x>
-     <y>380</y>
+     <x>40</x>
+     <y>370</y>
      <width>93</width>
      <height>28</height>
     </rect>
@@ -52,20 +52,20 @@
   <widget class="QPushButton" name="pause">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>380</y>
+     <x>150</x>
+     <y>370</y>
      <width>93</width>
      <height>28</height>
     </rect>
    </property>
    <property name="text">
-    <string>停止</string>
+    <string>暂停</string>
    </property>
   </widget>
   <widget class="QPushButton" name="clear">
    <property name="geometry">
     <rect>
-     <x>430</x>
+     <x>470</x>
      <y>380</y>
      <width>93</width>
      <height>28</height>
@@ -78,8 +78,8 @@
   <widget class="QPushButton" name="continue_2">
    <property name="geometry">
     <rect>
-     <x>300</x>
-     <y>380</y>
+     <x>250</x>
+     <y>370</y>
      <width>93</width>
      <height>28</height>
     </rect>
@@ -91,7 +91,7 @@
   <widget class="QPushButton" name="saveAs">
    <property name="geometry">
     <rect>
-     <x>540</x>
+     <x>580</x>
      <y>380</y>
      <width>93</width>
      <height>28</height>
@@ -105,7 +105,7 @@
    <property name="geometry">
     <rect>
      <x>560</x>
-     <y>120</y>
+     <y>100</y>
      <width>71</width>
      <height>16</height>
     </rect>
@@ -118,7 +118,7 @@
    <property name="geometry">
     <rect>
      <x>560</x>
-     <y>140</y>
+     <y>120</y>
      <width>121</width>
      <height>21</height>
     </rect>
@@ -144,7 +144,7 @@
    <property name="geometry">
     <rect>
      <x>560</x>
-     <y>160</y>
+     <y>140</y>
      <width>121</width>
      <height>21</height>
     </rect>
@@ -170,7 +170,7 @@
    <property name="geometry">
     <rect>
      <x>560</x>
-     <y>180</y>
+     <y>160</y>
      <width>121</width>
      <height>21</height>
     </rect>
@@ -195,10 +195,10 @@
   <widget class="QWidget" name="horizontalLayoutWidget_4">
    <property name="geometry">
     <rect>
-     <x>550</x>
-     <y>30</y>
+     <x>560</x>
+     <y>10</y>
      <width>161</width>
-     <height>31</height>
+     <height>21</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_7">
@@ -221,10 +221,10 @@
   <widget class="QWidget" name="horizontalLayoutWidget_5">
    <property name="geometry">
     <rect>
-     <x>550</x>
-     <y>70</y>
+     <x>560</x>
+     <y>30</y>
      <width>161</width>
-     <height>31</height>
+     <height>21</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_8">
@@ -247,8 +247,8 @@
   <widget class="QPushButton" name="startPointChoiceBT">
    <property name="geometry">
     <rect>
-     <x>570</x>
-     <y>210</y>
+     <x>690</x>
+     <y>140</y>
      <width>75</width>
      <height>23</height>
     </rect>
@@ -260,8 +260,8 @@
   <widget class="QPushButton" name="confirmNextPointBT">
    <property name="geometry">
     <rect>
-     <x>640</x>
-     <y>320</y>
+     <x>710</x>
+     <y>200</y>
      <width>75</width>
      <height>23</height>
     </rect>
@@ -270,24 +270,11 @@
     <string>确定</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="autoSetNextPointBT">
-   <property name="geometry">
-    <rect>
-     <x>550</x>
-     <y>320</y>
-     <width>75</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>自动判断</string>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_15">
    <property name="geometry">
     <rect>
-     <x>550</x>
-     <y>260</y>
+     <x>520</x>
+     <y>200</y>
      <width>71</width>
      <height>16</height>
     </rect>
@@ -299,11 +286,259 @@
   <widget class="QLineEdit" name="lineEdit">
    <property name="geometry">
     <rect>
-     <x>560</x>
-     <y>290</y>
+     <x>590</x>
+     <y>200</y>
      <width>113</width>
      <height>20</height>
     </rect>
+   </property>
+  </widget>
+  <widget class="QWidget" name="horizontalLayoutWidget_6">
+   <property name="geometry">
+    <rect>
+     <x>550</x>
+     <y>260</y>
+     <width>211</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_4">
+    <item>
+     <widget class="QLabel" name="label_9">
+      <property name="text">
+       <string>P</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_10">
+      <property name="text">
+       <string>I</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_11">
+      <property name="text">
+       <string>D</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QPushButton" name="ConfirmPID">
+   <property name="geometry">
+    <rect>
+     <x>680</x>
+     <y>330</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>确定</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_8">
+   <property name="geometry">
+    <rect>
+     <x>520</x>
+     <y>240</y>
+     <width>71</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PID参数设置</string>
+   </property>
+  </widget>
+  <widget class="QWidget" name="horizontalLayoutWidget_7">
+   <property name="geometry">
+    <rect>
+     <x>550</x>
+     <y>290</y>
+     <width>211</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_5">
+    <item>
+     <widget class="QLineEdit" name="PLineEdit">
+      <property name="text">
+       <string>0</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="ILineEdit">
+      <property name="text">
+       <string>0</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="DLineEdit">
+      <property name="text">
+       <string>0</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="horizontalLayoutWidget_8">
+   <property name="geometry">
+    <rect>
+     <x>560</x>
+     <y>50</y>
+     <width>161</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_6">
+    <item>
+     <widget class="QLabel" name="rangeCTE">
+      <property name="text">
+       <string>0</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_12">
+      <property name="text">
+       <string>方向偏差</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="horizontalLayoutWidget_9">
+   <property name="geometry">
+    <rect>
+     <x>560</x>
+     <y>70</y>
+     <width>161</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_9">
+    <item>
+     <widget class="QLabel" name="speedCTE">
+      <property name="text">
+       <string>0</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_14">
+      <property name="text">
+       <string>速度偏差</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QPushButton" name="loadPID">
+   <property name="geometry">
+    <rect>
+     <x>570</x>
+     <y>330</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>加载</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_13">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>400</y>
+     <width>91</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>开始接收数据</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_16">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>400</y>
+     <width>71</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>暂停接收数据</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_17">
+   <property name="geometry">
+    <rect>
+     <x>250</x>
+     <y>400</y>
+     <width>81</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>继续接收数据</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="startSendingCO">
+   <property name="geometry">
+    <rect>
+     <x>110</x>
+     <y>440</y>
+     <width>91</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>发送控制指令</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="stopSendingCO">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>440</y>
+     <width>101</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>停止发送指令</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="receiveStatus">
+   <property name="geometry">
+    <rect>
+     <x>370</x>
+     <y>372</y>
+     <width>81</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="sendCOStatus">
+   <property name="geometry">
+    <rect>
+     <x>370</x>
+     <y>440</y>
+     <width>101</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
    </property>
   </widget>
  </widget>

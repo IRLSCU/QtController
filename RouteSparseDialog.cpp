@@ -1,4 +1,4 @@
-#include "RouteSparseDialog.h"
+﻿#include "RouteSparseDialog.h"
 #include "ui_RouteSparseDialog.h"
 #include "CoTrans.h"
 #include<QMessageBox>
@@ -126,7 +126,7 @@ void RouteSparseDialog::sparseRouteHelper(double minD,double maxD){
             lonlat_first = lonlat_second;
             point_first = point_second;
             if (distance > maxD) {
-                 qDebug() << "第" << count << "个点与第" << count - 1 << "个点距离为" << distance << "米\n";
+                 qDebug() << QStringLiteral("第") << count << QStringLiteral("个点与第") << count - 1 << QStringLiteral("个点距离为") << distance << QStringLiteral("米");
             }
         }
     }
@@ -138,9 +138,10 @@ void RouteSparseDialog::setSparseStatus(bool status,int num){
     sparseStatus=status;
     QString content;
     if(sparseStatus){
-        content.sprintf("已完成,稀疏后有%d个点",num);
+        content=QStringLiteral("已完成,稀疏后有点（个）：");
+        content+=num;
     }else{
-        content="未完成";
+        content=QStringLiteral("未完成");
     }
     this->ui->sparseStatusLabel->setText(content);
 }
@@ -148,9 +149,10 @@ void RouteSparseDialog::setLoadStatus(bool status,int num){
     loadStatus=status;
     QString content;
     if(loadStatus){
-        content.sprintf("已加载,共%d个点",num);
+        content=QStringLiteral("已加载,共%d个点");
+        content+=num;
     }else{
-        content="未加载";
+        content=QStringLiteral("未加载");
     }
     this->ui->loadStatusLabel->setText(content);
 }

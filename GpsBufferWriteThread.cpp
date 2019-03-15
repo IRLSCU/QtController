@@ -28,7 +28,7 @@ void GpsBufferWriteThread::run(){//将char缓冲区中的数据拼接成gpsInfo�
                     NewParser->getGpsGlobalStruct(globalGps);
                     gpsRingBuffer->push(GpsInfo(globalGps.fLongitude,globalGps.fLatitude,globalGps.quality,globalGps.ulTime,globalGps.ulDate,globalGps.fAltitude,globalGps.fSpeed,globalGps.fCourse));
                 }
-                qDebug()<<stringBuffer;
+                //qDebug()<<stringBuffer;
                 stringBuffer.clear();
             }
         }else{

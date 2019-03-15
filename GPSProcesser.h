@@ -45,8 +45,9 @@ public:
 	static void initCCoordinate(double gpsheight, double gpslongitude, double gpslatitude);
 	bool initRoute(std::string path);//初始化gps_route
     bool initRoute(QList<QPointF>);
-	int initStartPoint(GaussGPSData current);//通过当前位置设定起始点，返回在固定路径中最近的位置
-	double startProcess(GaussGPSData current);//通过当前点返回其离直线的距离，用来纠偏
+    int initStartPoint(GaussGPSData current);//通过当前位置设定起始点，返回在固定路径中最近的位置,若无则返回0;
+    int setNextTargetPoint(int i);
+    double startProcess(GaussGPSData current,int* target,int* status);//通过当前点返回其离直线的距离，用来纠偏
 	double startProcess2(GaussGPSData current);//通过当前点返回其离直线的距离，用来纠偏
 	static double getPointDistance(const GaussGPSData, const GaussGPSData);
 	static double getLineDistance(const Line);
