@@ -43,12 +43,25 @@ void RouteSparseDialog::openFile(){
         init();
         QTextStream in(&file);
         while (!in.atEnd()) {
-            qreal x=0;
-            qreal y=0;
-            in>>x>>y;
-            if(x==0&&y==0)
+//            qreal x=0;
+//            qreal y=0;
+//            in>>x>>y;
+//            if(x==0&&y==0)
+//                continue;
+//            routeGps->append(GpsInfo(x,y));
+            qreal lon=0;
+            qreal lat=0;
+            int quality=0;
+            qreal time=0;
+            long date=0;
+            qreal altitude=0;
+            qreal speed=0;
+            qreal course=0;
+            //分别为经度、纬度、质量、时分秒、年月日、高度、速度、航向
+            in>>lon>>lat>>quality>>time>>date>>altitude>>speed>>course;
+            if(lon==0&&lat==0)
                 continue;
-            routeGps->append(GpsInfo(x,y));
+            routeGps->append(GpsInfo(lon,lat,quality,time,date,altitude,speed,course));
         }
         file.close();
         this->setLoadStatus(!(this->loadStatus),routeGps->size());
@@ -56,6 +69,19 @@ void RouteSparseDialog::openFile(){
         QMessageBox::warning(this, tr("Path"),
                              tr("You did not select any file."));
     }
+//    qreal lon=0;
+//    qreal lat=0;
+//    qreal quality=0;
+//    qreal time=0;
+//    long date=0;
+//    qreal altitude=0;
+//    qreal speed=0;
+//    qreal course=0;
+//    //分别为经度、纬度、质量、时分秒、年月日、高度、速度、航向
+//    in>>lon>>lat>>quality>>time>>date>>altitude>>speed>>course;
+//    if(lon==0&&lat==0)
+//        continue;
+//    routeGps->append(GpsInfo(lon,lat,quality,time,date,altitude,speed,course));
 }
 void RouteSparseDialog::saveAsFile(){
     QString path = QFileDialog::getSaveFileName(this,
@@ -73,7 +99,9 @@ void RouteSparseDialog::saveAsFile(){
         QList<GpsInfo>::iterator gps;
         QString lon,lat;
         for(gps=routeGps->begin();gps<routeGps->end();gps++){
-            out<<lon.setNum(gps->longitude,'f',10)<<" "<<lat.setNum(gps->latitude,'f',10)<<"\n";
+            out<<lon.setNum(gps->longitude,'f',10)<<" "<<lat.setNum(gps->latitude,'f',10)<<" "<<QString::number(gps->quality)
+              <<" "<<QString::number(gps->time,'f')<<" "<<QString::number(gps->date)<<" "<<QString::number(gps->altitude,'f',2)
+              <<" "<<QString::number(gps->speed,'f',2)<<" "<<QString::number(gps->course,'f',2)<<"\n";
         }
         file.close();
     }
@@ -139,7 +167,7 @@ void RouteSparseDialog::setSparseStatus(bool status,int num){
     QString content;
     if(sparseStatus){
         content=QStringLiteral("已完成,稀疏后有点（个）：");
-        content+=num;
+        content+=QString::number(num);
     }else{
         content=QStringLiteral("未完成");
     }
@@ -149,8 +177,8 @@ void RouteSparseDialog::setLoadStatus(bool status,int num){
     loadStatus=status;
     QString content;
     if(loadStatus){
-        content=QStringLiteral("已加载,共%d个点");
-        content+=num;
+        content=QStringLiteral("已加载,GPS点共有:");
+        content+=QString::number(num);
     }else{
         content=QStringLiteral("未加载");
     }

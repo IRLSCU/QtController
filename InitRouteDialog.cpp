@@ -17,7 +17,11 @@ InitRouteDialog::InitRouteDialog(GpsRingBuffer* gpsRingBuffer, QWidget *parent) 
     connect(this,&InitRouteDialog::sendInitSignal,gpsBufferReadInitRouteThread,&GpsBufferReadInitRouteThread::initSignal);
     qRegisterMetaType<GpsInfo>("GpsInfo");
     //将数据显示与获取Gps信息绑定
-    connect(gpsBufferReadInitRouteThread,&GpsBufferReadInitRouteThread::sendInitGpsInfo,this,&InitRouteDialog::updateBroswerText);
+    connect(gpsBufferReadInitRouteThread,&GpsBufferReadInitRouteThread::sendInitGpsInfo,[&](GpsInfo gpsInfo){
+        updateBroswerText(gpsInfo);
+        this->ui->speed->setText(QString::number(gpsInfo.speed,'f',2));
+        this->ui->course->setText(QString::number(gpsInfo.course,'f',2));
+    });
 
     //控制读线程开始与暂停
     connect(ui->start,&QPushButton::clicked,this,&InitRouteDialog::startInit);

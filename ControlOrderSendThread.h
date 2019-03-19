@@ -30,9 +30,9 @@ public:
     void stopImmediately();
     void enableSignal(bool signal);
     void run();
-    void setRange(double range);
-    void setSpeed(double speed);
-
+    void setRange(int range);
+    void setSpeed(int speed);
+    void setGear(int gear);
 signals:
 };
 

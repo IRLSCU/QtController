@@ -19,6 +19,8 @@ ProcessRunDialog::ProcessRunDialog(GpsRingBuffer* gpsRingBuffer,QWidget *parent)
     //若点击界面的重新开始或者继续按钮，消费者线程开始传递信号
     connect(gpsBufferConsumeRunThread,&GpsBufferConsumeRunThread::sendRunGpsInfo,[&](GpsInfo gpsInfo){
         processGPS(gpsInfo);//处理传过来的GPS,对车辆当前位置进行处理
+        this->ui->speed->setText(QString::number(gpsInfo.speed,'f',2));
+        this->ui->course->setText(QString::number(gpsInfo.course,'f',2));
         updateBroswerText(gpsInfo);//更新显示的text broswer
     });//同时将数据发往ProcessRunDialog
     connect(gpsBufferConsumeRunThread,&GpsBufferConsumeRunThread::sendStartGpsInfo,this,&ProcessRunDialog::initStartPointByGpsInfo);//接收从消费者线程传出的当前车辆坐标，直接初始化。
@@ -89,7 +91,7 @@ ProcessRunDialog::ProcessRunDialog(GpsRingBuffer* gpsRingBuffer,QWidget *parent)
     connect(ui->continue_2,&QPushButton::clicked,[&](){
         controlOrderSendThread->enableSignal(true);
     });
-    //先把之前打开的线程关闭，再打开
+    //发送控制指令按钮设置，先把之前打开的线程关闭，再打开
     connect(ui->startSendingCO,&QPushButton::clicked,[&](){
        this->ui->sendCOStatus->setText(QStringLiteral("与车辆连接"));
        controlOrderSendThread->stopImmediately();
@@ -99,6 +101,37 @@ ProcessRunDialog::ProcessRunDialog(GpsRingBuffer* gpsRingBuffer,QWidget *parent)
     connect(ui->stopSendingCO,&QPushButton::clicked,[&](){
        this->ui->sendCOStatus->setText(QStringLiteral("断开与车辆连接"));
        controlOrderSendThread->stopImmediately();
+    });
+    //设置速度与挡位
+    this->ui->orderSpeed->setText(QString::number(CONTROLORDER_MAX_SPEED/8));
+    this->ui->orderGear->setText(QString::number(CONTROLORDER_GEAR_FORWARD));
+    connect(ui->orderInitSettingBT,&QPushButton::clicked,[&](){
+        bool speedOk;
+        bool gearOk;
+        int speed=ui->orderSpeed->text().toInt(&speedOk);
+        int gear=ui->orderGear->text().toInt(&gearOk);
+        if(speedOk){
+            controlOrderSendThread->setSpeed(speed);
+        }else{
+            controlOrderSendThread->setSpeed(CONTROLORDER_ZERO_SPEED);
+            QMessageBox::warning(this, tr("speed parameter error"),
+                                       tr("please input integer"));
+        }
+        if(gearOk){
+            if(gear>0){
+                controlOrderSendThread->setGear(CONTROLORDER_GEAR_FORWARD);
+            }
+            else if(gear==0){
+                controlOrderSendThread->setGear(CONTROLORDER_GEAR_ZERO);
+            }
+            else{
+                controlOrderSendThread->setGear(CONTROLORDER_GEAR_BACKWARD);
+            }
+        }else{
+            controlOrderSendThread->setGear(CONTROLORDER_GEAR_ZERO);
+            QMessageBox::warning(this, tr("gear parameter error"),
+                                       tr("please input integer"));
+        }
     });
 }
 

@@ -23,26 +23,26 @@ NmeaPres::~NmeaPres()
 }
 
 bool NmeaPres::NmeaInitParsers()
-{//change 由于目前仅需要GGA数据，所以注释其他
-	/*if(!addNmea0183Parser(rmc_callback, "$GPRMC", &mGlobalGps)){
+{//change 由于目前仅需要GGA、RMC数据，所以注释其他
+    if(!addNmea0183Parser(rmc_callback, "$GPRMC", &mGlobalGps)){
 		std::cerr << "Cannot add a new NMEAP parser" << std::endl;
 		return false;
-	}*/
+    }
 	
 	if(!addNmea0183Parser(gga_callback, "$GPGGA", &mGlobalGps)){
 		std::cerr << "Cannot add a new NMEAP parser" << std::endl;
 		return false;
 	}
 	
-	/*if(!addNmea0183Parser(gsa_callback, "$GPGSA", &mGlobalGps)){
-		std::cerr << "Cannot add a new NMEAP parser" << std::endl;
-		return false;
-	}
+//	if(!addNmea0183Parser(gsa_callback, "$GPGSA", &mGlobalGps)){
+//		std::cerr << "Cannot add a new NMEAP parser" << std::endl;
+//		return false;
+//	}
 	
-	if(!addNmea0183Parser(gsv_callback, "$GPGSV", &mGlobalGps)){
-		std::cerr << "Cannot add a new NMEAP parser" << std::endl;
-		return false;
-	}*/
+//	if(!addNmea0183Parser(gsv_callback, "$GPGSV", &mGlobalGps)){
+//		std::cerr << "Cannot add a new NMEAP parser" << std::endl;
+//		return false;
+//	}
 	return true;
 }
 

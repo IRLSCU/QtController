@@ -132,19 +132,18 @@ double GPSProcesser::startProcess(GaussGPSData current,int* target,int* status) 
 		current_point_count += 1;
         if (current_point_count >= sum_gps_point-1) {
             *status=1;
-            current_point_count=current_point_count%sum_gps_point;
+            current_point_count=0;
             qDebug()<< QStringLiteral("车辆已在道路终点,重置当前点为起始点。");
         }else{
             *status=0;
         }
-        *target=current_point_count+1;
-		current_route_gps = gps_route[current_point_count];
-		next_route_gps = gps_route[current_point_count + 1];
+        current_route_gps = gps_route[current_point_count];
+        next_route_gps = gps_route[current_point_count + 1];
         qDebug()<< QStringLiteral("车辆已经过第")<<current_point_count<<QStringLiteral("个高斯点，车辆目标为第") << current_point_count+1 << QStringLiteral("个路径的GPS高斯点");
 	}
     *target = current_point_count+1;
-	double distance = calPointFromLineDistance(current, Line(gps_route[current_point_count], gps_route[current_point_count + 1]));
-	double director = calPointFromLineDirector(current, Line(gps_route[current_point_count], gps_route[current_point_count + 1]));
+    double distance = calPointFromLineDistance(current, Line(current_route_gps, next_route_gps));
+    double director = calPointFromLineDirector(current, Line(current_route_gps, next_route_gps));
 	return distance * director;
 }
 double GPSProcesser::startProcess2(GaussGPSData current) {

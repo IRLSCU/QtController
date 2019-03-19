@@ -119,7 +119,9 @@ void MainWindow::openFile()
         while (!in.atEnd()) {
             qreal x=0;
             qreal y=0;
-            in>>x>>y;
+            qreal o=0;
+            //分别为经度、纬度、质量、时分秒、年月日、高度、速度、航向，后面几个绘图用不着。
+            in>>x>>y>>o>>o>>o>>o>>o>>o;
             if(x==0&&y==0)
                 continue;
             QPointF point(x,y);

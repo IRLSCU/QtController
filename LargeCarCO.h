@@ -1,4 +1,4 @@
-#ifndef LARGECARCO_H
+﻿#ifndef LARGECARCO_H
 #define LARGECARCO_H
 
 #define LARGECARCO_MAX_SPEED 0
@@ -15,6 +15,7 @@
 #define LARGECARCO_LIGHT_LEFT_ON 2
 #define LARGECARCO_HORN_OFF 0
 #define LARGECARCO_HORN_ON 1
+#define LARGECARCO_LENGTH 8
 #include<QDebug>
 class LargeCarCO {
 public:
