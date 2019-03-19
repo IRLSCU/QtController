@@ -1,4 +1,4 @@
-#ifndef __NMEAPRES_H__
+﻿#ifndef __NMEAPRES_H__
 #define __NMEAPRES_H__
 
 #include "nmeaparser.h"
@@ -9,13 +9,13 @@
 #define LOG_NDEBUG 1
 
 typedef struct {
-	double fLatitude;
-	double fLongitude;
-	double fAltitude;
-	unsigned long ulTime;
-	unsigned long ulDate;
-	double fSpeed;
-	double fCourse;
+    double fLatitude;//from gga,rmc
+    double fLongitude;//from gga,rmc
+    double fAltitude;//from gga
+    unsigned long ulTime;//from gga
+    unsigned long ulDate;//from rmc
+    double fSpeed;//from rmc
+    double fCourse;//from rmc
 	int CeGpsFixMode;
 	double fGpsSNR;
 	int quality;

@@ -8,7 +8,7 @@ struct GpsInfo
     double longitude;//经度
     double latitude;//纬度
     int quality;
-    unsigned long time;//时分秒
+    double time;//时分秒
     unsigned long date;//日月年
     double altitude;//高度
     double speed;//速度

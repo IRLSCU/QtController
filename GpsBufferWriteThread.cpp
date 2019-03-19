@@ -1,4 +1,4 @@
-#include "GpsBufferWriteThread.h"
+﻿#include "GpsBufferWriteThread.h"
 
 #include <QDebug>
 #include <string.h>

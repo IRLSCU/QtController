@@ -35,19 +35,26 @@ PaintWidget::PaintWidget(QWidget *parent)
     mousePosInfoLabel->setParent(this);
     scaleInfoLabel=new QLabel("");
     scaleInfoLabel->setParent(this);
-    QPushButton* addPointButton=new QPushButton("add point");
-    connect(addPointButton,&QPushButton::clicked,[this](){
-        addQPoint(QPointF(qrand()%width()-width()/2,qrand()%height()-height()/2));
-    });
+//    QPushButton* addPointButton=new QPushButton("add point");
+//    connect(addPointButton,&QPushButton::clicked,[this](){
+//        addQPoint(QPointF(qrand()%width()-width()/2,qrand()%height()-height()/2));
+//    });
     QPushButton* clearPointButton=new QPushButton("clear all");
     connect(clearPointButton,&QPushButton::clicked,this,&PaintWidget::clear);
+    QPushButton* clearPassWayButton=new QPushButton("clear pass way");
+//    connect(clearPassWayButton,&QPushButton::clicked,this,[&](){
+//        qDebug()<<"what happened?";
+//        passWayPointList.clear();
+//        update();
+//    });
     QHBoxLayout *layout = new QHBoxLayout;
     QVBoxLayout *layout2 = new QVBoxLayout;
     layout2->addStretch();
     layout->addStretch();
     layout->addLayout(layout2);
+//    layout2->addWidget(clearPassWayButton);
     layout2->addWidget(clearPointButton);
-    layout2->addWidget(addPointButton);
+    //layout2->addWidget(addPointButton);
     layout2->addWidget(scaleInfoLabel);
     layout2->addWidget(mousePosInfoLabel);
     this->setLayout(layout);
