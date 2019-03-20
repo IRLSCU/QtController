@@ -58,12 +58,12 @@ public:
     /*
         加速范围（-32768,32767）仅代表程度，不表示具体加速度。-32768表示最大刹车的加速度，32767最大加速
     */
-    ControlOrder& setSpeed(qint16);
+    ControlOrder& setSpeed(int);
     /*
         转向范围（-32768，32767）负代表左转，正代表右转。数值仅表示程度
     */
-    ControlOrder& setTurnRange(qint16);
-    ControlOrder& setLastTurnRange(qint16);
+    ControlOrder& setTurnRange(int);
+    ControlOrder& setLastTurnRange(int);
     /*
         三种挡位0空挡，1表示前进挡，2表示后退挡
     */

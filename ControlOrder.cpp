@@ -10,27 +10,27 @@ void ControlOrder::init(){
     this->horn=0;
 }
 
-ControlOrder& ControlOrder::setSpeed(qint16 speed){
-//    if(speed>CONTROLORDER_MAX_SPEED){
-//        speed=CONTROLORDER_MAX_SPEED;
-//    }else if(speed<CONTROLORDER_MIN_SPEED){
-//        speed=CONTROLORDER_MIN_SPEED;
-//    }
+ControlOrder& ControlOrder::setSpeed(int speed){
+    if(speed>CONTROLORDER_MAX_SPEED){
+        speed=CONTROLORDER_MAX_SPEED;
+    }else if(speed<CONTROLORDER_MIN_SPEED){
+        speed=CONTROLORDER_MIN_SPEED;
+    }
     this->speed=speed;
     return *this;
 }
 
-ControlOrder& ControlOrder::setTurnRange(qint16 turnRange){
-//    if(turnRange>CONTROLORDER_MAX_TURN_RANGE){
-//        turnRange=CONTROLORDER_MAX_TURN_RANGE;
-//    }else if(turnRange<CONTROLORDER_MIN_TURN_RANGE){
-//        turnRange=CONTROLORDER_MIN_TURN_RANGE;
-//    }
+ControlOrder& ControlOrder::setTurnRange(int turnRange){
+    if(turnRange>CONTROLORDER_MAX_TURN_RANGE){
+        turnRange=CONTROLORDER_MAX_TURN_RANGE;
+    }else if(turnRange<CONTROLORDER_MIN_TURN_RANGE){
+        turnRange=CONTROLORDER_MIN_TURN_RANGE;
+    }
     this->lastTurnRange=this->turnRange;
     this->turnRange=turnRange;
     return *this;
 }
-ControlOrder& ControlOrder::setLastTurnRange(qint16 lastTurnRange){
+ControlOrder& ControlOrder::setLastTurnRange(int lastTurnRange){
     this->lastTurnRange=lastTurnRange;
     return *this;
 }
