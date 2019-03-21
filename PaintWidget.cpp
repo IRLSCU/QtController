@@ -1,11 +1,11 @@
-#include"PaintWidget.h"
+﻿#include"PaintWidget.h"
 #include<QHBoxLayout>
 #include<QPushButton>
 #include<QVBoxLayout>
 #include<QPainter>
 #include<QPen>
 #include<QDebug>
-
+#include<QMessageBox>
 void PaintWidget::initScreenCenter(QPointF lonlat){
     coordinate.InitRadarPara(500,lonlat.x(),lonlat.y());
     QPointF temp=coordinate.LongLat2XY(lonlat.x(),lonlat.y());
@@ -35,19 +35,26 @@ PaintWidget::PaintWidget(QWidget *parent)
     mousePosInfoLabel->setParent(this);
     scaleInfoLabel=new QLabel("");
     scaleInfoLabel->setParent(this);
-    QPushButton* addPointButton=new QPushButton("add point");
-    connect(addPointButton,&QPushButton::clicked,[this](){
-        addQPoint(QPointF(qrand()%width()-width()/2,qrand()%height()-height()/2));
-    });
+//    QPushButton* addPointButton=new QPushButton("add point");
+//    connect(addPointButton,&QPushButton::clicked,[this](){
+//        addQPoint(QPointF(qrand()%width()-width()/2,qrand()%height()-height()/2));
+//    });
     QPushButton* clearPointButton=new QPushButton("clear all");
     connect(clearPointButton,&QPushButton::clicked,this,&PaintWidget::clear);
+    QPushButton* clearPassWayButton=new QPushButton("clear pass way");
+//    connect(clearPassWayButton,&QPushButton::clicked,this,[&](){
+//        qDebug()<<"what happened?";
+//        passWayPointList.clear();
+//        update();
+//    });
     QHBoxLayout *layout = new QHBoxLayout;
     QVBoxLayout *layout2 = new QVBoxLayout;
     layout2->addStretch();
     layout->addStretch();
     layout->addLayout(layout2);
+//    layout2->addWidget(clearPassWayButton);
     layout2->addWidget(clearPointButton);
-    layout2->addWidget(addPointButton);
+    //layout2->addWidget(addPointButton);
     layout2->addWidget(scaleInfoLabel);
     layout2->addWidget(mousePosInfoLabel);
     this->setLayout(layout);
@@ -55,7 +62,20 @@ PaintWidget::PaintWidget(QWidget *parent)
 PaintWidget::~PaintWidget(){
 
 }
-
+void PaintWidget::paintStartPoint(QPointF gpsInfo){
+    startPointGPS=gpsInfo;
+    update();
+}
+void PaintWidget::paintTargetPoint(int target){
+    if(target==-1){
+        qDebug()<<QStringLiteral("未找到下一个目标位置");
+        QMessageBox::warning(this, tr("find next target point"),
+                             tr("find next target point filed,please retry"));
+        return;
+    }
+    nextTargetPointGPS=routePointList.at(target%routePointList.size());
+    update();
+}
 void PaintWidget::paintEvent(QPaintEvent*)
 {
     if(routePointList.size()!=0){
@@ -72,12 +92,12 @@ void PaintWidget::paintEvent(QPaintEvent*)
     //wh/2+horizontalOffset,ww/2+verticalOffset
     coordinate.m_fixedScale=currentStepScaleFactor;
     coordinate.m_scale=scaleFactor;
-    qDebug()<<"屏幕像素"<<ww<<wh<<"重绘偏移"<<horizontalOffset<<verticalOffset
-           <<"放大倍数"<<currentStepScaleFactor * scaleFactor;
+//    qDebug()<<"屏幕像素"<<ww<<wh<<"重绘偏移"<<horizontalOffset<<verticalOffset
+//           <<"放大倍数"<<currentStepScaleFactor * scaleFactor;
 
     QPen mypen;
     QVector<qreal> dashes;
-    dashes<<1<<2;
+    dashes<<1<<3;
     mypen.setDashPattern(dashes);
     mypen.setCapStyle(Qt::RoundCap);
 //    QPointF tmep1=coordinate.LongLat2Screen(LongLat(103.9588080550,30.7852871117));
@@ -94,7 +114,7 @@ void PaintWidget::paintEvent(QPaintEvent*)
             painter.setPen(mypen);
             painter.drawLine(last,temp);
         }
-        mypen.setWidth(0);                     // 1 表示点的大小
+        mypen.setWidth(1);                     // 1 表示点的大小
         mypen.setColor(Qt::green);
         painter.setPen(mypen);
         painter.drawPoint((qint64)temp.x(),(qint64)temp.y());
@@ -117,6 +137,18 @@ void PaintWidget::paintEvent(QPaintEvent*)
         last=temp;
     }
 
+    //绘制起始点。
+    QPointF startScreenPoint=coordinate.LongLat2Screen(LongLat(startPointGPS.x(),startPointGPS.y()));
+    mypen.setWidth(2);
+    mypen.setColor(Qt::black);
+    painter.setPen(mypen);
+    painter.drawPoint(startScreenPoint);
+
+    QPointF nextTargetScreenPoint=coordinate.LongLat2Screen(LongLat(nextTargetPointGPS.x(),nextTargetPointGPS.y()));
+    mypen.setWidth(2);
+    mypen.setColor(Qt::red);
+    painter.setPen(mypen);
+    painter.drawPoint(nextTargetScreenPoint);
 }
 //双击初始化
 void PaintWidget::mouseDoubleClickEvent(QMouseEvent *)
@@ -139,7 +171,7 @@ void PaintWidget::resizeEvent(QResizeEvent*e)
 void PaintWidget::keyPressEvent(QKeyEvent *event)
 {
     switch (event->key()) {
-    qDebug() << event->key();
+    //qDebug() << event->key();
     case Qt::Key_Up:
         translate(QPointF(0, -5));  // 上移
         break;
@@ -178,17 +210,17 @@ void PaintWidget::mouseMoveEvent(QMouseEvent *event)
 
 void PaintWidget::mousePressEvent(QMouseEvent *event)
 {
-    qDebug() << "PaintWidget::mousePressEvent";
+    //qDebug() << "PaintWidget::mousePressEvent";
     if (event->button() == m_translateButton) {
         m_bMouseTranslate = true;
         m_lastMousePos = event->pos();
         setCursor(Qt::OpenHandCursor);
     }
-    qDebug("screen偏移:(%d,%d)  ",event->pos().x(),event->pos().y());
+    //qDebug("screen偏移:(%d,%d)  ",event->pos().x(),event->pos().y());
     qreal x=event->pos().x()-width()/2-horizontalOffset;
     qreal y=event->pos().y()-height()/2-verticalOffset;
     QPointF temp=coordinate.Screen2XY(x,y);
-    qDebug("xy偏移:(%.10f,%.10f)  ",temp.x(),temp.y());
+    //qDebug("xy偏移:(%.10f,%.10f)  ",temp.x(),temp.y());
     LongLat mouseGPS=coordinate.XY2LongLat(temp);
 
     QString lat=tr("lat:")+QString::number(mouseGPS.Lat,10,10);
@@ -212,7 +244,7 @@ void PaintWidget::mouseReleaseEvent(QMouseEvent *event)
 // 放大/缩小
 void PaintWidget::wheelEvent(QWheelEvent *event)
 {
-    qDebug() << "PaintWidget::wheelEvent";
+    //qDebug() << "PaintWidget::wheelEvent";
     QPoint scrallAmount = event->angleDelta();
     if(scrallAmount.y() > 0){
         zoomIn();

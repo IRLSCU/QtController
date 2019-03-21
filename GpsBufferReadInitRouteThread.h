@@ -24,7 +24,7 @@ public:
     GpsBufferReadInitRouteThread(GpsRingBuffer*,QObject *parent);
     ~GpsBufferReadInitRouteThread();
     void stopImmediately();
-    void startInit(bool signal);
+    void initSignal(bool signal);
     void run();
 
 signals:

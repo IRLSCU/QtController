@@ -1,9 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 #include "SerialPortDialog.h"
-#include "GpsBufferReadThread.h"
-#include "GpsBufferReadInitRouteThread.h"
-#include "InitRouteDialog.h"
 #include "PaintWidget.h"
 #include "RingBuffer.h"
 #include <QMainWindow>
@@ -24,6 +21,7 @@ public:
 private:
     Ui::MainWindow *ui;
     void open();
+    void openProcessRun();
     void openSerialDialog();
     void openInitRouteDialog();
     void openRouteSparseDialog();
@@ -36,9 +34,6 @@ private:
     QAction* setScaleAction;    //设置比例尺
     GpsRingBuffer* gpsRingBuffer;
     PaintWidget* paintWidget;
-
-    GpsBufferReadThread* gpsBufferReadThread;
-    GpsBufferReadInitRouteThread* gpsBufferReadInitRouteThread;
 signals:
     void sendQPointToPaintWidget(QPointF&);
 };

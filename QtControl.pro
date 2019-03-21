@@ -40,7 +40,13 @@ SOURCES += \
     GpsBufferReadThread.cpp \
     GpsBufferReadInitRouteThread.cpp \
     RouteSparseDialog.cpp \
-    InitRouteDialog.cpp
+    InitRouteDialog.cpp \
+    GpsBufferConsumeRunThread.cpp \
+    ProcessRunDialog.cpp \
+    PID.cpp \
+    GPSProcesser.cpp \
+    ControlOrderSendThread.cpp \
+    LargeCarWindowsCommunication.cpp
 
 HEADERS += \
         MainWindow.h \
@@ -58,18 +64,39 @@ HEADERS += \
     ControlMessageStruct.h \
     GpsInfo.h \
     GpsBufferWriteThread.h \
-    GpsBufferReadThread.h \
     GpsBufferReadInitRouteThread.h \
     RouteSparseDialog.h \
-    InitRouteDialog.h
+    InitRouteDialog.h \
+    GpsBufferReadThread.h \
+    GpsBufferConsumeRunThread.h \
+    ProcessRunDialog.h \
+    PID.h \
+    PID.h \
+    GPSProcesser.h \
+    ControlOrderSendThread.h \
+    AbstractCommunication.h \
+    CommunicationFactory.h \
+    ControlCAN.h \
+    LargeCarWindowsCommunication.h
 
 FORMS += \
         MainWindow.ui \
     SerialInfoDialog.ui \
     RouteSparseDialog.ui \
-    InitRouteDialog.ui
+    InitRouteDialog.ui \
+    ProcessRunDialog.ui
 
 RESOURCES += \
     res.qrc
 INCLUDEPATH+= D:\local\boost_1_67_0
 INCLUDEPATH += /home/zhb/Downloads/boost_1_67_0
+
+LIBS += -L$$PWD/./ -lControlCAN
+
+INCLUDEPATH += $$PWD/.
+DEPENDPATH += $$PWD/.
+
+#win32: LIBS += -L$$PWD/./ -llibboost_chrono-vc141-mt-gd-x64-1_67
+
+
+win32: LIBS += -L$$PWD/./ -llibboost_atomic-vc141-mt-gd-x64-1_67
