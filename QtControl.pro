@@ -72,3 +72,4 @@ FORMS += \
 RESOURCES += \
     res.qrc
 INCLUDEPATH+= D:\local\boost_1_67_0
+INCLUDEPATH += /home/zhb/Downloads/boost_1_67_0

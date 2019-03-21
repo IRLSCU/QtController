@@ -1,6 +1,6 @@
 #ifndef ROUTESPARSEDIALOG_H
 #define ROUTESPARSEDIALOG_H
-#include "gpsinfo.h"
+#include "GpsInfo.h"
 #include <QDialog>
 #include<QList>
 #include<QPointF>
