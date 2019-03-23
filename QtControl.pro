@@ -46,7 +46,8 @@ SOURCES += \
     PID.cpp \
     GPSProcesser.cpp \
     ControlOrderSendThread.cpp \
-    LargeCarWindowsCommunication.cpp
+    LargeCarWindowsCommunication.cpp \
+    TinyCarCommunication.cpp
 
 HEADERS += \
         MainWindow.h \
@@ -77,7 +78,8 @@ HEADERS += \
     AbstractCommunication.h \
     CommunicationFactory.h \
     ControlCAN.h \
-    LargeCarWindowsCommunication.h
+    LargeCarWindowsCommunication.h \
+    TinyCarCommunication.h
 
 FORMS += \
         MainWindow.ui \
