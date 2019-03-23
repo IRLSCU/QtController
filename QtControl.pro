@@ -91,6 +91,7 @@ FORMS += \
 RESOURCES += \
     res.qrc
 INCLUDEPATH+= D:\local\boost_1_67_0
+INCLUDEPATH += /home/zhb/Downloads/boost_1_67_0
 
 LIBS += -L$$PWD/./ -lControlCAN
 
@@ -101,6 +102,3 @@ DEPENDPATH += $$PWD/.
 
 
 win32: LIBS += -L$$PWD/./ -llibboost_atomic-vc141-mt-gd-x64-1_67
-
-INCLUDEPATH += $$PWD/.
-DEPENDPATH += $$PWD/.

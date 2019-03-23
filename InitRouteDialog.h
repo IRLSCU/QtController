@@ -1,7 +1,7 @@
 #ifndef INITROUTEDIALOG_H
 #define INITROUTEDIALOG_H
 
-#include "gpsinfo.h"
+#include "GpsInfo.h"
 #include "GpsBufferReadInitRouteThread.h"
 #include "RingBuffer.h"
 #include <QDialog>
