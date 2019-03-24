@@ -3,6 +3,7 @@
 #include "InitRouteDialog.h"
 #include "RouteSparseDialog.h"
 #include "ProcessRunDialog.h"
+#include "TinyCarSerialPortDialog.h"
 #include <QAction>
 #include <QMenuBar>
 #include <QMessageBox>
@@ -53,6 +54,11 @@ MainWindow::MainWindow(QWidget *parent) :
     setScaleAction->setStatusTip(QStringLiteral("打开比例尺界面"));
     connect(setScaleAction, &QAction::triggered, this, &MainWindow::open);
 
+    setTinyCarComAction=new QAction(QStringLiteral("小车串口设置"),this);
+    setTinyCarComAction->setShortcuts(QKeySequence::Open);
+    setTinyCarComAction->setStatusTip(QStringLiteral("小车串口设置"));
+    connect(setTinyCarComAction, &QAction::triggered, this, &MainWindow::openTinyCarSerialDialog);
+
     QToolBar *toolBar = addToolBar(tr("&File"));
 
     toolBar->addAction(setSerialAction);
@@ -61,7 +67,7 @@ MainWindow::MainWindow(QWidget *parent) :
     toolBar->addAction(loadGPSDataAction);
     toolBar->addAction(routeSparseAction);
     toolBar->addAction(setScaleAction);
-
+    toolBar->addAction(setTinyCarComAction);
     statusBar();
 
 }
@@ -139,6 +145,11 @@ void MainWindow::openSerialDialog(){
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->show();
 
+}
+void MainWindow::openTinyCarSerialDialog(){
+    TinyCarSerialPortDialog* dialog=new TinyCarSerialPortDialog();
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
+    dialog->show();
 }
 
 void MainWindow::print(const QString& title){

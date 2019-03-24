@@ -47,7 +47,8 @@ SOURCES += \
     GPSProcesser.cpp \
     ControlOrderSendThread.cpp \
     LargeCarWindowsCommunication.cpp \
-    TinyCarCommunication.cpp
+    TinyCarCommunication.cpp \
+    TinyCarSerialPortDialog.cpp
 
 HEADERS += \
         MainWindow.h \
@@ -79,14 +80,17 @@ HEADERS += \
     CommunicationFactory.h \
     ControlCAN.h \
     LargeCarWindowsCommunication.h \
-    TinyCarCommunication.h
+    TinyCarCommunication.h \
+    TinyCarSerialPortDialog.h \
+    PreDefinition.h
 
 FORMS += \
         MainWindow.ui \
     SerialInfoDialog.ui \
     RouteSparseDialog.ui \
     InitRouteDialog.ui \
-    ProcessRunDialog.ui
+    ProcessRunDialog.ui \
+    TinyCarSerialPortDialog.ui
 
 RESOURCES += \
     res.qrc

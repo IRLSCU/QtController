@@ -2,16 +2,33 @@
 
 #include "TinyCarCommunication.h"
 
-#include <QDebug>
-TinyCarCommunication::TinyCarCommunication(QSerialPort* serialPort){
-    this->serialPort=serialPort;
+
+TinyCarCommunication::TinyCarCommunication(){
+    this->serialPort=new QSerialPort();
+    initConfig();
+}
+TinyCarCommunication::~TinyCarCommunication()
+{
+    delete serialPort;
 }
 void TinyCarCommunication::initConfig(){
-
+    QFile file("./../QtControl/softwareConfig/config.txt");
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    QByteArray t = file.readAll();
+    qDebug()<<"file.readAll:"<<t;
+    QList<QByteArray>list =t.split(' ');
+    serialPort->setPortName(list[2]);
+    serialPort->setBaudRate(list[3].toInt());
+    serialPort->setDataBits((QSerialPort::DataBits)list[4].toInt());
+    serialPort->setParity((QSerialPort::Parity)list[5].toInt());
+    serialPort->setStopBits((QSerialPort::StopBits)list[6].toInt());
+    serialPort->setFlowControl((QSerialPort::FlowControl)list[7].toInt());
+    file.close();
 }
 
 bool TinyCarCommunication::connect(){
     if(serialPort->open(QSerialPort::OpenModeFlag::ReadWrite)){
+        qDebug()<<serialPort->portName()<<"TinyCarCommunication opened successd";
         return true;
     }else{
         qDebug()<<"TinyCarCommunication opened failed";
@@ -22,10 +39,12 @@ bool TinyCarCommunication::connect(){
 
 void TinyCarCommunication::sendMessage(const unsigned char* message){
     sendInfo(message,TINYCARORDERLENGTH);
+    serialPort->waitForBytesWritten();
+    //serialPort->flush();
 }
 void TinyCarCommunication::receiveMessage(){
     QByteArray readComData = serialPort->readAll();
-    qDebug()<<readComData;
+    qDebug()<<"tinycar received message:"<<readComData;
 }
 bool TinyCarCommunication::close(){
     if(serialPort->isOpen()){
@@ -33,6 +52,7 @@ bool TinyCarCommunication::close(){
         serialPort->close();
     }
     qDebug()<<serialPort->portName()<<"has been closed";
+    return true;
 }
 void TinyCarCommunication::convertStringToHex(const QString &str, QByteArray &byteData)
 {
@@ -84,22 +104,19 @@ char TinyCarCommunication::TinyCarCommunication::convertCharToHex(char ch)
         return ch-'a'+10;
     else return (-1);
 }
-void TinyCarCommunication::TinyCarCommunication::sendInfo(char* info,int len){
-
+void TinyCarCommunication::TinyCarCommunication::sendInfo(const unsigned char* info,int len){
+    char* temp=new char[len];
     for(int i=0; i<len; ++i)
     {
-        printf("0x%x\n", info[i]);
+        temp[i]=(char)info[i];
+        //printf("0x%x\n", info[i]);
     }
-    serialPort->write(info,len);//这句是真正的给单片机发数据 用到的是QIODevice::write 具体可以看文档
+    serialPort->write(temp,len);//这句是真正的给单片机发数据 用到的是QIODevice::write 具体可以看文档
 }
 
 void TinyCarCommunication::TinyCarCommunication::sendInfo(const QString &info){
 
     QByteArray sendBuf;
-    if (info.contains(" "))
-    {
-        info.replace(QString(" "),QString(""));//我这里是把空格去掉，根据你们定的协议来
-    }
     qDebug()<<"Write to serial: "<<info;
     convertStringToHex(info, sendBuf); //把QString 转换 为 hex
     serialPort->write(sendBuf);////这句是真正的给单片机发数据 用到的是QIODevice::write 具体可以看文档

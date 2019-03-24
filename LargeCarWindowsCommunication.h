@@ -26,6 +26,7 @@ public:
     void sendMessage(const unsigned char*);
     void receiveMessage();
     bool close();
+    void setSerialPort(QSerialPort *);
 };
 
 #endif // LARGECARWINDOWSCOMMUNICATION_H

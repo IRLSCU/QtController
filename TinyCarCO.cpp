@@ -43,3 +43,11 @@ void TinyCarCO::printInfo(){
     qDebug("Tiny Car Control Order: leftSpeed:%d,rightSpeed:%d,leftOrientation:%d,rightOrientation:%d",
            leftSpeed,rightSpeed,leftOrientation,rightOrientation);
 }
+
+quint8* TinyCarCO::getCharOrder(){
+    charOrder[2]=leftSpeed;
+    charOrder[3]=rightSpeed;
+    charOrder[2]=leftOrientation;
+    charOrder[3]=rightOrientation;
+    return charOrder;
+}
