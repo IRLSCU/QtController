@@ -1,4 +1,4 @@
-#ifndef COMMUNICATIONFACTORY_H
+﻿#ifndef COMMUNICATIONFACTORY_H
 #define COMMUNICATIONFACTORY_H
 
 #include "AbstractCommunication.h"
@@ -12,10 +12,13 @@ public:
     static AbstractCommunication* createCommunication(CommunicationType type){
         switch (type){
         case LargeCarWindows:
+            qDebug()<<"LargeCarWindowsCommunication open";
             return new LargeCarWindowsCommunication();break;
         case TinyCarLinux:
+            qDebug()<<"TinyCarCommunication open";
             return new TinyCarCommunication();break;
         case TinyCarWindows:
+            qDebug()<<"TinyCarCommunication open";
             return new TinyCarCommunication();break;
         default: return NULL;
         }

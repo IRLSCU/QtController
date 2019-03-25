@@ -66,8 +66,8 @@ void ControlOrderSendThread::run(){
         ControlOrder::NormalCO2LargeCarCO(*current,largeCarCO);
         ControlOrder::NormalCO2TinyCarCO(*current,tinyCarCO);
         locker1.unlock();
-        tinyCarCO.printInfo();
-        current->printInfo();
+        //tinyCarCO.printInfo();
+        //current->printInfo();
         unsigned char * c=largeCarCO.getCharOrder();
         for(int i=0;i<LARGECARCO_LENGTH;i++){
             out<<QString::number(c[i],16)<<" ";
