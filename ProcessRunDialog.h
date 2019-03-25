@@ -1,11 +1,10 @@
-#ifndef PROCESSRUNDIALOG_H
+﻿#ifndef PROCESSRUNDIALOG_H
 #define PROCESSRUNDIALOG_H
 
 #define STARTPOINTLONGITUDE 103.958573205
 #define STARTPOINTLATITUDE 30.783824800
 #define STARTPOINTALTITUDE 500
 
-#include "gpsinfo.h"
 #include "RingBuffer.h"
 #include "GPSProcesser.h"
 #include "PID.h"
