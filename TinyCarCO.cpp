@@ -1,4 +1,4 @@
-#include "TinyCarCO.h"
+﻿#include "TinyCarCO.h"
 #include <QDebug>
 TinyCarCO& TinyCarCO::setLeftSpeed(quint8 leftSpeed){
 //    if(leftSpeed<TINYCARCO_MIN_SPEED){
@@ -42,4 +42,12 @@ void TinyCarCO::init(){
 void TinyCarCO::printInfo(){
     qDebug("Tiny Car Control Order: leftSpeed:%d,rightSpeed:%d,leftOrientation:%d,rightOrientation:%d",
            leftSpeed,rightSpeed,leftOrientation,rightOrientation);
+}
+
+quint8* TinyCarCO::getCharOrder(){
+    charOrder[2]=leftSpeed;
+    charOrder[3]=rightSpeed;
+    charOrder[4]=leftOrientation;
+    charOrder[5]=rightOrientation;
+    return charOrder;
 }

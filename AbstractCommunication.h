@@ -1,8 +1,9 @@
 #ifndef ABSTRACTCOMMUNICATION_H
 #define ABSTRACTCOMMUNICATION_H
 
-
-class AbstractCommunication
+#include <QtSerialPort/QSerialPort>
+#include <QtSerialPort/QSerialPortInfo>
+class AbstractCommunication:public QObject
 {
 public:
     AbstractCommunication(){}

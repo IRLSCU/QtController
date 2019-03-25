@@ -1,15 +1,12 @@
 ﻿#include "ControlOrderSendThread.h"
-#include <QDebug>
 #include <QDateTime>
 ControlOrderSendThread::ControlOrderSendThread(QObject *parent=0):QThread(parent){
+    readConfig();
     m_enable=false;
-    communication=CommunicationFactory::createCommunication(LargeCarWindows);
-    //todo 打开接口
 }
 
 ControlOrderSendThread::~ControlOrderSendThread(){
     //todo 关闭接口
-    delete communication;
     qDebug()<<"ControlOrderSendThread for sending car's control orders has been destoried";
 }
 
@@ -26,11 +23,27 @@ void ControlOrderSendThread::enableSignal(bool signal){
 }
 
 void ControlOrderSendThread::run(){
-    qDebug()<<"ControlOrderSendThread for sending car's control orders has been destoried";
+    //初始化接口
+    if(carType==LARGECARTYPE){
+        if(systemType==PREDEFINITIONWINDOWS){
+            communicationType=LargeCarWindows;
+        }else if(systemType==PREDEFINITIONLINUX){
+            communicationType=LargeCarLinux;
+        }
+    }else if(carType==TINYCARTYPE){
+        communicationType=TinyCarLinux;
+    }
+    communication=CommunicationFactory::createCommunication(communicationType);
+    //todo 打开接口
+    qDebug()<<"ControlOrderSendThread for sending car's control orders started";
     m_isCanRun=true;
     if(!communication->connect()){
         return;
     }
+
+//    unsigned char tt[10]={0xFF,0xFE,1,2,3,4,5,6,7,8};
+//    communication->sendMessage(tt);
+
     QString time = QDateTime::currentDateTime().toString("yyyyddMM_hhmmss");
     QFile file("./../QtControl/largeCarOrder/"+time+".txt");
     if(!file.open(QIODevice::WriteOnly | QIODevice::Text))
@@ -48,16 +61,26 @@ void ControlOrderSendThread::run(){
             current=&runControlOrder;
         }
         LargeCarCO largeCarCO;
+        TinyCarCO tinyCarCO;
         QMutexLocker locker1(&m_controlOrderLock);
         ControlOrder::NormalCO2LargeCarCO(*current,largeCarCO);
+        ControlOrder::NormalCO2TinyCarCO(*current,tinyCarCO);
         locker1.unlock();
+        tinyCarCO.printInfo();
+        current->printInfo();
         unsigned char * c=largeCarCO.getCharOrder();
         for(int i=0;i<LARGECARCO_LENGTH;i++){
             out<<QString::number(c[i],16)<<" ";
         }
         QString localTime = QDateTime::currentDateTime().toString("ddMMyy hhmmss.zzz");
         out<<localTime<<"\n";
-        communication->sendMessage(largeCarCO.getCharOrder());
+        //todo
+        if(carType==LARGECARTYPE)
+            communication->sendMessage(largeCarCO.getCharOrder());
+        if(carType==TINYCARTYPE){//todo
+//            unsigned char tt[10]={0xFF,0xFE,1,2,3,4,5,6,7,8};
+            communication->sendMessage(tinyCarCO.getCharOrder());
+        }
         communication->receiveMessage();
         QMutexLocker locker2(&m_threadRunLock);
         if(!m_isCanRun)//在每次循环判断是否可以运行，如果不行就退出循环
@@ -70,6 +93,7 @@ void ControlOrderSendThread::run(){
     }
     file.close();
     communication->close();
+    delete communication;
 }
 
 void ControlOrderSendThread::setRange(int range){
@@ -91,4 +115,13 @@ void ControlOrderSendThread::setGear(int gear){
     runControlOrder.setGear(gear);
     qDebug()<<"speed gear to "<<gear;
     locker.unlock();
+}
+void ControlOrderSendThread::readConfig(){
+    QFile file("./../QtControl/softwareConfig/config.txt");
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    QByteArray t = file.readAll();
+    QList<QByteArray>list =t.split(' ');
+    systemType=list[0].toInt();
+    carType=list[1].toInt();
+    file.close();
 }

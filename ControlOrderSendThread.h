@@ -1,7 +1,8 @@
 ﻿#ifndef CONTROLORDERSENDTHREAD_H
 #define CONTROLORDERSENDTHREAD_H
-#define CONTROLORDERSENDTHREAD_BOLCKTIME 200
+#define CONTROLORDERSENDTHREAD_BOLCKTIME 2000
 
+#include "PreDefinition.h"
 #include<CommunicationFactory.h>
 #include<QThread>
 #include<QMutex>
@@ -23,7 +24,12 @@ private:
     ControlOrder doNothingControlOrder;
     ControlOrder runControlOrder;
     ControlOrder *current;
+    CommunicationType communicationType;
     AbstractCommunication* communication;
+    //TinyCarCommunication* communication;
+    int systemType;
+    int carType;//
+    void readConfig();
 public:
     ControlOrderSendThread(QObject *parent);
     ~ControlOrderSendThread();

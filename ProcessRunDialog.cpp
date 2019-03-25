@@ -154,9 +154,9 @@ void ProcessRunDialog::processGPS(GpsInfo gpsInfo){
     //转化成车辆的转向
     double range=PID->PID_realize(actualCTE);
     //todo 车辆速度PID
-    double speed=12;
+    //double speed=12;
     emit sendRange((int)range);
-    emit sendSpeed((int)speed);
+    //emit sendSpeed((int)speed);
     ui->rangeCTE->setText(QString::number(actualCTE));
     //ui->speedCTE->setText(QString::number(speed));
     if(status==1){

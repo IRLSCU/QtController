@@ -61,9 +61,9 @@ int GPSProcesser::setNextTargetPoint(int i){
     i=i%gps_route.size();
     next_route_gps=gps_route[i];
     if(i==0){
-        qDebug()<<QStringLiteral("gps processer setNextTargetPoint is setting 0");
-        current_point_count=-1;
-        current_route_gps=current_gps;
+        qDebug()<<QStringLiteral("gps processer setNextTargetPoint is setting 1");
+        current_point_count=0;
+        current_route_gps=gps_route[1];
     }
     if(i!=0){
         current_route_gps=gps_route[i-1];

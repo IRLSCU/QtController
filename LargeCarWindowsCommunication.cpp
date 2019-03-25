@@ -141,3 +141,6 @@ bool LargeCarWindowsCommunication::close(){
         return true;
     }
 }
+void LargeCarWindowsCommunication::setSerialPort(QSerialPort *){
+    //do noting
+}

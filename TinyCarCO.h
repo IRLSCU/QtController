@@ -34,6 +34,7 @@ private:
      * 左轮转的方向 0表示向前，1表示向后
      */
     qint8 rightOrientation;
+    quint8 charOrder[10] = { 0xFF,0xFE,0,0,0,0,0,0,0,0 };
 public:
     void init();
     quint8 getLeftSpeed(){return leftSpeed;}
@@ -45,6 +46,7 @@ public:
     TinyCarCO& setRightSpeed(quint8);
     TinyCarCO& setLeftOrientation(qint8);
     TinyCarCO& setRightOrientation(qint8);
+    quint8* getCharOrder();//转化成实际的指令
 
 };
 #endif // TINYCARCO_H

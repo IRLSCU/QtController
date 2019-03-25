@@ -344,7 +344,6 @@ void SerialPortDialog::closeSerialPort(QSerialPort* serialPort,CharRingBuffer* r
         if(temp==NULL)
             break;
     }
-
 }
 bool SerialPortDialog::openSerialPort(QSerialPort* serialPort,CharRingBuffer* ringBuffer){
     if(serialPort->open(QSerialPort::OpenModeFlag::ReadOnly)){
