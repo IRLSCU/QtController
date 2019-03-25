@@ -94,15 +94,19 @@ FORMS += \
 
 RESOURCES += \
     res.qrc
-INCLUDEPATH+= D:\local\boost_1_67_0
-INCLUDEPATH += /home/zhb/Downloads/boost_1_67_0
 
-LIBS += -L$$PWD/./ -lControlCAN
+win32:{
+    INCLUDEPATH+= D:\local\boost_1_67_0
+    LIBS += -L$$PWD/./ -lControlCAN
+    LIBS += -L$$PWD/./ -llibboost_atomic-vc141-mt-gd-x64-1_67
+}
+
+linux-g++*{
+    INCLUDEPATH += /home/zhb/Downloads/boost_1_67_0
+}
+
 
 INCLUDEPATH += $$PWD/.
 DEPENDPATH += $$PWD/.
 
 #win32: LIBS += -L$$PWD/./ -llibboost_chrono-vc141-mt-gd-x64-1_67
-
-
-win32: LIBS += -L$$PWD/./ -llibboost_atomic-vc141-mt-gd-x64-1_67
