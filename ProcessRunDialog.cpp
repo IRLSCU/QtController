@@ -77,10 +77,9 @@ ProcessRunDialog::ProcessRunDialog(GpsRingBuffer* gpsRingBuffer,QWidget *parent)
 
     //send control order thread setting
     controlOrderSendThread=new ControlOrderSendThread(this);
-//    connect(this,&ProcessRunDialog::sendRange,controlOrderSendThread,&ControlOrderSendThread::setRange,Qt::BlockingQueuedConnection);
-//    connect(this,&ProcessRunDialog::sendSpeed,controlOrderSendThread,&ControlOrderSendThread::setSpeed,Qt::BlockingQueuedConnection);
     connect(this,&ProcessRunDialog::sendRange,controlOrderSendThread,&ControlOrderSendThread::setRange);
     connect(this,&ProcessRunDialog::sendSpeed,controlOrderSendThread,&ControlOrderSendThread::setSpeed);
+    connect(this,&ProcessRunDialog::sendGpsInfo,controlOrderSendThread,&ControlOrderSendThread::setGpsInfo);
 
     connect(ui->start,&QPushButton::clicked,[&](){
         controlOrderSendThread->enableSignal(true);
@@ -156,6 +155,7 @@ void ProcessRunDialog::processGPS(GpsInfo gpsInfo){
     //todo 车辆速度PID
     //double speed=12;
     emit sendRange((int)range);
+    emit sendGpsInfo(gpsInfo);
     //emit sendSpeed((int)speed);
     ui->rangeCTE->setText(QString::number(actualCTE));
     //ui->speedCTE->setText(QString::number(speed));
@@ -167,7 +167,7 @@ void ProcessRunDialog::processGPS(GpsInfo gpsInfo){
     }
 }
 void ProcessRunDialog::updateBroswerText(GpsInfo gpsInfo){
-    ui->textBrowser->insertPlainText(gpsInfo.toString());
+    ui->textBrowser->insertPlainText(gpsInfo.toString().append("\n"));
     ui->textBrowser->moveCursor(QTextCursor::End);
 }
 void ProcessRunDialog::copySetInitRouteList(QList<QPointF> route){

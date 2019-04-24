@@ -45,9 +45,9 @@ void TinyCarCO::printInfo(){
 }
 
 quint8* TinyCarCO::getCharOrder(){
-    charOrder[2]=leftSpeed;
-    charOrder[3]=rightSpeed;
-    charOrder[4]=leftOrientation;
-    charOrder[5]=rightOrientation;
+    charOrder[3]=leftSpeed;
+    charOrder[2]=rightSpeed;
+    charOrder[5]=leftOrientation;
+    charOrder[4]=rightOrientation;
     return charOrder;
 }

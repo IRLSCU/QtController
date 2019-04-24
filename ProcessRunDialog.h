@@ -57,6 +57,7 @@ signals:
     void sendNextTargetPointToPaintWidget(int target);
     void sendRange(int range);//将车辆转向程度，送往车辆命令发送线程
     void sendSpeed(int speed);//将车辆速度，送往车辆命令发送线程
+    void sendGpsInfo(GpsInfo gps);//将当前GPS信息，送往车辆命令发送线程
 };
 
 #endif // PROCESSRUNDIALOG_H

@@ -11,7 +11,7 @@ GPSProcesser::~GPSProcesser() {
 }
 void GPSProcesser::initCCoordinate(double gpsheight, double gpslongitude, double gpslatitude) {
 	cCoordinate.InitRadarPara(gpsheight, gpslongitude, gpslatitude);
-    qDebug() << "初始化原点成功";
+    qDebug() << QStringLiteral("初始化原点成功");
 }
 /**
  * @brief GPSProcesser::initRoute
@@ -126,7 +126,7 @@ double GPSProcesser::startProcess(GaussGPSData current,int* target,int* status) 
 	Line corssLine = getCorssLine(Line(current_route_gps, next_route_gps), next_route_gps);
 	if (pointsInSameSide(current,current_route_gps , corssLine)) {
         //std::cout << "车辆未经过任意一高斯点(过垂线),"<<"上一个经过的高斯点为第" << current_point_count << "个\n";
-        qDebug()<< QStringLiteral("车辆未经过任意一高斯点(过垂线),上一个经过的高斯点为:")<< current_point_count;
+        //qDebug()<< QStringLiteral("车辆未经过任意一高斯点(过垂线),上一个经过的高斯点为:")<< current_point_count;
 
 	}else {
 		current_point_count += 1;
@@ -205,7 +205,7 @@ double GPSProcesser::calPointFromLineDistance(const GaussGPSData point, const Li
 	B = line.m_start.m_x - line.m_end.m_x;
 	C = line.m_start.m_y*line.m_end.m_x - line.m_start.m_x*line.m_end.m_y;
 	assert((A != 0 || B != 0));
-	double distance = abs(A*point.m_x + B * point.m_y + C) / sqrt(A*A + B * B);
+    double distance = fabs(A*point.m_x + B * point.m_y + C) / sqrt(A*A + B * B);
 	return distance;
 }
 /*

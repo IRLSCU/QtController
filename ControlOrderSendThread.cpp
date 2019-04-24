@@ -1,4 +1,5 @@
 ﻿#include "ControlOrderSendThread.h"
+#include "GpsInfo.h"
 #include <QDateTime>
 ControlOrderSendThread::ControlOrderSendThread(QObject *parent=0):QThread(parent){
     readConfig();
@@ -69,8 +70,9 @@ void ControlOrderSendThread::run(){
         //tinyCarCO.printInfo();
         //current->printInfo();
         unsigned char * c=largeCarCO.getCharOrder();
+        out<<current->getGpsInfo().toString()<<" ";
         for(int i=0;i<LARGECARCO_LENGTH;i++){
-            out<<QString::number(c[i],16)<<" ";
+            out<<QString::number(c[i],10)<<" ";
         }
         QString localTime = QDateTime::currentDateTime().toString("ddMMyy hhmmss.zzz");
         out<<localTime<<"\n";
@@ -82,7 +84,7 @@ void ControlOrderSendThread::run(){
 //            unsigned char tt[10]={0xFF,0xFE,1,2,3,4,5,6,7,8};
             communication->sendMessage(tinyCarCO.getCharOrder());
         }
-        communication->receiveMessage();
+        //  communication->receiveMessage();
         QMutexLocker locker2(&m_threadRunLock);
         if(!m_isCanRun)//在每次循环判断是否可以运行，如果不行就退出循环
         {
@@ -107,10 +109,15 @@ void ControlOrderSendThread::setRange(int range){
 void ControlOrderSendThread::setSpeed(int speed){
     QMutexLocker locker(&m_controlOrderLock);
     runControlOrder.setSpeed(speed);
-    qDebug()<<"speed change to "<<speed;
+    //qDebug()<<"speed change to "<<speed;
     locker.unlock();
 }
-
+void ControlOrderSendThread::setGpsInfo(GpsInfo gpsInfo){
+    QMutexLocker locker(&m_controlOrderLock);
+    runControlOrder.setGpsInfo(gpsInfo);
+    //qDebug()<<"gpsInfo change to "<<gpsInfo.toString();
+    locker.unlock();
+}
 void ControlOrderSendThread::setGear(int gear){
     QMutexLocker locker(&m_controlOrderLock);
     runControlOrder.setGear(gear);

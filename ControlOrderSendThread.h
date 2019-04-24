@@ -1,6 +1,6 @@
 ﻿#ifndef CONTROLORDERSENDTHREAD_H
 #define CONTROLORDERSENDTHREAD_H
-#define CONTROLORDERSENDTHREAD_BOLCKTIME 2000
+#define CONTROLORDERSENDTHREAD_BOLCKTIME 200
 
 #include "PreDefinition.h"
 #include<CommunicationFactory.h>
@@ -38,6 +38,7 @@ public:
     void run();
     void setRange(int range);
     void setSpeed(int speed);
+    void setGpsInfo(GpsInfo gps);
     void setGear(int gear);
 signals:
 };
