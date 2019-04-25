@@ -30,7 +30,7 @@ double Pid_control::PID_realize(double CTE){
         double i=pid.Ki*pid.integral;
         double d=pid.Kd*(pid.err - pid.err_last);
         pid.voltage =  p + i + d;
-        qDebug()<<pid.err<<pid.err_last<<"p:"<<p<<"i:"<<i<<"d:"<<d;
+        //qDebug()<<pid.err<<pid.err_last<<"p:"<<p<<"i:"<<i<<"d:"<<d;
 	}
     pid.err_last = pid.err;
 	return pid.voltage;

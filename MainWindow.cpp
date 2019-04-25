@@ -3,6 +3,8 @@
 #include "InitRouteDialog.h"
 #include "RouteSparseDialog.h"
 #include "ProcessRunDialog.h"
+#include "ProcessRunNoGPSDialog.h"
+#include "SocketSettingWidget.h"
 #include "TinyCarSerialPortDialog.h"
 #include <QAction>
 #include <QMenuBar>
@@ -20,7 +22,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     gpsRingBuffer=new GpsRingBuffer();
 
-
     setCentralWidget(paintWidget=new PaintWidget());
     connect(this,&MainWindow::sendQPointToPaintWidget,paintWidget,&PaintWidget::acceptQPoint);
 
@@ -28,6 +29,11 @@ MainWindow::MainWindow(QWidget *parent) :
     setSerialAction->setShortcuts(QKeySequence::Open);
     setSerialAction->setStatusTip(QStringLiteral("打开设置串口界面"));
     connect(setSerialAction, &QAction::triggered, this, &MainWindow::openSerialDialog);
+
+    setSocketAction=new QAction(QStringLiteral("Socket设置"),this);
+    setSocketAction->setShortcuts(QKeySequence::Open);
+    setSocketAction->setStatusTip(QStringLiteral("打开Socket设置界面"));
+    connect(setSocketAction, &QAction::triggered, this, &MainWindow::openSocketDialog);
 
     initRouteAction=new QAction(QStringLiteral("初始化路径"),this);
     initRouteAction->setShortcuts(QKeySequence::Open);
@@ -38,6 +44,11 @@ MainWindow::MainWindow(QWidget *parent) :
     startRunningAction->setShortcuts(QKeySequence::Open);
     startRunningAction->setStatusTip(QStringLiteral("打开开始行驶界面"));
     connect(startRunningAction, &QAction::triggered, this, &MainWindow::openProcessRun);
+
+    startRunningNoGPSAction=new QAction(QStringLiteral("开始行驶(非GPS)"),this);
+    startRunningNoGPSAction->setShortcuts(QKeySequence::Open);
+    startRunningNoGPSAction->setStatusTip(QStringLiteral("打开开始行驶界面"));
+    connect(startRunningNoGPSAction, &QAction::triggered, this, &MainWindow::openProcessRunNoGPS);
 
     loadGPSDataAction=new QAction(QStringLiteral("加载路径"),this);
     loadGPSDataAction->setShortcuts(QKeySequence::Open);
@@ -62,8 +73,10 @@ MainWindow::MainWindow(QWidget *parent) :
     QToolBar *toolBar = addToolBar(tr("&File"));
 
     toolBar->addAction(setSerialAction);
+    toolBar->addAction(setSocketAction);
     toolBar->addAction(initRouteAction);
     toolBar->addAction(startRunningAction);
+    toolBar->addAction(startRunningNoGPSAction);
     toolBar->addAction(loadGPSDataAction);
     toolBar->addAction(routeSparseAction);
     toolBar->addAction(setScaleAction);
@@ -82,6 +95,12 @@ void MainWindow::open(){
     dialog->setWindowTitle(tr("Hello, dialog!"));
     dialog->show();
 }
+void MainWindow::openSocketDialog(){
+    SocketSettingWidget* widget=new SocketSettingWidget(gpsRingBuffer,this);
+    widget->setAttribute(Qt::WA_DeleteOnClose);
+    widget->setWindowTitle(QStringLiteral("打开Socket设置"));
+    widget->show();
+}
 void MainWindow::openProcessRun(){
     if(paintWidget->getRoutePointList().size()==0){
         QMessageBox::warning(this, tr("Empty Route"),
@@ -96,6 +115,21 @@ void MainWindow::openProcessRun(){
     connect(dialog->getGpsBufferConsumeRunThread(),&GpsBufferConsumeRunThread::sendGpsInfo,paintWidget,&PaintWidget::acceptQPoint);
     connect(dialog,&ProcessRunDialog::sendStartPointGPSToPaintWidget,paintWidget,&PaintWidget::paintStartPoint);
     connect(dialog,&ProcessRunDialog::sendNextTargetPointToPaintWidget,paintWidget,&PaintWidget::paintTargetPoint);
+}
+void MainWindow::openProcessRunNoGPS(){
+    if(paintWidget->getRoutePointList().size()==0){
+        QMessageBox::warning(this, tr("Empty Route"),
+                             tr("please load route firstly"));
+        return;
+    }
+    ProcessRunNoGPSDialog * dialog=new ProcessRunNoGPSDialog(gpsRingBuffer,this);
+    dialog->copySetInitRouteList(paintWidget->getRoutePointList());
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
+    dialog->setWindowTitle(tr("Process Run(Not GPS)"));
+    dialog->show();
+    connect(dialog->getGpsBufferConsumeRunThread(),&GpsBufferConsumeRunThread::sendGpsInfo,paintWidget,&PaintWidget::acceptQPoint);
+    connect(dialog,&ProcessRunNoGPSDialog::sendStartPointGPSToPaintWidget,paintWidget,&PaintWidget::paintStartPoint);
+    connect(dialog,&ProcessRunNoGPSDialog::sendNextTargetPointToPaintWidget,paintWidget,&PaintWidget::paintTargetPoint);
 }
 void MainWindow::openInitRouteDialog(){
     InitRouteDialog* initRouteDialog=new InitRouteDialog(gpsRingBuffer,this);

@@ -1,8 +1,9 @@
-#pragma once
+﻿#pragma once
 #ifndef RING_BUFFER
 #define RING_BUFFER
 #include <boost/atomic.hpp>
 #include "GpsInfo.h"
+#include "LocationPosition.h"
 template<typename T, size_t Size>
 class RingBuffer {
 public:
@@ -36,4 +37,5 @@ private:
 };
 typedef RingBuffer<char,20480> CharRingBuffer;
 typedef RingBuffer<GpsInfo,2048> GpsRingBuffer;
+typedef RingBuffer<LocationPosition,2048> LocationRingBuffer;
 #endif

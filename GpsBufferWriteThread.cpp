@@ -14,7 +14,7 @@ GpsBufferWriteThread::GpsBufferWriteThread(CharRingBuffer* ringBuffer,GpsRingBuf
 }
 void GpsBufferWriteThread::run(){//将char缓冲区中的数据拼接成gpsInfo类型数据，并存入环形缓冲区
     m_isCanRun = true;
-    qDebug()<<name<<"GpsBufferWriteThread has started";
+    qDebug()<<name<<" GpsBufferWriteThread has started";
     QString stringBuffer;
     char receive_char;
     while(true){

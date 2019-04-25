@@ -102,7 +102,7 @@ void ControlOrderSendThread::run(){
 void ControlOrderSendThread::setRange(int range){
     QMutexLocker locker(&m_controlOrderLock);
     runControlOrder.setTurnRange(range);
-    qDebug()<<"range change to "<<range;
+    //qDebug()<<"range change to "<<range;
     locker.unlock();
 }
 

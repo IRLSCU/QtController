@@ -1,0 +1,35 @@
+﻿#ifndef SOCKETSETTINGWIDGET_H
+#define SOCKETSETTINGWIDGET_H
+
+#include "GpsBufferWriteThread.h"
+
+#include <QWidget>
+#include <QTcpSocket>
+
+namespace Ui {
+class SocketSettingWidget;
+}
+
+class SocketSettingWidget : public QWidget
+{
+    Q_OBJECT
+
+public:
+    explicit SocketSettingWidget(GpsRingBuffer* gpsRingBuffer,QWidget *parent = 0);
+    ~SocketSettingWidget();
+
+private slots:
+    void socket_Read_Data();
+    void socket_Disconnected();
+    void on_pushButton_Connect_clicked();
+    void on_pushButton_Clear_clicked();
+    void on_pushButton_Save_clicked();
+private:
+    Ui::SocketSettingWidget *ui;
+    QTcpSocket *socket;
+    GpsRingBuffer* gpsRingBuffer;
+    GpsBufferWriteThread* gpsBufferWriteThread1;
+    CharRingBuffer* ringBuffer1;
+};
+
+#endif // SOCKETSETTINGWIDGET_H

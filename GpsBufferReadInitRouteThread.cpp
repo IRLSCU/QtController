@@ -1,4 +1,4 @@
-#include "GpsBufferReadInitRouteThread.h"
+﻿#include "GpsBufferReadInitRouteThread.h"
 #include <QDebug>
 GpsBufferReadInitRouteThread::GpsBufferReadInitRouteThread(GpsRingBuffer* gpsRingBuffer,QObject *parent=0):QThread(parent){
     this->gpsRingBuffer=gpsRingBuffer;
@@ -17,7 +17,7 @@ void GpsBufferReadInitRouteThread::stopImmediately(){
 }
 void GpsBufferReadInitRouteThread::initSignal(bool signal){
     QMutexLocker locker(&m_Initlock);
-    qDebug()<<"initSignal"<<(signal?"start":"end");
+    qDebug()<<"initSignal "<<(signal?"start":"end");
     m_startInit=signal;
     locker.unlock();
 }
@@ -34,7 +34,6 @@ void GpsBufferReadInitRouteThread::run(){
                 QMutexLocker locker2(&m_Initlock);
                 if(m_startInit){//同时将数据发往初始化列表
 //                    qDebug()<<"start init route";
-                    //emit sendInitGpsInfo(gpsInfo);
                     emit sendInitGpsInfo(gpsInfo);
                 }
                 locker2.unlock();
