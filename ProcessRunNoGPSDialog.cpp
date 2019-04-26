@@ -182,7 +182,7 @@ void ProcessRunNoGPSDialog::initGpsProcessRoute(QList<QPointF> route){
     gpsProcesser->initRoute(route);
 }
 void ProcessRunNoGPSDialog::initCoordinateOriginPoint(QPointF originPoint){//初始化高斯坐标系坐标原点
-    gpsProcesser->initCCoordinate(500,originPoint.x(),originPoint.y());
+    //gpsProcesser->initCCoordinate(500,originPoint.x(),originPoint.y());
 }
 void ProcessRunNoGPSDialog::startProcess(){
     this->ui->textBrowser->clear();

@@ -4,14 +4,40 @@
 CCoordinate GPSProcesser::cCoordinate;
 
 GPSProcesser::GPSProcesser() {
-
+    initCCoordinate();
 }
 GPSProcesser::~GPSProcesser() {
 
 }
-void GPSProcesser::initCCoordinate(double gpsheight, double gpslongitude, double gpslatitude) {
-	cCoordinate.InitRadarPara(gpsheight, gpslongitude, gpslatitude);
-    qDebug() << QStringLiteral("初始化原点成功");
+void GPSProcesser::initCCoordinate() {
+    QFile file("./../QtControl/CoordinateConf.txt");
+    if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
+        QByteArray t ;
+        while(!file.atEnd())
+        {
+            t += file.readLine();
+        }
+        QList<QByteArray> sl =t.split(' ');
+        if(sl.size()==3){
+            bool ok1;
+            bool ok2;
+            bool ok3;
+            double lon=sl.at(0).toDouble(&ok1);
+            double lat=sl.at(1).toDouble(&ok2);
+            double hei=sl.at(2).toDouble(&ok3);
+            if(ok1&&ok2&&ok3){
+                cCoordinate.InitRadarPara(hei, lon, lat);
+                qDebug() << QStringLiteral("初始化原点成功");
+            }else{
+                qDebug()<<"load coordinateConf data fail";
+            }
+         }else{
+            qDebug()<<"load coordinateConf data fail";
+        }
+    }else{
+        qDebug()<<"open coordinateConf failed";
+    }
+    file.close();
 }
 bool GPSProcesser::initRoute(QList<QPointF> gps){
     QList<QPointF> route;

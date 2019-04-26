@@ -12,7 +12,7 @@ class GPSProcesser{
 public:
 	GPSProcesser();
 	~GPSProcesser();
-	static void initCCoordinate(double gpsheight, double gpslongitude, double gpslatitude);
+    static void initCCoordinate();
     bool initRoute(QList<QPointF>);//初始化gps_route QPointF(longitude,latitude)
     int initStartPoint(double longitude,double latitude);//通过当前位置设定起始点，返回在固定路径中最近的位置,若无则返回0;
     int setNextTargetPoint(int i);

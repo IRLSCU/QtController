@@ -3,6 +3,7 @@
 #include "SerialPortDialog.h"
 #include "PaintWidget.h"
 #include "RingBuffer.h"
+#include "CoTrans.h"
 #include <QMainWindow>
 #include <QDataStream>
 namespace Ui {
@@ -17,6 +18,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void print(const QString&);
+    QList<QPointF> gpsRouteList;
 
 private:
     Ui::MainWindow *ui;
@@ -29,6 +31,8 @@ private:
     void openRouteSparseDialog();
     void openTinyCarSerialDialog();
     void openFile();
+    void loadCenterGPS();
+    void initOrdinate();
     QAction* setSerialAction;   //打开串口设置,接收gps
     QAction* setSocketAction;   //打开Socket设置，接收gps
     QAction* initRouteAction;   //初始化路径
@@ -40,6 +44,8 @@ private:
     QAction* setTinyCarComAction;    //设置比例尺
     GpsRingBuffer* gpsRingBuffer;
     PaintWidget* paintWidget;
+    GpsInfo centerGPS;
+    CCoordinate ordinate;
 signals:
     void sendQPointToPaintWidget(QPointF&);
 };

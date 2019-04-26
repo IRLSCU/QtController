@@ -20,6 +20,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     setWindowTitle(QStringLiteral("主窗口"));
 
+    loadCenterGPS();
+    initOrdinate();
+
     gpsRingBuffer=new GpsRingBuffer();
 
     setCentralWidget(paintWidget=new PaintWidget());
@@ -82,7 +85,6 @@ MainWindow::MainWindow(QWidget *parent) :
     toolBar->addAction(setScaleAction);
     toolBar->addAction(setTinyCarComAction);
     statusBar();
-
 }
 
 MainWindow::~MainWindow()
@@ -102,32 +104,39 @@ void MainWindow::openSocketDialog(){
     widget->show();
 }
 void MainWindow::openProcessRun(){
-    if(paintWidget->getRoutePointList().size()==0){
+    if(gpsRouteList.size()==0){
         QMessageBox::warning(this, tr("Empty Route"),
                              tr("please load route firstly"));
         return;
     }
     ProcessRunDialog* dialog=new ProcessRunDialog(gpsRingBuffer,this);
-    dialog->copySetInitRouteList(paintWidget->getRoutePointList());
+    dialog->copySetInitRouteList(gpsRouteList);
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->setWindowTitle(tr("Process Run"));
     dialog->show();
-    connect(dialog->getGpsBufferConsumeRunThread(),&GpsBufferConsumeRunThread::sendGpsInfo,paintWidget,&PaintWidget::acceptQPoint);
-    connect(dialog,&ProcessRunDialog::sendStartPointGPSToPaintWidget,paintWidget,&PaintWidget::paintStartPoint);
+    connect(dialog->getGpsBufferConsumeRunThread(),&GpsBufferConsumeRunThread::sendGpsInfo,[&](QPointF point){
+        QPointF temp=ordinate.LongLat2XY(point.x(),point.y());
+        paintWidget->addQPoint(temp);
+    });
+    connect(dialog,&ProcessRunDialog::sendStartPointGPSToPaintWidget,[&](QPointF gpsInfo){
+        QPointF temp=ordinate.LongLat2XY(gpsInfo.x(),gpsInfo.y());
+        qDebug()<<gpsInfo.x()<<gpsInfo.y();
+        paintWidget->paintStartPoint(temp);
+    });
     connect(dialog,&ProcessRunDialog::sendNextTargetPointToPaintWidget,paintWidget,&PaintWidget::paintTargetPoint);
 }
 void MainWindow::openProcessRunNoGPS(){
-    if(paintWidget->getRoutePointList().size()==0){
+    if(gpsRouteList.size()==0){
         QMessageBox::warning(this, tr("Empty Route"),
                              tr("please load route firstly"));
         return;
     }
     ProcessRunNoGPSDialog * dialog=new ProcessRunNoGPSDialog(gpsRingBuffer,this);
-    dialog->copySetInitRouteList(paintWidget->getRoutePointList());
+    dialog->copySetInitRouteList(gpsRouteList);
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->setWindowTitle(tr("Process Run(Not GPS)"));
     dialog->show();
-    connect(dialog->getGpsBufferConsumeRunThread(),&GpsBufferConsumeRunThread::sendGpsInfo,paintWidget,&PaintWidget::acceptQPoint);
+    connect(dialog->getGpsBufferConsumeRunThread(),&GpsBufferConsumeRunThread::sendGpsInfo,paintWidget,&PaintWidget::addQPoint);
     connect(dialog,&ProcessRunNoGPSDialog::sendStartPointGPSToPaintWidget,paintWidget,&PaintWidget::paintStartPoint);
     connect(dialog,&ProcessRunNoGPSDialog::sendNextTargetPointToPaintWidget,paintWidget,&PaintWidget::paintTargetPoint);
 }
@@ -135,7 +144,10 @@ void MainWindow::openInitRouteDialog(){
     InitRouteDialog* initRouteDialog=new InitRouteDialog(gpsRingBuffer,this);
     initRouteDialog->setAttribute(Qt::WA_DeleteOnClose);
     initRouteDialog->show();
-    connect(initRouteDialog->getGpsBufferReadInitRouteThread(),&GpsBufferReadInitRouteThread::sendGpsInfo,paintWidget,&PaintWidget::acceptQPoint);
+    connect(initRouteDialog->getGpsBufferReadInitRouteThread(),&GpsBufferReadInitRouteThread::sendGpsInfo,[&](QPointF point){
+        QPointF temp=ordinate.LongLat2XY(point.x(),point.y());
+        paintWidget->acceptQPoint(temp);
+    });
 }
 void MainWindow::openRouteSparseDialog(){
     RouteSparseDialog* routeSparseDialog=new RouteSparseDialog(this);
@@ -164,10 +176,12 @@ void MainWindow::openFile()
             in>>x>>y>>o>>o>>o>>o>>o>>o;
             if(x==0&&y==0)
                 continue;
-            QPointF point(x,y);
+            //经纬度转化成XY
+            gpsRouteList.append(QPointF(x,y));
+            QPointF point=ordinate.LongLat2XY(x,y);
             sendQPointToPaintWidget(point);//signal
-        }
 
+        }
         file.close();
     } else {
         QMessageBox::warning(this, tr("Path"),
@@ -188,4 +202,39 @@ void MainWindow::openTinyCarSerialDialog(){
 
 void MainWindow::print(const QString& title){
     qDebug()<<title;
+}
+void MainWindow::initOrdinate(){
+    ordinate.InitRadarPara(centerGPS.altitude,centerGPS.longitude,centerGPS.latitude);
+}
+void MainWindow::loadCenterGPS()
+{
+    QFile file("./../QtControl/CoordinateConf.txt");
+    if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
+        QByteArray t ;
+        while(!file.atEnd())
+        {
+            t += file.readLine();
+        }
+        QList<QByteArray> sl =t.split(' ');
+        if(sl.size()==3){
+            bool ok1;
+            bool ok2;
+            bool ok3;
+            double lon=sl.at(0).toDouble(&ok1);
+            double lat=sl.at(1).toDouble(&ok2);
+            double hei=sl.at(2).toDouble(&ok3);
+            if(ok1&&ok2&&ok3){
+                centerGPS.longitude=lon;
+                centerGPS.latitude=lat;
+                centerGPS.altitude=hei;
+            }else{
+                qDebug()<<"load coordinateConf data fail";
+            }
+         }else{
+            qDebug()<<"load coordinateConf data fail";
+        }
+    }else{
+        qDebug()<<"open coordinateConf failed";
+    }
+    file.close();
 }

@@ -6,11 +6,9 @@
 #include<QPen>
 #include<QDebug>
 #include<QMessageBox>
-void PaintWidget::initScreenCenter(QPointF lonlat){
-    coordinate.InitRadarPara(500,lonlat.x(),lonlat.y());
-    QPointF temp=coordinate.LongLat2XY(lonlat.x(),lonlat.y());
-    coordinate.m_DspCenter.setX(temp.x());
-    coordinate.m_DspCenter.setY(temp.y());
+void PaintWidget::initScreenCenter(QPointF xy){
+    coordinate.m_DspCenter.setX(xy.x());
+    coordinate.m_DspCenter.setY(xy.y());
 }
 PaintWidget::PaintWidget(QWidget *parent)
     : QWidget(parent),
@@ -27,10 +25,7 @@ PaintWidget::PaintWidget(QWidget *parent)
     coordinate=CCoordinate();
 //    coordinate.InitRadarPara(500, 103.9588080550,30.7852871117);
 //    QPointF temp=coordinate.LongLat2XY(103.9588080550,30.7852871117);
-
-//    initScreenCenter(QPointF(103.9583595900,30.7830247100));
-    initScreenCenter(QPointF(103.9585726017,30.7838652900));
-
+    initScreenCenter(QPointF());//默认值
     mousePosInfoLabel=new QLabel("");
     mousePosInfoLabel->setParent(this);
     scaleInfoLabel=new QLabel("");
@@ -62,8 +57,8 @@ PaintWidget::PaintWidget(QWidget *parent)
 PaintWidget::~PaintWidget(){
 
 }
-void PaintWidget::paintStartPoint(QPointF gpsInfo){
-    startPointGPS=gpsInfo;
+void PaintWidget::paintStartPoint(QPointF startLocation){
+    startPoint=startLocation;
     update();
 }
 void PaintWidget::paintTargetPoint(int target){
@@ -73,16 +68,17 @@ void PaintWidget::paintTargetPoint(int target){
                              tr("find next target point filed,please retry"));
         return;
     }
-    nextTargetPointGPS=routePointList.at(target%routePointList.size());
+    nextTargetPoint=routeLocationList.at(target%routeLocationList.size());
     update();
 }
 void PaintWidget::paintEvent(QPaintEvent*)
 {
-    if(routePointList.size()!=0){
-        //qDebug("routePointList.at(0):%.10f,%.10f",routePointList.at(0).x(),routePointList.at(0).y());
-        this->initScreenCenter(routePointList.at(0));
-    }
     QPainter painter(this);
+    if(routeLocationList.size()!=0){
+        //qDebug("routePointList.at(0):%.10f,%.10f",routePointList.at(0).x(),routePointList.at(0).y());
+        //this->initScreenCenter(routePointList.at(0));
+        initScreenCenter(routeLocationList.at(0));
+    }
     painter.setRenderHint(QPainter::Antialiasing, true);
     const qreal wh = height();
     const qreal ww = width();
@@ -106,8 +102,8 @@ void PaintWidget::paintEvent(QPaintEvent*)
 //    painter.drawPoint((qint64)tmep2.x(),(qint64)tmep2.y());
 
     QPointF last;
-    for(int i=0;i<routePointList.size();i++){
-        QPointF temp=coordinate.LongLat2Screen(LongLat(routePointList.at(i).x(),routePointList.at(i).y()));
+    for(int i=0;i<routeLocationList.size();i++){
+        QPointF temp=coordinate.XY2Screen(routeLocationList.at(i));
         if(i!=0){
             mypen.setColor(Qt::black);
             mypen.setWidth(0);
@@ -117,34 +113,34 @@ void PaintWidget::paintEvent(QPaintEvent*)
         mypen.setWidth(1);                     // 1 表示点的大小
         mypen.setColor(Qt::green);
         painter.setPen(mypen);
-        painter.drawPoint((qint64)temp.x(),(qint64)temp.y());
+        painter.drawPoint(temp);
         last=temp;
     }
     mypen.setColor(Qt::green);
     painter.setPen(mypen);
-    for(int i=0;i<passWayPointList.size();i++){
-        QPointF temp=coordinate.XY2Screen(passWayPointList.at(i));
+    for(int i=0;i<passwayLocationList.size();i++){
+        QPointF temp=coordinate.XY2Screen(passwayLocationList.at(i));
         if(i!=0){
             mypen.setColor(Qt::black);
             mypen.setWidth(0);
             painter.setPen(mypen);
             painter.drawLine(last,temp);
         }
-        mypen.setWidth(0);                     // 1 表示点的大小
+        mypen.setWidth(1);                     // 1 表示点的大小
         mypen.setColor(Qt::green);
         painter.setPen(mypen);
-        painter.drawPoint((qint64)temp.x(),(qint64)temp.y());
+        painter.drawPoint(temp);
         last=temp;
     }
 
     //绘制起始点。
-    QPointF startScreenPoint=coordinate.LongLat2Screen(LongLat(startPointGPS.x(),startPointGPS.y()));
+    QPointF startScreenPoint=coordinate.XY2Screen(startPoint);
     mypen.setWidth(2);
     mypen.setColor(Qt::black);
     painter.setPen(mypen);
     painter.drawPoint(startScreenPoint);
 
-    QPointF nextTargetScreenPoint=coordinate.LongLat2Screen(LongLat(nextTargetPointGPS.x(),nextTargetPointGPS.y()));
+    QPointF nextTargetScreenPoint=coordinate.XY2Screen(nextTargetPoint);
     mypen.setWidth(2);
     mypen.setColor(Qt::red);
     painter.setPen(mypen);
@@ -219,6 +215,8 @@ void PaintWidget::mousePressEvent(QMouseEvent *event)
     //qDebug("screen偏移:(%d,%d)  ",event->pos().x(),event->pos().y());
     qreal x=event->pos().x()-width()/2-horizontalOffset;
     qreal y=event->pos().y()-height()/2-verticalOffset;
+
+    //将地图上的点转化成经纬度 存在问题
     QPointF temp=coordinate.Screen2XY(x,y);
     //qDebug("xy偏移:(%.10f,%.10f)  ",temp.x(),temp.y());
     LongLat mouseGPS=coordinate.XY2LongLat(temp);
@@ -290,29 +288,17 @@ void PaintWidget::translate(QPointF delta)
 }
 
 void PaintWidget::acceptQPoint(QPointF point){
-    routePointList.push_back(point);
+    routeLocationList.push_back(point);
     update();
 }
 void PaintWidget::addQPoint(QPointF point){
-    passWayPointList.push_back(point);
+    passwayLocationList.push_back(point);
     update();
 }
 void PaintWidget::clear(){
-    passWayPointList.clear();
-    routePointList.clear();
+    routeLocationList.clear();
+    passwayLocationList.clear();
     update();
 }
-//QPointF PaintWidget::XY2Screen(QPointF XY){
-//    qreal dx=XY.x()-center.x();
-//    qreal dy=XY.y()-center.y();
-//    QPointF screen(dx*currentStepScaleFactor*scaleFactor,-dy*currentStepScaleFactor*scaleFactor);
-//    return screen;
-//}
 
-//QPointF PaintWidget::Screen2XY(QPointF screen){
-//    qreal dx=(screen.x()-centerScreen.x())/currentStepScaleFactor/scaleFactor;
-//    qreal dy=-(screen.y()-centerScreen.y())/currentStepScaleFactor/scaleFactor;
-//    QPointF XY(center.x()+dx,center.y()+dy);
-//    qDebug()<<XY.x()<<XY.y();
-//    return XY;
-//}
+

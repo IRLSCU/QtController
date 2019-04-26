@@ -174,15 +174,10 @@ void ProcessRunDialog::copySetInitRouteList(QList<QPointF> route){
     for(int i=0;i<route.size();i++){
         this->routePointList.append(QPointF(route.at(i)));
     }
-    initCoordinateOriginPoint(routePointList.at(0));
     initGpsProcessRoute(routePointList);
-
 }
 void ProcessRunDialog::initGpsProcessRoute(QList<QPointF> route){
     gpsProcesser->initRoute(route);
-}
-void ProcessRunDialog::initCoordinateOriginPoint(QPointF originPoint){//初始化高斯坐标系坐标原点
-    gpsProcesser->initCCoordinate(500,originPoint.x(),originPoint.y());
 }
 void ProcessRunDialog::startProcess(){
     this->ui->textBrowser->clear();

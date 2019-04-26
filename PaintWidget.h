@@ -12,6 +12,10 @@
 #include <QGestureEvent>
 #include <QPanGesture>
 #include <QPinchGesture>
+/**
+ * @brief The PaintWidget class
+ * 传入相对坐标系，绘制到界面
+ */
 class PaintWidget: public QWidget{
     Q_OBJECT
 public:
@@ -24,12 +28,12 @@ public:
     void addQPoint(QPointF point);
     void clear();
     void initScreenCenter(QPointF);
-    QList<QPointF> getRoutePointList(){return routePointList;}
     ~PaintWidget();
 private:
-    QList<QPointF> routePointList;
-    QList<QPointF> passWayPointList;
-    QPointF currenGPS;
+    QList<QPointF> routeLocationList;//存的XY
+    QList<QPointF> passwayLocationList;//存的XY
+    QPointF centerGPS;
+
 //    QPointF center;//高斯坐标表示
 //    QPointF centerScreen;//屏幕坐标表示
     qreal horizontalOffset;
@@ -44,8 +48,8 @@ private:
 
     CCoordinate coordinate;
 
-    QPointF startPointGPS;
-    QPointF nextTargetPointGPS;
+    QPointF startPoint;
+    QPointF nextTargetPoint;
 
     QLabel* mousePosInfoLabel;
     QLabel* scaleInfoLabel;
@@ -67,8 +71,6 @@ protected:
 public:
     void paintStartPoint(QPointF GpsInfo);
     void paintTargetPoint(int target);
-//    QPointF XY2Screen(QPointF);
-//    QPointF Screen2XY(QPointF);
 
 };
 #endif // PAINTWIDGET_H

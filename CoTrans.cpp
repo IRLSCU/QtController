@@ -157,14 +157,6 @@ LongLat CCoordinate::XY2LongLat(const qreal &x,const qreal &y)
     return XY2LongLat(xyp);
 }
 
-QPointF CCoordinate::XY2Screen(const qlonglong &x,const qlonglong &y)
-{
-    QPointF xyp;
-    xyp.setX(x);
-    xyp.setY(y);
-    return XY2Screen(xyp);
-}
-
 QPointF CCoordinate::XY2Screen(QPointF pos)
 {
     qreal f_tempX,f_tempY;
