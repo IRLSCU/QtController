@@ -19,7 +19,7 @@ public:
     ~MainWindow();
     void print(const QString&);
     QList<QPointF> gpsRouteList;
-
+    QList<QPointF> locationRouteList;
 private:
     Ui::MainWindow *ui;
     void open();
@@ -43,6 +43,7 @@ private:
     QAction* setScaleAction;    //设置比例尺
     QAction* setTinyCarComAction;    //设置比例尺
     GpsRingBuffer* gpsRingBuffer;
+    LocationRingBuffer* locationRingBuffer;
     PaintWidget* paintWidget;
     GpsInfo centerGPS;
     CCoordinate ordinate;

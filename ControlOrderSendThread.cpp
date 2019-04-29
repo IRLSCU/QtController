@@ -118,6 +118,9 @@ void ControlOrderSendThread::setGpsInfo(GpsInfo gpsInfo){
     //qDebug()<<"gpsInfo change to "<<gpsInfo.toString();
     locker.unlock();
 }
+void ControlOrderSendThread::setLocationInfo(LocationPosition location){
+    //TODO 仅用作记录数据
+}
 void ControlOrderSendThread::setGear(int gear){
     QMutexLocker locker(&m_controlOrderLock);
     runControlOrder.setGear(gear);

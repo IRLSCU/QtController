@@ -131,13 +131,13 @@ void MainWindow::openProcessRunNoGPS(){
                              tr("please load route firstly"));
         return;
     }
-    ProcessRunNoGPSDialog * dialog=new ProcessRunNoGPSDialog(gpsRingBuffer,this);
-    dialog->copySetInitRouteList(gpsRouteList);
+    ProcessRunNoGPSDialog * dialog=new ProcessRunNoGPSDialog(locationRingBuffer,this);
+    dialog->copySetInitRouteList(locationRouteList);
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->setWindowTitle(tr("Process Run(Not GPS)"));
     dialog->show();
     connect(dialog->getGpsBufferConsumeRunThread(),&GpsBufferConsumeRunThread::sendGpsInfo,paintWidget,&PaintWidget::addQPoint);
-    connect(dialog,&ProcessRunNoGPSDialog::sendStartPointGPSToPaintWidget,paintWidget,&PaintWidget::paintStartPoint);
+    connect(dialog,&ProcessRunNoGPSDialog::sendStartPointLocationToPaintWidget,paintWidget,&PaintWidget::paintStartPoint);
     connect(dialog,&ProcessRunNoGPSDialog::sendNextTargetPointToPaintWidget,paintWidget,&PaintWidget::paintTargetPoint);
 }
 void MainWindow::openInitRouteDialog(){

@@ -3,27 +3,29 @@
 
 #include<QFileDialog>
 #include<QMessageBox>
-ProcessRunNoGPSDialog::ProcessRunNoGPSDialog(GpsRingBuffer* gpsRingBuffer,QWidget *parent) :
+ProcessRunNoGPSDialog::ProcessRunNoGPSDialog(LocationRingBuffer* locationRingBuffer,QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ProcessRunDialog)
 {
     ui->setupUi(this);
     this->setWindowTitle(QStringLiteral("start running"));
     PID=new Pid_control;
-    gpsProcesser=new GPSProcesser();//需要初始化高斯坐标的终点gps信息，需要加载路径，需要设定初始点。
-    gpsBufferConsumeRunThread=new GpsBufferConsumeRunThread(gpsRingBuffer,this);//从ringbuffer中消费GPS坐标
-    gpsBufferConsumeRunThread->start();
-    connect(this,&ProcessRunNoGPSDialog::sendInitSignal,gpsBufferConsumeRunThread,&GpsBufferConsumeRunThread::runSignal);//开始消费者线程后，标识是否开始
-    connect(ui->startPointChoiceBT,&QPushButton::clicked,gpsBufferConsumeRunThread,&GpsBufferConsumeRunThread::setSendStartGpsInfoSignal);//开始消费者线程后，标识是否取一个值为车辆当前坐标
-    qRegisterMetaType<GpsInfo>("GpsInfo");
-    //若点击界面的重新开始或者继续按钮，消费者线程开始传递信号
-    connect(gpsBufferConsumeRunThread,&GpsBufferConsumeRunThread::sendRunGpsInfo,[&](GpsInfo gpsInfo){
-        processGPS(gpsInfo);//处理传过来的GPS,对车辆当前位置进行处理
-        this->ui->speed->setText(QString::number(gpsInfo.speed,'f',2));
-        this->ui->course->setText(QString::number(gpsInfo.course,'f',2));
-        updateBroswerText(gpsInfo);//更新显示的text broswer
-    });//同时将数据发往ProcessRunDialog
-    connect(gpsBufferConsumeRunThread,&GpsBufferConsumeRunThread::sendStartGpsInfo,this,&ProcessRunNoGPSDialog::initStartPointByGpsInfo);//接收从消费者线程传出的当前车辆坐标，直接初始化。
+    processer=new Processer();//需要初始化高斯坐标的终点gps信息，需要加载路径，需要设定初始点。
+
+    //用消费者线程处理locationBuffer  todo
+//    gpsBufferConsumeRunThread=new GpsBufferConsumeRunThread(gpsRingBuffer,this);//从ringbuffer中消费GPS坐标
+//    gpsBufferConsumeRunThread->start();
+//    connect(this,&ProcessRunNoGPSDialog::sendInitSignal,gpsBufferConsumeRunThread,&GpsBufferConsumeRunThread::runSignal);//开始消费者线程后，标识是否开始
+//    connect(ui->startPointChoiceBT,&QPushButton::clicked,gpsBufferConsumeRunThread,&GpsBufferConsumeRunThread::setSendStartGpsInfoSignal);//开始消费者线程后，标识是否取一个值为车辆当前坐标
+//    qRegisterMetaType<GpsInfo>("GpsInfo");
+//    //若点击界面的重新开始或者继续按钮，消费者线程开始传递信号
+//    connect(gpsBufferConsumeRunThread,&GpsBufferConsumeRunThread::sendRunGpsInfo,[&](GpsInfo gpsInfo){
+//        processGPS(gpsInfo);//处理传过来的GPS,对车辆当前位置进行处理
+//        this->ui->speed->setText(QString::number(gpsInfo.speed,'f',2));
+//        this->ui->course->setText(QString::number(gpsInfo.course,'f',2));
+//        updateBroswerText(gpsInfo);//更新显示的text broswer
+//    });//同时将数据发往ProcessRunDialog
+//    connect(gpsBufferConsumeRunThread,&GpsBufferConsumeRunThread::sendStartGpsInfo,this,&ProcessRunNoGPSDialog::initStartPointByGpsInfo);//接收从消费者线程传出的当前车辆坐标，直接初始化。
 
     //设置下一个目标点
     connect(ui->confirmNextPointBT,&QPushButton::clicked,[&](){
@@ -79,7 +81,7 @@ ProcessRunNoGPSDialog::ProcessRunNoGPSDialog(GpsRingBuffer* gpsRingBuffer,QWidge
     controlOrderSendThread=new ControlOrderSendThread(this);
     connect(this,&ProcessRunNoGPSDialog::sendRange,controlOrderSendThread,&ControlOrderSendThread::setRange);
     connect(this,&ProcessRunNoGPSDialog::sendSpeed,controlOrderSendThread,&ControlOrderSendThread::setSpeed);
-    connect(this,&ProcessRunNoGPSDialog::sendGpsInfo,controlOrderSendThread,&ControlOrderSendThread::setGpsInfo);
+    connect(this,&ProcessRunNoGPSDialog::sendLocationInfo,controlOrderSendThread,&ControlOrderSendThread::setLocationInfo);
 
     connect(ui->start,&QPushButton::clicked,[&](){
         controlOrderSendThread->enableSignal(true);
@@ -136,25 +138,25 @@ ProcessRunNoGPSDialog::ProcessRunNoGPSDialog(GpsRingBuffer* gpsRingBuffer,QWidge
 
 ProcessRunNoGPSDialog::~ProcessRunNoGPSDialog()
 {
-    gpsBufferConsumeRunThread->stopImmediately();
-    gpsBufferConsumeRunThread->wait();
+//    gpsBufferConsumeRunThread->stopImmediately();
+//    gpsBufferConsumeRunThread->wait();
 
     controlOrderSendThread->stopImmediately();
     controlOrderSendThread->wait();
     delete ui;
 }
-void ProcessRunNoGPSDialog::processGPS(GpsInfo gpsInfo){
+void ProcessRunNoGPSDialog::processGPS(LocationPosition& location){
     int status;//状态，0未到终点，1到达终点
     int target;//下一个目标点
-    //gps转XY坐标，计算获得的偏离程度。
-    double actualCTE = gpsProcesser->startProcess(gpsInfo,&target,&status);
+    //计算获得的偏离程度。
+    double actualCTE = processer->startProcess(GaussGPSData(location.x,location.y),&target,&status);
     setNextTargetPoint(target);
     //转化成车辆的转向
     double range=PID->PID_realize(actualCTE);
     //todo 车辆速度PID
     //double speed=12;
     emit sendRange((int)range);
-    emit sendGpsInfo(gpsInfo);
+    emit sendLocationInfo(location);
     //emit sendSpeed((int)speed);
     ui->rangeCTE->setText(QString::number(actualCTE));
     //ui->speedCTE->setText(QString::number(speed));
@@ -165,8 +167,8 @@ void ProcessRunNoGPSDialog::processGPS(GpsInfo gpsInfo){
         qDebug()<<QStringLiteral("已到终点");
     }
 }
-void ProcessRunNoGPSDialog::updateBroswerText(GpsInfo gpsInfo){
-    ui->textBrowser->insertPlainText(gpsInfo.toString().append("\n"));
+void ProcessRunNoGPSDialog::updateBroswerText(LocationPosition& location){
+    ui->textBrowser->insertPlainText(location.toString().append("\n"));
     ui->textBrowser->moveCursor(QTextCursor::End);
 }
 //使用在主界面中
@@ -174,15 +176,6 @@ void ProcessRunNoGPSDialog::copySetInitRouteList(QList<QPointF> route){
     for(int i=0;i<route.size();i++){
         this->routePointList.append(QPointF(route.at(i)));
     }
-    initCoordinateOriginPoint(routePointList.at(0));
-    initGpsProcessRoute(routePointList);
-
-}
-void ProcessRunNoGPSDialog::initGpsProcessRoute(QList<QPointF> route){
-    gpsProcesser->initRoute(route);
-}
-void ProcessRunNoGPSDialog::initCoordinateOriginPoint(QPointF originPoint){//初始化高斯坐标系坐标原点
-    //gpsProcesser->initCCoordinate(500,originPoint.x(),originPoint.y());
 }
 void ProcessRunNoGPSDialog::startProcess(){
     this->ui->textBrowser->clear();
@@ -216,18 +209,18 @@ void ProcessRunNoGPSDialog::saveFile()
                              tr("You did not select any file."));
     }
 }
-void ProcessRunNoGPSDialog::initStartPointByGpsInfo(GpsInfo gps){
-    emit sendStartPointGPSToPaintWidget(QPointF(gps.longitude,gps.latitude));
-    initStartPoint(gps.longitude,gps.latitude,gps.altitude);
+void ProcessRunNoGPSDialog::initStartPointByLocationInfo(LocationPosition& location){
+    emit sendStartPointLocationToPaintWidget(QPointF(location.x,location.y));
+    initStartPoint(location.x,location.y,location.z);
 }
-void ProcessRunNoGPSDialog::initStartPoint(double longitude, double latitude, double altitude){
-    int target=gpsProcesser->initStartPoint(longitude,latitude);
+void ProcessRunNoGPSDialog::initStartPoint(double x, double y, double z){
+    int target=processer->initStartPoint(GaussGPSData(x,y));
     setNextTargetPoint(target);
-    initStartPointToQLable(longitude,latitude,altitude);//QLabel显示
+    initStartPointToQLable(x,y,z);//QLabel显示
 }
 void ProcessRunNoGPSDialog::setNextTargetPoint(int i){
     ui->lineEdit->setText(QString::number(i));
-    gpsProcesser->setNextTargetPoint(i);
+    processer->setNextTargetPoint(i);
     emit sendNextTargetPointToPaintWidget(i);
 }
 void ProcessRunNoGPSDialog::initStartPointToQLable(double longitude, double latitude, double altitude){

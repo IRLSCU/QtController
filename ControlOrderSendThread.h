@@ -3,6 +3,7 @@
 #define CONTROLORDERSENDTHREAD_BOLCKTIME 200
 
 #include "PreDefinition.h"
+#include "LocationPosition.h"
 #include<CommunicationFactory.h>
 #include<QThread>
 #include<QMutex>
@@ -39,6 +40,7 @@ public:
     void setRange(int range);
     void setSpeed(int speed);
     void setGpsInfo(GpsInfo gps);
+    void setLocationInfo(LocationPosition location);
     void setGear(int gear);
 signals:
 };

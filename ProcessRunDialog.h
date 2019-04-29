@@ -22,14 +22,12 @@ class ProcessRunDialog : public QDialog
 
 public:
     explicit ProcessRunDialog(GpsRingBuffer*, QWidget *parent = 0);
-    void acceptGpsInfo(GpsInfo& GpsInfo);
     void updateBroswerText(GpsInfo GpsInfo);
     void startProcess();
     void continueProcess();
     void endProcess();
     void saveFile();
     void readFile();
-    void setStartGps(GpsInfo gps);
     void copySetInitRouteList(QList<QPointF>);
     void setNextTargetPoint(int i);
     void processGPS(GpsInfo GpsInfo);
@@ -44,8 +42,7 @@ private:
     GPSProcesser* gpsProcesser;
     Pid_control* PID;
     QList<QPointF> routePointList;//需要现在主界面加载路径后
-    void initGpsProcessRoute(QList<QPointF>);//初始化路径
-    void initCoordinateOriginPoint(QPointF);//初始化高斯坐标原点GPS
+    void initGpsProcessRoute(QList<QPointF>);//通过GPSProcesser 初始化路径
     void initStartPointByGpsInfo(GpsInfo gps);//初始化车辆起始位置坐标GPS
     void initStartPoint(double longitude,double latitude,double altitude);//初始化车辆起始位置坐标GPS
     void initStartPointToQLable(double longitude,double latitude,double altitude);//同步数据到label界面
