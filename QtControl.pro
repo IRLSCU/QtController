@@ -53,7 +53,8 @@ SOURCES += \
     TinyCarSerialPortDialog.cpp \
     SocketSettingWidget.cpp \
     Processer.cpp \
-    ProcessRunNoGPSDialog.cpp
+    ProcessRunNoGPSDialog.cpp \
+    LocationBufferConsumeRunThread.cpp
 
 HEADERS += \
         MainWindow.h \
@@ -91,7 +92,8 @@ HEADERS += \
     SocketSettingWidget.h \
     Processer.h \
     ProcessRunNoGPSDialog.h \
-    LocationPosition.h
+    LocationPosition.h \
+    LocationBufferConsumeRunThread.h
 
 FORMS += \
         MainWindow.ui \

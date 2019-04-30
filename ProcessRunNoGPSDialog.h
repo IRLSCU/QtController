@@ -8,7 +8,7 @@
 #include "RingBuffer.h"
 #include "Processer.h"
 #include "PID.h"
-#include "GpsBufferConsumeRunThread.h"
+#include "LocationBufferConsumeRunThread.h"
 #include "ControlOrderSendThread.h"
 #include <QDialog>
 
@@ -22,7 +22,7 @@ class ProcessRunNoGPSDialog : public QDialog
 
 public:
     explicit ProcessRunNoGPSDialog(LocationRingBuffer*, QWidget *parent = 0);
-    void initStartPointByLocationInfo(LocationPosition& location);
+    void initStartPointByLocation(LocationPosition location);
     void updateBroswerText(LocationPosition& location);
     void startProcess();
     void continueProcess();
@@ -31,16 +31,16 @@ public:
     void readFile();
     void copySetInitRouteList(QList<QPointF>);
     void setNextTargetPoint(int i);
-    void processGPS(LocationPosition& location);
+    void processLocation(LocationPosition& location);
     void initStartPointToQLable(double,double,double);
     void initStartPoint(double x, double y, double z);
     Pid_control* getPid(){return PID;}
-    GpsBufferConsumeRunThread* getGpsBufferConsumeRunThread(){return gpsBufferConsumeRunThread;}
+    LocationBufferConsumeRunThread* getLocationBufferConsumeRunThread(){return locationBufferConsumeRunThread;}
     ~ProcessRunNoGPSDialog();
 
 private:
     Ui::ProcessRunDialog *ui;
-    GpsBufferConsumeRunThread* gpsBufferConsumeRunThread;
+    LocationBufferConsumeRunThread* locationBufferConsumeRunThread;
     ControlOrderSendThread* controlOrderSendThread;
     Processer* processer;
     Pid_control* PID;

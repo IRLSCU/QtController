@@ -80,7 +80,7 @@ void ControlOrderSendThread::run(){
         if(carType==LARGECARTYPE)
 //            largeCarCO.setSpeed(107);
             communication->sendMessage(largeCarCO.getCharOrder());
-        if(carType==TINYCARTYPE){//todo
+        if(carType==TINYCARTYPE){
 //            unsigned char tt[10]={0xFF,0xFE,1,2,3,4,5,6,7,8};
             communication->sendMessage(tinyCarCO.getCharOrder());
         }

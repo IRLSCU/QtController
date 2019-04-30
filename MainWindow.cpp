@@ -24,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
     initOrdinate();
 
     gpsRingBuffer=new GpsRingBuffer();
-
+    locationRingBuffer=new LocationRingBuffer();
     setCentralWidget(paintWidget=new PaintWidget());
     connect(this,&MainWindow::sendQPointToPaintWidget,paintWidget,&PaintWidget::acceptQPoint);
 
@@ -136,7 +136,7 @@ void MainWindow::openProcessRunNoGPS(){
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->setWindowTitle(tr("Process Run(Not GPS)"));
     dialog->show();
-    connect(dialog->getGpsBufferConsumeRunThread(),&GpsBufferConsumeRunThread::sendGpsInfo,paintWidget,&PaintWidget::addQPoint);
+    connect(dialog->getLocationBufferConsumeRunThread(),&LocationBufferConsumeRunThread::sendLocation,paintWidget,&PaintWidget::addQPoint);
     connect(dialog,&ProcessRunNoGPSDialog::sendStartPointLocationToPaintWidget,paintWidget,&PaintWidget::paintStartPoint);
     connect(dialog,&ProcessRunNoGPSDialog::sendNextTargetPointToPaintWidget,paintWidget,&PaintWidget::paintTargetPoint);
 }

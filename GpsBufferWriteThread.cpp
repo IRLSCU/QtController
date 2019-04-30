@@ -56,7 +56,7 @@ void GpsBufferWriteThread::stopImmediately()
 bool GpsBufferWriteThread::haveStartAndIsGGA(QString s) {
     if (s.size() < 8) return false;
     QString hex=s.mid(1, 5);
-    if (hex.compare("GPGGA")!=0)//todo 为了获取速度需要去掉这一块
+    if (hex.compare("GPGGA")!=0)
         return false;
     for (int i = 0; i<s.size(); i++) {
         if (s[i] == '*') return true;

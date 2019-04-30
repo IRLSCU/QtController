@@ -12,20 +12,20 @@ ProcessRunNoGPSDialog::ProcessRunNoGPSDialog(LocationRingBuffer* locationRingBuf
     PID=new Pid_control;
     processer=new Processer();//需要初始化高斯坐标的终点gps信息，需要加载路径，需要设定初始点。
 
-    //用消费者线程处理locationBuffer  todo
-//    gpsBufferConsumeRunThread=new GpsBufferConsumeRunThread(gpsRingBuffer,this);//从ringbuffer中消费GPS坐标
-//    gpsBufferConsumeRunThread->start();
-//    connect(this,&ProcessRunNoGPSDialog::sendInitSignal,gpsBufferConsumeRunThread,&GpsBufferConsumeRunThread::runSignal);//开始消费者线程后，标识是否开始
-//    connect(ui->startPointChoiceBT,&QPushButton::clicked,gpsBufferConsumeRunThread,&GpsBufferConsumeRunThread::setSendStartGpsInfoSignal);//开始消费者线程后，标识是否取一个值为车辆当前坐标
-//    qRegisterMetaType<GpsInfo>("GpsInfo");
-//    //若点击界面的重新开始或者继续按钮，消费者线程开始传递信号
-//    connect(gpsBufferConsumeRunThread,&GpsBufferConsumeRunThread::sendRunGpsInfo,[&](GpsInfo gpsInfo){
-//        processGPS(gpsInfo);//处理传过来的GPS,对车辆当前位置进行处理
-//        this->ui->speed->setText(QString::number(gpsInfo.speed,'f',2));
-//        this->ui->course->setText(QString::number(gpsInfo.course,'f',2));
-//        updateBroswerText(gpsInfo);//更新显示的text broswer
-//    });//同时将数据发往ProcessRunDialog
-//    connect(gpsBufferConsumeRunThread,&GpsBufferConsumeRunThread::sendStartGpsInfo,this,&ProcessRunNoGPSDialog::initStartPointByGpsInfo);//接收从消费者线程传出的当前车辆坐标，直接初始化。
+    //用消费者线程处理locationBuffer
+    locationBufferConsumeRunThread=new LocationBufferConsumeRunThread(locationRingBuffer,this);//从ringbuffer中消费GPS坐标
+    locationBufferConsumeRunThread->start();
+    connect(this,&ProcessRunNoGPSDialog::sendInitSignal,locationBufferConsumeRunThread,&LocationBufferConsumeRunThread::runSignal);//开始消费者线程后，标识是否开始
+    connect(ui->startPointChoiceBT,&QPushButton::clicked,locationBufferConsumeRunThread,&LocationBufferConsumeRunThread::setSendStartLocationSignal);//开始消费者线程后，标识是否取一个值为车辆当前坐标
+    qRegisterMetaType<LocationPosition>("LocationPosition");
+    //若点击界面的重新开始或者继续按钮，消费者线程开始传递信号
+    connect(locationBufferConsumeRunThread,&LocationBufferConsumeRunThread::sendRunLocation,[&](LocationPosition location){
+        processLocation(location);//处理传过来的GPS,对车辆当前位置进行处理
+//        this->ui->speed->setText(QString::number(location.speed,'f',2));
+//        this->ui->course->setText(QString::number(location.course,'f',2));
+        updateBroswerText(location);//更新显示的text broswer
+    });//同时将数据发往ProcessRunDialog
+    connect(locationBufferConsumeRunThread,&LocationBufferConsumeRunThread::sendStartLocation,this,&ProcessRunNoGPSDialog::initStartPointByLocation);//接收从消费者线程传出的当前车辆坐标，直接初始化。
 
     //设置下一个目标点
     connect(ui->confirmNextPointBT,&QPushButton::clicked,[&](){
@@ -138,14 +138,14 @@ ProcessRunNoGPSDialog::ProcessRunNoGPSDialog(LocationRingBuffer* locationRingBuf
 
 ProcessRunNoGPSDialog::~ProcessRunNoGPSDialog()
 {
-//    gpsBufferConsumeRunThread->stopImmediately();
-//    gpsBufferConsumeRunThread->wait();
+    locationBufferConsumeRunThread->stopImmediately();
+    locationBufferConsumeRunThread->wait();
 
     controlOrderSendThread->stopImmediately();
     controlOrderSendThread->wait();
     delete ui;
 }
-void ProcessRunNoGPSDialog::processGPS(LocationPosition& location){
+void ProcessRunNoGPSDialog::processLocation(LocationPosition& location){
     int status;//状态，0未到终点，1到达终点
     int target;//下一个目标点
     //计算获得的偏离程度。
@@ -209,7 +209,7 @@ void ProcessRunNoGPSDialog::saveFile()
                              tr("You did not select any file."));
     }
 }
-void ProcessRunNoGPSDialog::initStartPointByLocationInfo(LocationPosition& location){
+void ProcessRunNoGPSDialog::initStartPointByLocation(LocationPosition location){
     emit sendStartPointLocationToPaintWidget(QPointF(location.x,location.y));
     initStartPoint(location.x,location.y,location.z);
 }
