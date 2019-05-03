@@ -23,7 +23,7 @@ private:
     QMutex m_lock;
     bool m_isCanRun;
 
-    bool haveStartAndIsGGA(QString s);//判断是否是GGA
+    bool isGGA(QString s);//判断是否是GGA
 public:
     GpsBufferWriteThread(CharRingBuffer*,GpsRingBuffer*,QObject *parent ,QString name);//传入char循环队列与gps循环队列的指针
     ~GpsBufferWriteThread();

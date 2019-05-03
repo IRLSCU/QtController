@@ -196,6 +196,9 @@ void ControlOrder::LargeCarCO2NormalCO(LargeCarCO& largeCarCO,ControlOrder& norm
 void ControlOrder::setGpsInfo(GpsInfo gps){
     this->gpsInfo=gps;
 }
+void ControlOrder::setLocation(LocationPosition location){
+    this->location=location;
+}
 void ControlOrder::printInfo(){
     qDebug("Control Order: speed:%d,turnRange:%d,gear:%d %s,lightSignal:%d %s,hore:%d %s",
            speed,turnRange,

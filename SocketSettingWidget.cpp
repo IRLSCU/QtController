@@ -35,6 +35,8 @@ SocketSettingWidget::~SocketSettingWidget()
     gpsBufferWriteThread1->stopImmediately();
     gpsBufferWriteThread1->wait();
 
+    locationBufferProduceThread->stopImmediately();
+    locationBufferProduceThread->wait();
     delete gpsBufferWriteThread1;
     delete ringBuffer1;
     delete this->socket;

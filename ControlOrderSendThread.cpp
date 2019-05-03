@@ -46,15 +46,26 @@ void ControlOrderSendThread::run(){
 //    communication->sendMessage(tt);
 
     QString time = QDateTime::currentDateTime().toString("yyyyddMM_hhmmss");
-    QFile file("./../QtControl/largeCarOrder/"+time+".txt");
+    QFile file("./../QtControl/largeCarOrder/GPS"+time+".txt");
+    QFile file2("./../QtControl/largeCarOrder/XYZ"+time+".txt");
     if(!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        qDebug() << QString("largeCarOrder.txt Open failed." );
+        qDebug() << QString("GPSlargeCarOrder.txt Open failed." );
         return;
     }else{
-        qDebug() << QString("largeCarOrder.txt OpenSuccessful." );
+        qDebug() << QString("GPSlargeCarOrder.txt OpenSuccessful." );
     }
+
+    if(!file2.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        qDebug() << QString("XYZlargeCarOrder.txt Open failed." );
+        return;
+    }else{
+        qDebug() << QString("XYZlargeCarOrder.txt OpenSuccessful." );
+    }
+
     QTextStream out(&file);
+    QTextStream out2(&file2);
     while(true){ 
         if(!m_enable){
             current=&doNothingControlOrder;
@@ -71,11 +82,16 @@ void ControlOrderSendThread::run(){
         //current->printInfo();
         unsigned char * c=largeCarCO.getCharOrder();
         out<<current->getGpsInfo().toString()<<" ";
+        out2<<current->getLocation().toString()<<" ";
+
         for(int i=0;i<LARGECARCO_LENGTH;i++){
             out<<QString::number(c[i],10)<<" ";
+            out2<<QString::number(c[i],10)<<" ";
         }
         QString localTime = QDateTime::currentDateTime().toString("ddMMyy hhmmss.zzz");
         out<<localTime<<"\n";
+        out2<<localTime<<"\n";
+
         //todo
         if(carType==LARGECARTYPE)
 //            largeCarCO.setSpeed(107);
@@ -95,6 +111,7 @@ void ControlOrderSendThread::run(){
         this->msleep(CONTROLORDERSENDTHREAD_BOLCKTIME);//阻塞否则cpu占用太高
     }
     file.close();
+    file2.close();
     communication->close();
     delete communication;
 }
@@ -119,7 +136,9 @@ void ControlOrderSendThread::setGpsInfo(GpsInfo gpsInfo){
     locker.unlock();
 }
 void ControlOrderSendThread::setLocationInfo(LocationPosition location){
-    //TODO 仅用作记录数据
+    QMutexLocker locker(&m_controlOrderLock);
+    runControlOrder.setLocation(location);
+    locker.unlock();
 }
 void ControlOrderSendThread::setGear(int gear){
     QMutexLocker locker(&m_controlOrderLock);

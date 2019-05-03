@@ -22,11 +22,12 @@ void GpsBufferWriteThread::run(){//将char缓冲区中的数据拼接成gpsInfo�
             stringBuffer.append(receive_char);
             if (receive_char == 10) {
                 std::string gpsData;
-                if(haveStartAndIsGGA(stringBuffer)&&NewParser->isValidSentenceChecksum(stringBuffer.toStdString(), gpsData)){
+                if(NewParser->isValidSentenceChecksum(stringBuffer.toStdString(), gpsData)){
                     NewParser->ParseNmea0183Sentence(gpsData);
                     GlobalGpsStruct globalGps;
                     NewParser->getGpsGlobalStruct(globalGps);
-                    gpsRingBuffer->push(GpsInfo(globalGps.fLongitude,globalGps.fLatitude,globalGps.quality,globalGps.ulTime,globalGps.ulDate,globalGps.fAltitude,globalGps.fSpeed,globalGps.fCourse));
+                    if(isGGA(stringBuffer))
+                        gpsRingBuffer->push(GpsInfo(globalGps.fLongitude,globalGps.fLatitude,globalGps.quality,globalGps.ulTime,globalGps.ulDate,globalGps.fAltitude,globalGps.fSpeed,globalGps.fCourse));
                 }
                 //qDebug()<<stringBuffer;
                 stringBuffer.clear();
@@ -53,13 +54,14 @@ void GpsBufferWriteThread::stopImmediately()
     m_isCanRun = false;
     locker.unlock();
 }
-bool GpsBufferWriteThread::haveStartAndIsGGA(QString s) {
+bool GpsBufferWriteThread::isGGA(QString s) {
     if (s.size() < 8) return false;
     QString hex=s.mid(1, 5);
     if (hex.compare("GPGGA")!=0)
         return false;
-    for (int i = 0; i<s.size(); i++) {
-        if (s[i] == '*') return true;
-    }
-    return false;
+//    for (int i = 0; i<s.size(); i++) {
+//        if (s[i] == '*') return true;
+//    }
+//    return false;
+    return true;
 }

@@ -176,6 +176,7 @@ void ProcessRunNoGPSDialog::copySetInitRouteList(QList<QPointF> route){
     for(int i=0;i<route.size();i++){
         this->routePointList.append(QPointF(route.at(i)));
     }
+    processer->initRoute(this->routePointList);
 }
 void ProcessRunNoGPSDialog::startProcess(){
     this->ui->textBrowser->clear();

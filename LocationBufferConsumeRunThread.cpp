@@ -48,10 +48,10 @@ void LocationBufferConsumeRunThread::run(){
 //    -16.958 7.10011
 //    -17.8929 7.66497
 //    -18.8343 8.24857
-    locationRingBuffer->push(LocationPosition());
-    locationRingBuffer->push(LocationPosition(-1,-0.5));
-    locationRingBuffer->push(LocationPosition(-3,1.6));
-    locationRingBuffer->push(LocationPosition(-10,3.7));
+//    locationRingBuffer->push(LocationPosition());
+//    locationRingBuffer->push(LocationPosition(-1,-0.5));
+//    locationRingBuffer->push(LocationPosition(-3,1.6));
+//    locationRingBuffer->push(LocationPosition(-10,3.7));
 
     //int i=0;
     while(true){ 

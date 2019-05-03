@@ -23,14 +23,15 @@ void LocationBufferProduceThread::run(){//将char缓冲区中的数据拼接成g
             stringBuffer.append(receive_char);
             if (receive_char == 10) {
                 std::string gpsData;
-                if(haveStartAndIsGGA(stringBuffer)&&NewParser->isValidSentenceChecksum(stringBuffer.toStdString(), gpsData)){
+                if(NewParser->isValidSentenceChecksum(stringBuffer.toStdString(), gpsData)){
                     NewParser->ParseNmea0183Sentence(gpsData);
                     GlobalGpsStruct globalGps;
                     NewParser->getGpsGlobalStruct(globalGps);
                     double lon=globalGps.fLongitude;
                     double lat=globalGps.fLatitude;
                     QPointF point=ordinate.LongLat2XY(lon,lat);
-                    loactionRingBuffer->push(LocationPosition(point.x(),point.y()));
+                    if(isGGA(stringBuffer))
+                        loactionRingBuffer->push(LocationPosition(point.x(),point.y()));
                 }
                 //qDebug()<<stringBuffer;
                 stringBuffer.clear();
@@ -57,15 +58,16 @@ void LocationBufferProduceThread::stopImmediately()
     m_isCanRun = false;
     locker.unlock();
 }
-bool LocationBufferProduceThread::haveStartAndIsGGA(QString s) {
+bool LocationBufferProduceThread::isGGA(QString s) {
     if (s.size() < 8) return false;
     QString hex=s.mid(1, 5);
     if (hex.compare("GPGGA")!=0)
         return false;
-    for (int i = 0; i<s.size(); i++) {
-        if (s[i] == '*') return true;
-    }
-    return false;
+//    for (int i = 0; i<s.size(); i++) {
+//        if (s[i] == '*') return true;
+//    }
+//    return false;
+    return true;
 }
 void LocationBufferProduceThread::initCCoordinate() {
     QFile file("./../QtControl/CoordinateConf.txt");

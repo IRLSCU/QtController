@@ -132,6 +132,10 @@ void MainWindow::openProcessRunNoGPS(){
         return;
     }
     ProcessRunNoGPSDialog * dialog=new ProcessRunNoGPSDialog(locationRingBuffer,this);
+    //for test 从文件读GPS转化成xy
+    for(int i=0;i<gpsRouteList.size();i++){
+        locationRouteList.push_back(ordinate.LongLat2XY(gpsRouteList.at(i).x(),gpsRouteList.at(i).y()));
+    }
     dialog->copySetInitRouteList(locationRouteList);
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->setWindowTitle(tr("Process Run(Not GPS)"));

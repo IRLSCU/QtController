@@ -12,8 +12,10 @@
 /**
  * @brief The GpsBufferWriteThread class
  * receive the character from gps info ringBuffer
- * and process the char to gps info(nema0183)
+ * and process the char to location info(XYZ)
  * and store in message ringBuffer
+ *
+ * for test
  */
 class LocationBufferProduceThread : public QThread{
     Q_OBJECT
@@ -27,7 +29,7 @@ private:
 
     CCoordinate ordinate;
 
-    bool haveStartAndIsGGA(QString s);//判断是否是GGA
+    bool isGGA(QString s);//判断是否是GGA
 public:
     LocationBufferProduceThread(CharRingBuffer*,LocationRingBuffer*,QObject *parent,QString name);//传入char循环队列与gps循环队列的指针
     void initCCoordinate();
