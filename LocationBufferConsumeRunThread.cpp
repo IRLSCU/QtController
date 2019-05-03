@@ -27,6 +27,31 @@ void LocationBufferConsumeRunThread::setSendStartLocationSignal(){
 void LocationBufferConsumeRunThread::run(){
     m_isCanRun=true;
     m_isSendStartLocation=false;
+    //for test
+//    0 0
+//    -0.926152 0.52687
+//    -1.89345 0.983842
+//    -2.89505 1.51831
+//    -3.89219 1.8344
+//    -4.88134 1.99365
+//    -5.8807 2.16939
+//    -6.95504 2.43004
+//    -7.99796 2.81899
+//    -9.05284 3.2754
+//    -10.0857 3.77131
+//    -11.1463 4.26907
+//    -12.2387 4.78593
+//    -13.1904 5.27146
+//    -14.1344 5.66299
+//    -15.0527 6.08826
+//    -16.083 6.59901
+//    -16.958 7.10011
+//    -17.8929 7.66497
+//    -18.8343 8.24857
+    locationRingBuffer->push(LocationPosition());
+    locationRingBuffer->push(LocationPosition(-1,-0.5));
+    locationRingBuffer->push(LocationPosition(-3,1.6));
+    locationRingBuffer->push(LocationPosition(-10,3.7));
 
     //int i=0;
     while(true){ 

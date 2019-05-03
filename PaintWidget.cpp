@@ -74,6 +74,12 @@ void PaintWidget::paintTargetPoint(int target){
 void PaintWidget::paintEvent(QPaintEvent*)
 {
     QPainter painter(this);
+    //for test
+    qDebug()<<"start";
+    for(int i=0;i<routeLocationList.size();i++){
+        qDebug()<<routeLocationList.at(i).x()<<routeLocationList.at(i).y();
+    }
+    qDebug()<<"end";
     if(routeLocationList.size()!=0){
         //qDebug("routePointList.at(0):%.10f,%.10f",routePointList.at(0).x(),routePointList.at(0).y());
         //this->initScreenCenter(routePointList.at(0));

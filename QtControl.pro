@@ -54,7 +54,8 @@ SOURCES += \
     SocketSettingWidget.cpp \
     Processer.cpp \
     ProcessRunNoGPSDialog.cpp \
-    LocationBufferConsumeRunThread.cpp
+    LocationBufferConsumeRunThread.cpp \
+    LocationBufferProduceThread.cpp
 
 HEADERS += \
         MainWindow.h \
@@ -93,7 +94,8 @@ HEADERS += \
     Processer.h \
     ProcessRunNoGPSDialog.h \
     LocationPosition.h \
-    LocationBufferConsumeRunThread.h
+    LocationBufferConsumeRunThread.h \
+    LocationBufferProduceThread.h
 
 FORMS += \
         MainWindow.ui \

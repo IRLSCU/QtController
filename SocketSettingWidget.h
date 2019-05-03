@@ -2,7 +2,7 @@
 #define SOCKETSETTINGWIDGET_H
 
 #include "GpsBufferWriteThread.h"
-
+#include "LocationBufferProduceThread.h"
 #include <QWidget>
 #include <QTcpSocket>
 
@@ -15,7 +15,7 @@ class SocketSettingWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit SocketSettingWidget(GpsRingBuffer* gpsRingBuffer,QWidget *parent = 0);
+    explicit SocketSettingWidget(GpsRingBuffer* gpsRingBuffer,LocationRingBuffer*,QWidget *parent = 0);
     ~SocketSettingWidget();
 
 private slots:
@@ -30,6 +30,9 @@ private:
     GpsRingBuffer* gpsRingBuffer;
     GpsBufferWriteThread* gpsBufferWriteThread1;
     CharRingBuffer* ringBuffer1;
+
+    LocationBufferProduceThread* locationBufferProduceThread;//for test
+    LocationRingBuffer* locationRingBuffer;
 };
 
 #endif // SOCKETSETTINGWIDGET_H
