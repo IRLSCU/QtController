@@ -108,6 +108,7 @@ void PaintWidget::paintEvent(QPaintEvent*)
     QPointF last;
     for(int i=0;i<routePointList.size();i++){
         QPointF temp=coordinate.LongLat2Screen(LongLat(routePointList.at(i).x(),routePointList.at(i).y()));
+        qDebug()<<i<<":"<<temp.x()<<temp.y();
         if(i!=0){
             mypen.setColor(Qt::black);
             mypen.setWidth(0);
