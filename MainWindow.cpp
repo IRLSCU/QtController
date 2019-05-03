@@ -98,7 +98,7 @@ void MainWindow::open(){
     dialog->show();
 }
 void MainWindow::openSocketDialog(){
-    SocketSettingWidget* widget=new SocketSettingWidget(gpsRingBuffer,this);
+    SocketSettingWidget* widget=new SocketSettingWidget(gpsRingBuffer,locationRingBuffer,this);
     widget->setAttribute(Qt::WA_DeleteOnClose);
     widget->setWindowTitle(QStringLiteral("打开Socket设置"));
     widget->show();

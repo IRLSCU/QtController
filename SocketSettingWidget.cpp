@@ -4,7 +4,7 @@
 
 #include<QFileDialog>
 #include<QMessageBox>
-SocketSettingWidget::SocketSettingWidget(GpsRingBuffer* gpsRingBuffer,QWidget *parent) :
+SocketSettingWidget::SocketSettingWidget(GpsRingBuffer* gpsRingBuffer,LocationRingBuffer*locationRingBuffer,QWidget *parent) :
     QWidget(parent,Qt::Window),
     ui(new Ui::SocketSettingWidget)
 {
@@ -12,9 +12,12 @@ SocketSettingWidget::SocketSettingWidget(GpsRingBuffer* gpsRingBuffer,QWidget *p
     socket = new QTcpSocket();
     this->gpsRingBuffer=gpsRingBuffer;
 
+    //for test
     ringBuffer1=new CharRingBuffer;
     gpsBufferWriteThread1=new GpsBufferWriteThread(ringBuffer1,this->gpsRingBuffer,this,"gpsBufferWriteThread1");
-    gpsBufferWriteThread1->start();
+    //gpsBufferWriteThread1->start();
+
+
     //连接信号槽
     QObject::connect(socket, &QTcpSocket::readyRead, this, &SocketSettingWidget::socket_Read_Data);
     QObject::connect(socket, &QTcpSocket::disconnected, this, &SocketSettingWidget::socket_Disconnected);
@@ -22,6 +25,9 @@ SocketSettingWidget::SocketSettingWidget(GpsRingBuffer* gpsRingBuffer,QWidget *p
     ui->lineEdit_IP->setText("127.0.0.1");
     ui->lineEdit_Port->setText("8765");
 
+    this->locationRingBuffer=locationRingBuffer;
+    locationBufferProduceThread=new LocationBufferProduceThread(ringBuffer1,this->locationRingBuffer,this,"locationBufferProduceThread");
+    locationBufferProduceThread->start();
 }
 
 SocketSettingWidget::~SocketSettingWidget()
