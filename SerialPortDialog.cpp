@@ -354,7 +354,7 @@ bool SerialPortDialog::openSerialPort(QSerialPort* serialPort,CharRingBuffer* ri
     }
     disconnect(serialPort,&QSerialPort::readyRead,0,0);
     connect(serialPort,&QSerialPort::readyRead,[this,serialPort,ringBuffer](){
-        readCom(serialPort,ringBuffer);
+        readCom(serialPort,ringBuffer);//从相应的串口读数据
     });
     return true;
 }

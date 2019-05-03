@@ -193,6 +193,9 @@ void ControlOrder::LargeCarCO2NormalCO(LargeCarCO& largeCarCO,ControlOrder& norm
     normalCO.setLightSignal(largeCarCO.getSignal());
     normalCO.setHorn(largeCarCO.getHorn());
 }
+void ControlOrder::setGpsInfo(GpsInfo gps){
+    this->gpsInfo=gps;
+}
 void ControlOrder::printInfo(){
     qDebug("Control Order: speed:%d,turnRange:%d,gear:%d %s,lightSignal:%d %s,hore:%d %s",
            speed,turnRange,

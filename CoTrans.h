@@ -60,7 +60,6 @@ public:
     LongLat XY2LongLat(const qreal &x,const qreal &y);
 
     QPointF	XY2Screen(QPointF pos);
-    QPointF XY2Screen(const qlonglong &x,const qlonglong &y);
     QPointF	Screen2XY(QPointF pos);
     QPointF	Screen2XY(const qlonglong &x,const qlonglong &y);
     QPointF	LongLat2Screen(LongLat pos);

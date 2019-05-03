@@ -1,4 +1,4 @@
-#ifndef SERIALPORTDIALOG_H
+﻿#ifndef SERIALPORTDIALOG_H
 #define SERIALPORTDIALOG_H
 
 #include "RingBuffer.h"
@@ -74,7 +74,7 @@ private:
     GpsBufferWriteThread* GpsBufferWriteThread2;
     GpsBufferWriteThread* GpsBufferWriteThread3;
 
-    void send(QByteArray,const QSerialPort*);
+    void send(QByteArray,const QSerialPort*);//发送信号给相应的文字显示程序SerialInfoDialog
     void closeSerialPort(QSerialPort*,CharRingBuffer*);
     void readCom(QSerialPort*,CharRingBuffer*);
     bool openSerialPort(QSerialPort*,CharRingBuffer*);//通过槽函数实现，未开启线程

@@ -20,7 +20,7 @@ struct GpsInfo
         qDebug()<<toString();
     }
     QString toString(){
-        QString content=QObject::tr("%1 %2 %3 %4 %5 %6 %7 %8\n").arg(longitude,8,'f',10).arg(latitude,8,'f',10).arg(quality).arg(time).arg(date).arg(altitude).arg(speed).arg(course);
+        QString content=QObject::tr("%1 %2 %3 %4 %5 %6 %7 %8").arg(longitude,8,'f',10).arg(latitude,8,'f',10).arg(quality).arg(time).arg(date).arg(altitude).arg(speed).arg(course);
         return content;
     }
 };

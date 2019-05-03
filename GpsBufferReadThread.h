@@ -1,9 +1,13 @@
-#ifndef GPSBUFFERREADTHREAD_H
+﻿#ifndef GPSBUFFERREADTHREAD_H
 #define GPSBUFFERREADTHREAD_H
 #define GPSBUFFERREADTHREAD_BOLCKTIME 50
 #include "RingBuffer.h"
 #include<QThread>
 #include<QMutex>
+/**
+ * @brief The GpsBufferReadThread class
+ * 暂未使用
+ */
 class GpsBufferReadThread : public QThread
 {
     Q_OBJECT

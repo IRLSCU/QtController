@@ -14,7 +14,7 @@ GpsBufferWriteThread::GpsBufferWriteThread(CharRingBuffer* ringBuffer,GpsRingBuf
 }
 void GpsBufferWriteThread::run(){//将char缓冲区中的数据拼接成gpsInfo类型数据，并存入环形缓冲区
     m_isCanRun = true;
-    qDebug()<<name<<"GpsBufferWriteThread has started";
+    qDebug()<<name<<" GpsBufferWriteThread has started";
     QString stringBuffer;
     char receive_char;
     while(true){
@@ -56,8 +56,8 @@ void GpsBufferWriteThread::stopImmediately()
 bool GpsBufferWriteThread::haveStartAndIsGGA(QString s) {
     if (s.size() < 8) return false;
     QString hex=s.mid(1, 5);
-//    if (hex.compare("GPGGA")!=0)//todo 为了获取速度需要去掉这一块
-//        return false;
+    if (hex.compare("GPGGA")!=0)
+        return false;
     for (int i = 0; i<s.size(); i++) {
         if (s[i] == '*') return true;
     }

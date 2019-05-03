@@ -40,7 +40,7 @@ InitRouteDialog::~InitRouteDialog()
 }
 
 void InitRouteDialog::updateBroswerText(GpsInfo gpsInfo){
-    ui->textBrowser->insertPlainText(gpsInfo.toString());
+    ui->textBrowser->insertPlainText(gpsInfo.toString().append('\n'));
     ui->textBrowser->moveCursor(QTextCursor::End);
 }
 

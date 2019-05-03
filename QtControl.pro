@@ -6,6 +6,8 @@
 
 QT       += core gui
 QT       += serialport
+QT       += network
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = QtControl
@@ -48,7 +50,11 @@ SOURCES += \
     ControlOrderSendThread.cpp \
     LargeCarWindowsCommunication.cpp \
     TinyCarCommunication.cpp \
-    TinyCarSerialPortDialog.cpp
+    TinyCarSerialPortDialog.cpp \
+    SocketSettingWidget.cpp \
+    Processer.cpp \
+    ProcessRunNoGPSDialog.cpp \
+    LocationBufferConsumeRunThread.cpp
 
 HEADERS += \
         MainWindow.h \
@@ -82,7 +88,12 @@ HEADERS += \
     LargeCarWindowsCommunication.h \
     TinyCarCommunication.h \
     TinyCarSerialPortDialog.h \
-    PreDefinition.h
+    PreDefinition.h \
+    SocketSettingWidget.h \
+    Processer.h \
+    ProcessRunNoGPSDialog.h \
+    LocationPosition.h \
+    LocationBufferConsumeRunThread.h
 
 FORMS += \
         MainWindow.ui \
@@ -90,7 +101,8 @@ FORMS += \
     RouteSparseDialog.ui \
     InitRouteDialog.ui \
     ProcessRunDialog.ui \
-    TinyCarSerialPortDialog.ui
+    TinyCarSerialPortDialog.ui \
+    SocketSettingWidget.ui
 
 RESOURCES += \
     res.qrc

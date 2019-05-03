@@ -17,6 +17,7 @@
 
 #include "LargeCarCO.h"
 #include "TinyCarCO.h"
+#include "GpsInfo.h"
 #include<QObject>
 /**
  * @brief The ControlOrder class
@@ -52,6 +53,8 @@ private:
      * range: 0静音 1鸣笛
      */
     qint8 horn=0;
+
+    GpsInfo gpsInfo;
 public:
     ControlOrder(){}
     ~ControlOrder(){}
@@ -76,7 +79,7 @@ public:
         鸣笛 0静音 1鸣笛
     */
     ControlOrder& setHorn(qint8);
-
+    void setGpsInfo(GpsInfo gps);
     void init();
     qint16 getSpeed() { return speed; }
     qint16 getLastTurnRange() { return lastTurnRange; }
@@ -84,6 +87,7 @@ public:
     qint8 getGear() { return gear; }
     qint8 getLightSignal() { return lightSignal; }
     qint8 getHorn() { return horn; }
+    GpsInfo getGpsInfo(){return gpsInfo;}
     static void NormalCO2TinyCarCO(ControlOrder&,TinyCarCO&);
     static void NormalCO2LargeCarCO(ControlOrder&,LargeCarCO&);
     static void TinyCarCO2NormalCO(TinyCarCO&,ControlOrder&);

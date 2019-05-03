@@ -1,5 +1,5 @@
 ﻿#include"pid.h"
-
+#include<QDebug>
 void Pid_control::PID_init(double kP,double Ki,double Kd,double expectedCTE,double ActualCTE,double deadZone)
 {
 	pid.SETCTE = expectedCTE;
@@ -26,9 +26,13 @@ double Pid_control::PID_realize(double CTE){
 	}
 	else {
 		pid.integral += pid.err;
-		pid.voltage = pid.Kp*pid.err + pid.Ki*pid.integral + pid.Kd*(pid.err - pid.err_last);
-		pid.err_last = pid.err;
+        double p=pid.Kp*pid.err;
+        double i=pid.Ki*pid.integral;
+        double d=pid.Kd*(pid.err - pid.err_last);
+        pid.voltage =  p + i + d;
+        //qDebug()<<pid.err<<pid.err_last<<"p:"<<p<<"i:"<<i<<"d:"<<d;
 	}
+    pid.err_last = pid.err;
 	return pid.voltage;
 }
 

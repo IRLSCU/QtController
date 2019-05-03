@@ -1,4 +1,4 @@
-#ifndef GPSBUFFERWRITETHREAD_H
+﻿#ifndef GPSBUFFERWRITETHREAD_H
 #define GPSBUFFERWRITETHREAD_H
 #define GPSBUFFERWIRTETHREAD_BOLCKTIME 50
 
@@ -23,9 +23,9 @@ private:
     QMutex m_lock;
     bool m_isCanRun;
 
-    bool haveStartAndIsGGA(QString s);//判断是否
+    bool haveStartAndIsGGA(QString s);//判断是否是GGA
 public:
-    GpsBufferWriteThread(CharRingBuffer*,GpsRingBuffer*,QObject *parent ,QString name);
+    GpsBufferWriteThread(CharRingBuffer*,GpsRingBuffer*,QObject *parent ,QString name);//传入char循环队列与gps循环队列的指针
     ~GpsBufferWriteThread();
     void stopImmediately();
     void run();
