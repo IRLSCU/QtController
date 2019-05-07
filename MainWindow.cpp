@@ -3,9 +3,13 @@
 #include "InitRouteDialog.h"
 #include "RouteSparseDialog.h"
 #include "ProcessRunDialog.h"
-#include "ProcessRunNoGPSDialog.h"
 #include "SocketSettingWidget.h"
 #include "TinyCarSerialPortDialog.h"
+
+#include "ProcessRunNoGPSDialog.h"
+#include "LocationInitRouteDialog.h"
+#include "RosSettingDialog.h"
+
 #include <QAction>
 #include <QMenuBar>
 #include <QMessageBox>
@@ -43,20 +47,30 @@ MainWindow::MainWindow(QWidget *parent) :
     initRouteAction->setStatusTip(QStringLiteral("打开初始化路径界面"));
     connect(initRouteAction, &QAction::triggered, this, &MainWindow::openInitRouteDialog);
 
+    initXYZRouteAction=new QAction(QStringLiteral("初始化路径(XYZ)"),this);
+    initXYZRouteAction->setShortcuts(QKeySequence::Open);
+    initXYZRouteAction->setStatusTip(QStringLiteral("打开初始化路径界面"));
+    connect(initXYZRouteAction, &QAction::triggered, this, &MainWindow::openLocationInitRouteDialog);
+
     startRunningAction=new QAction(QStringLiteral("开始行驶"),this);
     startRunningAction->setShortcuts(QKeySequence::Open);
     startRunningAction->setStatusTip(QStringLiteral("打开开始行驶界面"));
     connect(startRunningAction, &QAction::triggered, this, &MainWindow::openProcessRun);
 
-    startRunningNoGPSAction=new QAction(QStringLiteral("开始行驶(非GPS)"),this);
-    startRunningNoGPSAction->setShortcuts(QKeySequence::Open);
-    startRunningNoGPSAction->setStatusTip(QStringLiteral("打开开始行驶界面"));
-    connect(startRunningNoGPSAction, &QAction::triggered, this, &MainWindow::openProcessRunNoGPS);
+    startRunningXYZAction=new QAction(QStringLiteral("开始行驶(XYZ)"),this);
+    startRunningXYZAction->setShortcuts(QKeySequence::Open);
+    startRunningXYZAction->setStatusTip(QStringLiteral("打开开始行驶界面"));
+    connect(startRunningXYZAction, &QAction::triggered, this, &MainWindow::openProcessRunNoGPS);
 
     loadGPSDataAction=new QAction(QStringLiteral("加载路径"),this);
     loadGPSDataAction->setShortcuts(QKeySequence::Open);
     loadGPSDataAction->setStatusTip(QStringLiteral("打开加载路径界面"));
     connect(loadGPSDataAction, &QAction::triggered, this, &MainWindow::openFile);
+
+    loadXYZDataAction=new QAction(QStringLiteral("加载路径(XYZ)"),this);
+    loadXYZDataAction->setShortcuts(QKeySequence::Open);
+    loadXYZDataAction->setStatusTip(QStringLiteral("打开加载路径界面"));
+    connect(loadXYZDataAction, &QAction::triggered, this, &MainWindow::openXYZFile);
 
     routeSparseAction=new QAction(QStringLiteral("稀疏路径"),this);
     routeSparseAction->setShortcuts(QKeySequence::Open);
@@ -79,11 +93,22 @@ MainWindow::MainWindow(QWidget *parent) :
     toolBar->addAction(setSocketAction);
     toolBar->addAction(initRouteAction);
     toolBar->addAction(startRunningAction);
-    toolBar->addAction(startRunningNoGPSAction);
     toolBar->addAction(loadGPSDataAction);
     toolBar->addAction(routeSparseAction);
     toolBar->addAction(setScaleAction);
     toolBar->addAction(setTinyCarComAction);
+
+    toolBar->addAction(startRunningXYZAction);
+    toolBar->addAction(initXYZRouteAction);
+    toolBar->addAction(loadXYZDataAction);
+    //xyz
+    setRosAction=new QAction(QStringLiteral("Ros设置"),this);
+    setRosAction->setShortcuts(QKeySequence::Open);
+    setRosAction->setStatusTip(QStringLiteral("打开Ros设置界面"));
+    connect(setRosAction, &QAction::triggered, this, &MainWindow::openRosDialog);
+
+    toolBar->addAction(setRosAction);
+
     statusBar();
 }
 
@@ -126,7 +151,7 @@ void MainWindow::openProcessRun(){
     connect(dialog,&ProcessRunDialog::sendNextTargetPointToPaintWidget,paintWidget,&PaintWidget::paintTargetPoint);
 }
 void MainWindow::openProcessRunNoGPS(){
-    if(gpsRouteList.size()==0){
+    if(locationRouteList.size()==0){
         QMessageBox::warning(this, tr("Empty Route"),
                              tr("please load route firstly"));
         return;
@@ -153,6 +178,15 @@ void MainWindow::openInitRouteDialog(){
         paintWidget->acceptQPoint(temp);
     });
 }
+void MainWindow::openLocationInitRouteDialog(){
+    LocationInitRouteDialog* initRouteDialog=new LocationInitRouteDialog(locationRingBuffer,this);
+    initRouteDialog->setAttribute(Qt::WA_DeleteOnClose);
+    initRouteDialog->show();
+    connect(initRouteDialog->getLocationBufferConsumInitRouteThread(),&LocationBufferConsumInitRouteThread::sendLocationPointInfo,[&](QPointF point){
+        paintWidget->acceptQPoint(point);
+    });
+}
+
 void MainWindow::openRouteSparseDialog(){
     RouteSparseDialog* routeSparseDialog=new RouteSparseDialog(this);
     routeSparseDialog->setAttribute(Qt::WA_DeleteOnClose);
@@ -162,8 +196,7 @@ void MainWindow::openFile()
 {
     QString path = QFileDialog::getOpenFileName(this,
                                                 tr("Open File"),
-                                                "./../QtControl/route",
-                                                tr("Text Files(*.txt)"));
+                                                "./../QtControl/route");
     if(!path.isEmpty()) {
         QFile file(path);
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -184,7 +217,6 @@ void MainWindow::openFile()
             gpsRouteList.append(QPointF(x,y));
             QPointF point=ordinate.LongLat2XY(x,y);
             sendQPointToPaintWidget(point);//signal
-
         }
         file.close();
     } else {
@@ -192,6 +224,35 @@ void MainWindow::openFile()
                              tr("You did not select any file."));
     }
 }
+void MainWindow::openXYZFile()
+{
+    QString path = QFileDialog::getOpenFileName(this,
+                                                tr("Open File"),
+                                                "./../QtControl/routeXYZ");
+    if(!path.isEmpty()) {
+        QFile file(path);
+        if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            QMessageBox::warning(this, tr("Read File"),
+                                 tr("Cannot open file:\n%1").arg(path));
+            return;
+        }
+        QTextStream in(&file);
+        while (!in.atEnd()) {
+            QString str=in.readLine();
+            if(str.length()<10)
+                continue;
+            LocationPosition location=LocationPosition::stringToLocation(str);
+            QPointF pointF(location.x,location.y);
+            locationRouteList.append(pointF);
+            sendQPointToPaintWidget(pointF);//signal
+        }
+        file.close();
+    } else {
+        QMessageBox::warning(this, tr("Path"),
+                             tr("You did not select any file."));
+    }
+}
+
 void MainWindow::openSerialDialog(){
     SerialPortDialog* dialog=new SerialPortDialog(this,gpsRingBuffer);
     dialog->setAttribute(Qt::WA_DeleteOnClose);
@@ -200,6 +261,12 @@ void MainWindow::openSerialDialog(){
 }
 void MainWindow::openTinyCarSerialDialog(){
     TinyCarSerialPortDialog* dialog=new TinyCarSerialPortDialog();
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
+    dialog->show();
+}
+
+void MainWindow::openRosDialog(){
+    RosSettingDialog* dialog=new RosSettingDialog(locationRingBuffer,this);
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->show();
 }

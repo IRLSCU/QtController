@@ -82,6 +82,7 @@ ProcessRunNoGPSDialog::ProcessRunNoGPSDialog(LocationRingBuffer* locationRingBuf
     connect(this,&ProcessRunNoGPSDialog::sendRange,controlOrderSendThread,&ControlOrderSendThread::setRange);
     connect(this,&ProcessRunNoGPSDialog::sendSpeed,controlOrderSendThread,&ControlOrderSendThread::setSpeed);
     connect(this,&ProcessRunNoGPSDialog::sendLocationInfo,controlOrderSendThread,&ControlOrderSendThread::setLocationInfo);
+    connect(this,&ProcessRunNoGPSDialog::sendDoNothingSignal,controlOrderSendThread,&ControlOrderSendThread::doNothing);
 
     connect(ui->start,&QPushButton::clicked,[&](){
         controlOrderSendThread->enableSignal(true);
@@ -146,9 +147,17 @@ ProcessRunNoGPSDialog::~ProcessRunNoGPSDialog()
     delete ui;
 }
 void ProcessRunNoGPSDialog::processLocation(LocationPosition& location){
+    if(location.x==0&&location.y==0&&location.z==0){
+        qDebug()<<"do not accept correct ros data";
+        emit sendDoNothingSignal(true);
+        return;
+    }else {
+        emit sendDoNothingSignal(false);
+    }
+
     int status;//状态，0未到终点，1到达终点
     int target;//下一个目标点
-    //计算获得的偏离程度。
+    //计算获得的偏离程度。r
     double actualCTE = processer->startProcess(GaussGPSData(location.x,location.y),&target,&status);
     setNextTargetPoint(target);
     //转化成车辆的转向

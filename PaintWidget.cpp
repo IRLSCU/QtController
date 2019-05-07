@@ -295,6 +295,7 @@ void PaintWidget::translate(QPointF delta)
 
 void PaintWidget::acceptQPoint(QPointF point){
     routeLocationList.push_back(point);
+    qDebug()<<"route list size "<<routeLocationList.size();
     update();
 }
 void PaintWidget::addQPoint(QPointF point){

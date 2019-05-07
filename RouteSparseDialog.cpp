@@ -1,23 +1,26 @@
 ﻿#include "RouteSparseDialog.h"
 #include "ui_RouteSparseDialog.h"
 #include "CoTrans.h"
+#include <qmath.h>
 #include<QMessageBox>
 #include<QFileDialog>
-RouteSparseDialog::RouteSparseDialog(QWidget *parent) :
+RouteSparseDialog::RouteSparseDialog(bool isXYZ,QWidget *parent) :
     QDialog(parent),
     ui(new Ui::RouteSparseDialog)
 {
     ui->setupUi(this);
+
+    this->isXYZ=true;
     this->sparseStatus=false;
     this->loadStatus=false;
     routeGps=new QList<GpsInfo>;
-
+    routeLocation=new QList<LocationPosition>;
     connect(ui->openFileButton,&QPushButton::clicked,this,&RouteSparseDialog::openFile);
     connect(ui->sparseButton,&QPushButton::clicked,this,&RouteSparseDialog::sparseRoute);
     connect(ui->saveAsButton,&QPushButton::clicked,this,&RouteSparseDialog::saveAsFile);
     connect(ui->initButton,&QPushButton::clicked,this,&RouteSparseDialog::init);
-
 }
+
 void RouteSparseDialog::init(){
     routeGps->clear();
     setSparseStatus(false,0);
@@ -29,10 +32,18 @@ RouteSparseDialog::~RouteSparseDialog()
     delete ui;
 }
 void RouteSparseDialog::openFile(){
+    QString s="./../QtControl/";
+    routeGps->clear();
+    routeLocation->clear();
+    if(isXYZ){
+        s.append("routeXYZ");
+    }
+    else {
+        s.append("route");
+    }
     QString path = QFileDialog::getOpenFileName(this,
                                                 tr("Open File"),
-                                                "./../QtControl/route",
-                                                tr("Text Files(*.txt)"));
+                                                s);
     if(!path.isEmpty()) {
         QFile file(path);
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -43,51 +54,53 @@ void RouteSparseDialog::openFile(){
         init();
         QTextStream in(&file);
         while (!in.atEnd()) {
-//            qreal x=0;
-//            qreal y=0;
-//            in>>x>>y;
-//            if(x==0&&y==0)
-//                continue;
-//            routeGps->append(GpsInfo(x,y));
-            qreal lon=0;
-            qreal lat=0;
-            int quality=0;
-            qreal time=0;
-            long date=0;
-            qreal altitude=0;
-            qreal speed=0;
-            qreal course=0;
-            //分别为经度、纬度、质量、时分秒、年月日、高度、速度、航向
-            in>>lon>>lat>>quality>>time>>date>>altitude>>speed>>course;
-            if(lon==0&&lat==0)
+            QString s=in.readLine();
+            if(s.length()<10)
                 continue;
-            routeGps->append(GpsInfo(lon,lat,quality,time,date,altitude,speed,course));
+            if(isXYZ){
+                LocationPosition location=LocationPosition::stringToLocation(s);
+                routeLocation->append(location);
+            }else{
+                GpsInfo gpsInfo=GpsInfo::StringToGpsInfo(s);
+                routeGps->append(gpsInfo);
+//                qreal lon=0;
+//                qreal lat=0;
+//                int quality=0;
+//                double time=0;
+//                unsigned long date=0;
+//                qreal altitude=0;
+//                qreal speed=0;
+//                qreal course=0;
+//                //分别为经度、纬度、质量、时分秒、年月日、高度、速度、航向
+//                in>>lon>>lat>>quality>>time>>date>>altitude>>speed>>course;
+//                if(lon==0&&lat==0)
+//                    continue;
+//                routeGps->append(GpsInfo(lon,lat,quality,time,date,altitude,speed,course));
+            }
+
         }
         file.close();
-        this->setLoadStatus(!(this->loadStatus),routeGps->size());
+        if(isXYZ){
+            this->setLoadStatus(!(this->loadStatus),routeLocation->size());
+        }else {
+            this->setLoadStatus(!(this->loadStatus),routeGps->size());
+        }
     } else {
         QMessageBox::warning(this, tr("Path"),
                              tr("You did not select any file."));
     }
-//    qreal lon=0;
-//    qreal lat=0;
-//    qreal quality=0;
-//    qreal time=0;
-//    long date=0;
-//    qreal altitude=0;
-//    qreal speed=0;
-//    qreal course=0;
-//    //分别为经度、纬度、质量、时分秒、年月日、高度、速度、航向
-//    in>>lon>>lat>>quality>>time>>date>>altitude>>speed>>course;
-//    if(lon==0&&lat==0)
-//        continue;
-//    routeGps->append(GpsInfo(lon,lat,quality,time,date,altitude,speed,course));
 }
 void RouteSparseDialog::saveAsFile(){
+    QString s="./../QtControl/";
+    if(isXYZ){
+        s.append("routeXYZ");
+    }
+    else {
+        s.append("route");
+    }
     QString path = QFileDialog::getSaveFileName(this,
                                                 tr("Open File"),
-                                                "./../QtControl/route",
-                                                tr("Text Files(*.txt)"));
+                                                s);
     if(!path.isEmpty()) {
         QFile file(path);
         if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
@@ -96,13 +109,22 @@ void RouteSparseDialog::saveAsFile(){
             return;
         }
         QTextStream out(&file);
-        QList<GpsInfo>::iterator gps;
-        QString lon,lat;
-        for(gps=routeGps->begin();gps<routeGps->end();gps++){
-            out<<lon.setNum(gps->longitude,'f',10)<<" "<<lat.setNum(gps->latitude,'f',10)<<" "<<QString::number(gps->quality)
-              <<" "<<QString::number(gps->time,'f')<<" "<<QString::number(gps->date)<<" "<<QString::number(gps->altitude,'f',2)
-              <<" "<<QString::number(gps->speed,'f',2)<<" "<<QString::number(gps->course,'f',2)<<"\n";
+        if(isXYZ){
+            QList<LocationPosition>::iterator location;
+            for(location=routeLocation->begin();location<routeLocation->end();location++){
+                out<<location->toString()<<"\n";
+            }
+        }else{
+            QList<GpsInfo>::iterator gps;
+    //        QString lon,lat;
+            for(gps=routeGps->begin();gps<routeGps->end();gps++){
+    //            out<<lon.setNum(gps->longitude,'f',10)<<" "<<lat.setNum(gps->latitude,'f',10)<<" "<<QString::number(gps->quality)
+    //              <<" "<<QString::number(gps->time,'f')<<" "<<QString::number(gps->date)<<" "<<QString::number(gps->altitude,'f',2)
+    //              <<" "<<QString::number(gps->speed,'f',2)<<" "<<QString::number(gps->course,'f',2)<<"\n";
+                out<<gps->toString()<<"\n";
+            }
         }
+
         file.close();
     }
 }
@@ -111,21 +133,30 @@ void RouteSparseDialog::sparseRoute(){
     double minD=this->ui->factorStartEdit->text().toDouble(&isSuccessStart);
     double maxD=this->ui->factorEndEdit->text().toDouble(&isSuccessEnd);
     isSuccess=isSuccessStart&&isSuccessEnd;
-    if(isSuccess&&routeGps->size()>0){
-        sparseRouteHelper(minD,maxD);
-    }else{
-        if(routeGps->size()<=0){
+    if(!isSuccess){
+        QMessageBox::warning(this, tr("error"),
+                                   tr("please input correct number:\n"));
+        return;
+    }
+    if(isXYZ){
+        if(routeLocation->size()>0){
+            sparseXYZRouteHelper(minD,maxD);
+            qDebug()<<"routeLocation's  num :"<<routeLocation->size()<<". sparse distance "<<minD<<"-"<<maxD<<" metre";
+        }else{
             QMessageBox::warning(this, tr("error"),
                                        tr("please choose a correct file:\n"));
             return;
         }
-        if(!isSuccess){
+    }else{
+        if(routeGps->size()>0){
+            sparseRouteHelper(minD,maxD);
+            qDebug()<<"routeGps's  num :"<<routeGps->size()<<". sparse distance "<<minD<<"-"<<maxD<<" metre";
+        }else{
             QMessageBox::warning(this, tr("error"),
-                                       tr("please input correct number:\n"));
+                                       tr("please choose a correct file:\n"));
             return;
         }
     }
-    qDebug()<<"routeGps's  num :"<<routeGps->size()<<". sparse distance "<<minD<<"-"<<maxD<<" metre";
 }
 
 void RouteSparseDialog::sparseRouteHelper(double minD,double maxD){
@@ -134,7 +165,6 @@ void RouteSparseDialog::sparseRouteHelper(double minD,double maxD){
     GpsInfo cur=routeGps->at(0);
     count++;
     coordinate.InitRadarPara(500, cur.longitude,cur.latitude);//初始化坐标原点
-
     QList<GpsInfo>* tempList=new QList<GpsInfo>;
     tempList->append(cur);
 
@@ -161,6 +191,31 @@ void RouteSparseDialog::sparseRouteHelper(double minD,double maxD){
     delete routeGps;
     routeGps=tempList;
     setSparseStatus(true,routeGps->size());
+}
+void RouteSparseDialog::sparseXYZRouteHelper(double minD,double maxD){
+    int count=0;
+    LocationPosition cur=routeLocation->at(0);
+    count++;
+    QList<LocationPosition>* tempList=new QList<LocationPosition>;
+    tempList->append(cur);
+
+    QPointF point_first(cur.x,cur.y);
+    for(int i=1;i<routeLocation->size();i++){
+        cur=routeLocation->at(i);
+        QPointF point_second(cur.x,cur.y);
+        double distance = getDistance(point_first, point_second);
+        if (distance >= minD) {
+            count++;
+            tempList->append(cur);
+            point_first = point_second;
+            if (distance > maxD) {
+                 qDebug() << QStringLiteral("第") << count << QStringLiteral("个点与第") << count - 1 << QStringLiteral("个点距离为") << distance << QStringLiteral("米");
+            }
+        }
+    }
+    delete routeLocation;
+    routeLocation=tempList;
+    setSparseStatus(true,routeLocation->size());
 }
 void RouteSparseDialog::setSparseStatus(bool status,int num){
     sparseStatus=status;

@@ -1,6 +1,7 @@
 #ifndef ROUTESPARSEDIALOG_H
 #define ROUTESPARSEDIALOG_H
 #include "GpsInfo.h"
+#include "LocationPosition.h"
 #include <QDialog>
 #include<QList>
 #include<QPointF>
@@ -19,12 +20,13 @@ class RouteSparseDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit RouteSparseDialog(QWidget *parent = 0);
+    explicit RouteSparseDialog(bool isXYZ=false,QWidget *parent = 0);
     void init();
     void openFile();
     void saveAsFile();
     void sparseRoute();
     void sparseRouteHelper(double minDistance,double maxDistance);
+    void sparseXYZRouteHelper(double minDistance,double maxDistance);
     void setSparseStatus(bool,int);
     void setLoadStatus(bool,int);
     ~RouteSparseDialog();
@@ -32,6 +34,8 @@ public:
 private:
     Ui::RouteSparseDialog *ui;
     QList<GpsInfo>* routeGps;
+    bool isXYZ;
+    QList<LocationPosition>* routeLocation;
     bool sparseStatus;
     bool loadStatus;
     double getDistance(QPointF,QPointF);

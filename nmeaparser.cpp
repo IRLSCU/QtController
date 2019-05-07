@@ -5,7 +5,6 @@
 #include <vector>
 #include <cassert>
 #include "nmeaparser.h"
-
 const char * Nmea0183FramesHdr[NMEAPARSER_MAX_SENTENCES]={
 	"$GPGGA",
 	"$GPRMC",
@@ -196,7 +195,6 @@ void NmeaParser::ParseGSVSentence(std::vector<std::string> &GsvValidData, NmeaPa
 
 void NmeaParser::ParseNmea0183Sentence(std::string GpsFrameData)
 {
-	//std::cout << GpsFrameData << std::endl;
 	boost::char_separator<char> DecSep(",", 0, 
             boost::keep_empty_tokens);
 	tokenizer GpsContent{GpsFrameData, DecSep};
@@ -231,6 +229,7 @@ void NmeaParser::ParseNmea0183Sentence(std::string GpsFrameData)
 
 bool NmeaParser::isValidSentenceChecksum(std::string s, std::string &GpsData)
 {
+    if(s.length()<10) return false;//todo need to fix
 	boost::char_separator<char> sep{"*"};
 	tokenizer tokenTmp{s, sep};
 	auto parser = tokenTmp.begin();

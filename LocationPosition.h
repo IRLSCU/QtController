@@ -22,5 +22,18 @@ struct LocationPosition
                 .arg(speed,2,'f',2).arg(course,2,'f',2).arg(precision,2,'f',2).arg(timestamp);
         return content;
     }
+    static LocationPosition stringToLocation(QString str){
+        LocationPosition location;
+        QStringList strs=str.split(" ");
+
+        location.x=strs.at(0).toDouble();
+        location.y=strs.at(1).toDouble();
+        location.z=strs.at(2).toDouble();
+        location.speed=strs.at(3).toDouble();
+        location.course=strs.at(4).toDouble();
+        location.precision=strs.at(5).toDouble();
+        location.timestamp=strs.at(6).toULong();
+        return location;
+    }
 };
 #endif // LOCATIONPOSITION_H

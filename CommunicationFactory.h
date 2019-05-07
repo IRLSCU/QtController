@@ -13,7 +13,7 @@ public:
         switch (type){
         case LargeCarWindows:
             qDebug()<<"LargeCarWindowsCommunication open";
-            return new LargeCarWindowsCommunication();break;
+            //return new LargeCarWindowsCommunication();break;
         case TinyCarLinux:
             qDebug()<<"TinyCarCommunication open";
             return new TinyCarCommunication();break;

@@ -1,7 +1,7 @@
 ﻿#include "Processer.h"
 #include<QDebug>
 #include<limits>
-
+#include<qmath.h>
 Processer::Processer() {
 
 }

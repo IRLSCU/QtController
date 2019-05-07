@@ -22,6 +22,7 @@ private:
     QMutex m_controlOrderLock;
     bool m_isCanRun;//控制线程开闭
     bool m_enable;//是否开始RUN
+    bool m_doNothing;//未接受到正确的数据(x=y=z=0)
     ControlOrder doNothingControlOrder;
     ControlOrder runControlOrder;
     ControlOrder *current;
@@ -36,6 +37,7 @@ public:
     ~ControlOrderSendThread();
     void stopImmediately();
     void enableSignal(bool signal);
+    void doNothing(bool signal);
     void run();
     void setRange(int range);
     void setSpeed(int speed);

@@ -1,4 +1,4 @@
-﻿#include"pid.h"
+﻿#include "PID.h"
 #include<QDebug>
 void Pid_control::PID_init(double kP,double Ki,double Kd,double expectedCTE,double ActualCTE,double deadZone)
 {

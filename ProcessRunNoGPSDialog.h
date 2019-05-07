@@ -52,6 +52,7 @@ signals:
     void sendRange(int range);//将车辆转向程度，送往车辆命令发送线程
     void sendSpeed(int speed);//将车辆速度，送往车辆命令发送线程
     void sendLocationInfo(LocationPosition location);
+    void sendDoNothingSignal(bool signal);
 };
 
 #endif // PROCESSRUNNOGPSDIALOG_H

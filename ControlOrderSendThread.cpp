@@ -4,6 +4,7 @@
 ControlOrderSendThread::ControlOrderSendThread(QObject *parent=0):QThread(parent){
     readConfig();
     m_enable=false;
+    m_doNothing=true;
 }
 
 ControlOrderSendThread::~ControlOrderSendThread(){
@@ -39,7 +40,7 @@ void ControlOrderSendThread::run(){
     qDebug()<<"ControlOrderSendThread for sending car's control orders started";
     m_isCanRun=true;
     if(!communication->connect()){
-        return;
+        //return;  todo
     }
 
 //    unsigned char tt[10]={0xFF,0xFE,1,2,3,4,5,6,7,8};
@@ -67,10 +68,10 @@ void ControlOrderSendThread::run(){
     QTextStream out(&file);
     QTextStream out2(&file2);
     while(true){ 
-        if(!m_enable){
-            current=&doNothingControlOrder;
-        }else{
+        if(m_enable&&!m_doNothing){
             current=&runControlOrder;
+        }else{
+            current=&doNothingControlOrder;
         }
         LargeCarCO largeCarCO;
         TinyCarCO tinyCarCO;
@@ -145,6 +146,9 @@ void ControlOrderSendThread::setGear(int gear){
     runControlOrder.setGear(gear);
     qDebug()<<"speed gear to "<<gear;
     locker.unlock();
+}
+void ControlOrderSendThread::doNothing(bool signal){
+    this->m_doNothing=signal;
 }
 void ControlOrderSendThread::readConfig(){
     QFile file("./../QtControl/softwareConfig/config.txt");

@@ -55,7 +55,11 @@ SOURCES += \
     Processer.cpp \
     ProcessRunNoGPSDialog.cpp \
     LocationBufferConsumeRunThread.cpp \
-    LocationBufferProduceThread.cpp
+    LocationBufferProduceThread.cpp \
+    LocationBufferConsumInitRouteThread.cpp \
+    LocationInitRouteDialog.cpp \
+    RosSettingDialog.cpp \
+    RosReceiveThread.cpp
 
 HEADERS += \
         MainWindow.h \
@@ -95,7 +99,11 @@ HEADERS += \
     ProcessRunNoGPSDialog.h \
     LocationPosition.h \
     LocationBufferConsumeRunThread.h \
-    LocationBufferProduceThread.h
+    LocationBufferProduceThread.h \
+    LocationBufferConsumInitRouteThread.h \
+    LocationInitRouteDialog.h \
+    RosSettingDialog.h \
+    RosReceiveThread.h
 
 FORMS += \
         MainWindow.ui \
@@ -104,7 +112,9 @@ FORMS += \
     InitRouteDialog.ui \
     ProcessRunDialog.ui \
     TinyCarSerialPortDialog.ui \
-    SocketSettingWidget.ui
+    SocketSettingWidget.ui \
+    locationinitroutedialog.ui \
+    RosSettingDialog.ui
 
 RESOURCES += \
     res.qrc
@@ -116,9 +126,29 @@ win32:{
 }
 
 linux-g++*{
+    ##--add boost
     INCLUDEPATH += /home/zhb/Downloads/boost_1_67_0
-}
+    #--add ros include
+    INCLUDEPATH += -I /opt/ros/kinetic/include
+    DEPENDPATH +=  /opt/ros/kinetic/include
 
+    #--add ros libs
+
+    LIBS += -L /opt/ros/melodic/lib/ -lroscpp
+    LIBS += -L /opt/ros/melodic/lib/ -lroslib
+    LIBS += -L /opt/ros/melodic/lib/ -lpthread
+    LIBS += -L /opt/ros/melodic/lib/ -lroscpp_serialization
+    LIBS += -L /opt/ros/melodic/lib/ -lrostime
+    LIBS += -L /opt/ros/melodic/lib/ -lrosconsole
+    LIBS += -L /opt/ros/melodic/lib/ -lrosconsole_log4cxx
+    LIBS += -L /opt/ros/melodic/lib/ -lrosconsole_backend_interface
+    LIBS += -L /opt/ros/melodic/lib/ -lxmlrpcpp
+
+    LIBS += -L$$PWD/../../../../opt/ros/melodic/lib/ -lcpp_common
+
+    INCLUDEPATH += $$PWD/../../../../opt/ros/melodic/include
+    DEPENDPATH += $$PWD/../../../../opt/ros/melodic/include
+}
 
 INCLUDEPATH += $$PWD/.
 DEPENDPATH += $$PWD/.
