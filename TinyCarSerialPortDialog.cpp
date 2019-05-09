@@ -12,6 +12,13 @@ TinyCarSerialPortDialog::TinyCarSerialPortDialog(QWidget *parent) :
     ui->setupUi(this);
     this->setWindowTitle(QStringLiteral("software settings"));
     init();
+    QFile file("./../QtControl/softwareConfig/config.txt");
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    QByteArray t = file.readAll();
+    qDebug()<<"file.readAll:"<<t;
+    QList<QByteArray>list =t.split(' ');
+    file.close();
+
     connect(this->ui->confirm,&QPushButton::clicked,[this](){
         //写到文件里面，到时候读写线程直接从文件里面读
         QFile file("./../QtControl/softwareConfig/config.txt");

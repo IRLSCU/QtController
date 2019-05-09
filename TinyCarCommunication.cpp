@@ -19,10 +19,10 @@ void TinyCarCommunication::initConfig(){
     QList<QByteArray>list =t.split(' ');
     serialPort->setPortName(list[2]);
     serialPort->setBaudRate(list[3].toInt());
-    serialPort->setDataBits((QSerialPort::DataBits)list[4].toInt());
-    serialPort->setParity((QSerialPort::Parity)list[5].toInt());
-    serialPort->setStopBits((QSerialPort::StopBits)list[6].toInt());
-    serialPort->setFlowControl((QSerialPort::FlowControl)list[7].toInt());
+    serialPort->setDataBits(static_cast<QSerialPort::DataBits>(list[4].toInt()));
+    serialPort->setParity(static_cast<QSerialPort::Parity>(list[5].toInt()));
+    serialPort->setStopBits(static_cast<QSerialPort::StopBits>(list[6].toInt()));
+    serialPort->setFlowControl(static_cast<QSerialPort::FlowControl>(list[7].toInt()));
     file.close();
 }
 

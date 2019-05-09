@@ -87,6 +87,12 @@ MainWindow::MainWindow(QWidget *parent) :
     setTinyCarComAction->setStatusTip(QStringLiteral("小车串口设置"));
     connect(setTinyCarComAction, &QAction::triggered, this, &MainWindow::openTinyCarSerialDialog);
 
+    //xyz
+    setRosAction=new QAction(QStringLiteral("Ros设置"),this);
+    setRosAction->setShortcuts(QKeySequence::Open);
+    setRosAction->setStatusTip(QStringLiteral("打开Ros设置界面"));
+    connect(setRosAction, &QAction::triggered, this, &MainWindow::openRosDialog);
+
     QToolBar *toolBar = addToolBar(tr("&File"));
 
     toolBar->addAction(setSerialAction);
@@ -95,18 +101,12 @@ MainWindow::MainWindow(QWidget *parent) :
     toolBar->addAction(startRunningAction);
     toolBar->addAction(loadGPSDataAction);
     toolBar->addAction(routeSparseAction);
-    toolBar->addAction(setScaleAction);
+    //toolBar->addAction(setScaleAction);
     toolBar->addAction(setTinyCarComAction);
 
     toolBar->addAction(startRunningXYZAction);
     toolBar->addAction(initXYZRouteAction);
     toolBar->addAction(loadXYZDataAction);
-    //xyz
-    setRosAction=new QAction(QStringLiteral("Ros设置"),this);
-    setRosAction->setShortcuts(QKeySequence::Open);
-    setRosAction->setStatusTip(QStringLiteral("打开Ros设置界面"));
-    connect(setRosAction, &QAction::triggered, this, &MainWindow::openRosDialog);
-
     toolBar->addAction(setRosAction);
 
     statusBar();
