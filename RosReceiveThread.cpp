@@ -42,8 +42,8 @@ void RosReceiveThread::run(){
     }
 }
 void RosReceiveThread::chatterCallback(const geometry_msgs::Pose xyz){
-    ROS_INFO("I heard: [%f][%f][%f]", xyz.position.x,xyz.position.y,xyz.position.z);
-    qDebug()<<"I heard"<<xyz.position.x<<xyz.position.y<<xyz.position.z;
+    //ROS_INFO("I heard: [%f][%f][%f]", xyz.position.x,xyz.position.y,xyz.position.z);
+    //qDebug()<<"I heard"<<xyz.position.x<<xyz.position.y<<xyz.position.z;
     LocationPosition position(xyz.position.x,xyz.position.z,xyz.position.y);
     locationRingBuffer->push(position);
     sendMessage(position.toString().append("\n"));

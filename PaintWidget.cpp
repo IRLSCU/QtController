@@ -74,12 +74,6 @@ void PaintWidget::paintTargetPoint(int target){
 void PaintWidget::paintEvent(QPaintEvent*)
 {
     QPainter painter(this);
-//    //for test
-//    qDebug()<<"start";
-//    for(int i=0;i<routeLocationList.size();i++){
-//        qDebug()<<routeLocationList.at(i).x()<<routeLocationList.at(i).y();
-//    }
-//    qDebug()<<"end";
     if(routeLocationList.size()!=0){
         //qDebug("routePointList.at(0):%.10f,%.10f",routePointList.at(0).x(),routePointList.at(0).y());
         //this->initScreenCenter(routePointList.at(0));
@@ -102,10 +96,6 @@ void PaintWidget::paintEvent(QPaintEvent*)
     dashes<<1<<3;
     mypen.setDashPattern(dashes);
     mypen.setCapStyle(Qt::RoundCap);
-//    QPointF tmep1=coordinate.LongLat2Screen(LongLat(103.9588080550,30.7852871117));
-//    painter.drawPoint((qint64)tmep1.x(),(qint64)tmep1.y());
-//    QPointF tmep2=coordinate.LongLat2Screen(LongLat(103.9587750583,30.7852852883));
-//    painter.drawPoint((qint64)tmep2.x(),(qint64)tmep2.y());
 
     QPointF last;
     for(int i=0;i<routeLocationList.size();i++){
