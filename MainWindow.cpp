@@ -194,6 +194,7 @@ void MainWindow::openRouteSparseDialog(){
 }
 void MainWindow::openFile()
 {
+    gpsRouteList.clear();
     QString path = QFileDialog::getOpenFileName(this,
                                                 tr("Open File"),
                                                 "./../QtControl/route");
@@ -226,6 +227,7 @@ void MainWindow::openFile()
 }
 void MainWindow::openXYZFile()
 {
+    locationRouteList.clear();
     QString path = QFileDialog::getOpenFileName(this,
                                                 tr("Open File"),
                                                 "./../QtControl/routeXYZ");

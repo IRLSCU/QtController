@@ -11,6 +11,8 @@ ControlOrderSendThread::ControlOrderSendThread(QObject *parent=0):QThread(parent
     radar->openPort();
     connect(radar,&Ultrasonic::sendDistance,[this](bool flag,int distance){
         //qDebug()<<"radar distance:"<<distance;
+        if(flag)
+            qDebug()<<"radar detect danger!!";
         this->m_radarDangerSignal=flag;
     });
 }
@@ -80,10 +82,9 @@ void ControlOrderSendThread::run(){
     while(true){ 
         if(m_enable&&!m_doNothing&&!m_radarDangerSignal){
             current=&runControlOrder;
-            //qDebug()<<"do it";
         }else{
             current=&doNothingControlOrder;
-            //qDebug()<<"do nothing";
+            qDebug()<<"do nothing"<<((m_doNothing)?"XYZ position is (0,0,0)":"XYZ position is nomal")<<((m_radarDangerSignal)?"radar detect dange":"radar is nomal");
         }
         LargeCarCO largeCarCO;
         TinyCarCO tinyCarCO;

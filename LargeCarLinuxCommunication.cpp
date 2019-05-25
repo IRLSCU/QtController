@@ -24,10 +24,10 @@ bool LargeCarLinuxCommunication::connect(){
     DWORD dwRel;
     dwRel = VCI_OpenDevice(nDeviceType,nDeviceInd,0);
     if(dwRel!=1){
-        qDebug() << QStringLiteral("打开设备失败，错误代码为") << dwRel << QStringLiteral("(0表示操作失败；-1表示USB-CAN设备不存在或USB掉线)");
+        qDebug() << QStringLiteral("打开CAN-USB设备失败，错误代码为") << dwRel << QStringLiteral("(0表示操作失败；-1表示USB-CAN设备不存在或USB掉线)");
         return false;
     }else{
-        qDebug() <<QStringLiteral("打开设备成功");
+        qDebug() <<QStringLiteral("打开CAN-USB设备成功");
     }
 
     dwRel = VCI_InitCAN(nDeviceType, nDeviceInd, nCANInd1, &vic);//初始化CAN通道1

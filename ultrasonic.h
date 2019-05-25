@@ -1,6 +1,6 @@
 #ifndef ULTRASONIC_H
 #define ULTRASONIC_H
-#define THRESHOLD 300
+#define THRESHOLD 100
 #include <QDebug>
 #include <QSerialPort>
 #include <QObject>

@@ -29,10 +29,10 @@ void Ultrasonic::openPort(){
     m_serialPort->setPortName(portName);
     if(!m_serialPort->open(QIODevice::ReadWrite))//用ReadWrite 的模式尝试打开串口
     {
-        qDebug()<<"打开失败!";
+        qDebug()<<"radar serial port open fail!";
         return;
     }
-    qDebug()<<"串口打开成功!";
+    qDebug()<<"radar serial port open success!";
 
     m_serialPort->setBaudRate(QSerialPort::Baud9600,QSerialPort::AllDirections);//设置波特率和读写方向
     m_serialPort->setDataBits(QSerialPort::Data8);      //数据位为8位
