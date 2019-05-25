@@ -1,14 +1,23 @@
 ﻿#include "ControlOrderSendThread.h"
 #include "GpsInfo.h"
 #include <QDateTime>
+#include <QObject>
 ControlOrderSendThread::ControlOrderSendThread(QObject *parent=0):QThread(parent){
     readConfig();
     m_enable=false;
-    m_doNothing=true;
+    m_doNothing=false;
+    m_radarDangerSignal=false;
+    radar=new Ultrasonic;
+    radar->openPort();
+    connect(radar,&Ultrasonic::sendDistance,[this](bool flag,int distance){
+        //qDebug()<<"radar distance:"<<distance;
+        this->m_radarDangerSignal=flag;
+    });
 }
 
 ControlOrderSendThread::~ControlOrderSendThread(){
     //todo 关闭接口
+    radar->closePort();
     qDebug()<<"ControlOrderSendThread for sending car's control orders has been destoried";
 }
 
@@ -25,6 +34,7 @@ void ControlOrderSendThread::enableSignal(bool signal){
 }
 
 void ControlOrderSendThread::run(){
+
     //初始化接口
     if(carType==LARGECARTYPE){
         if(systemType==PREDEFINITIONWINDOWS){
@@ -68,10 +78,12 @@ void ControlOrderSendThread::run(){
     QTextStream out(&file);
     QTextStream out2(&file2);
     while(true){ 
-        if(m_enable&&!m_doNothing){
+        if(m_enable&&!m_doNothing&&!m_radarDangerSignal){
             current=&runControlOrder;
+            //qDebug()<<"do it";
         }else{
             current=&doNothingControlOrder;
+            //qDebug()<<"do nothing";
         }
         LargeCarCO largeCarCO;
         TinyCarCO tinyCarCO;
@@ -101,7 +113,8 @@ void ControlOrderSendThread::run(){
 //            unsigned char tt[10]={0xFF,0xFE,1,2,3,4,5,6,7,8};
             communication->sendMessage(tinyCarCO.getCharOrder());
         }
-        //  communication->receiveMessage();
+        //for test
+        //communication->receiveMessage();
         QMutexLocker locker2(&m_threadRunLock);
         if(!m_isCanRun)//在每次循环判断是否可以运行，如果不行就退出循环
         {

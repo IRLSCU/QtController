@@ -1,10 +1,7 @@
 ﻿#ifndef ABSTRACTCOMMUNICATION_H
 #define ABSTRACTCOMMUNICATION_H
 
-#include <QtSerialPort/QSerialPort>
-#include <QtSerialPort/QSerialPortInfo>
-class AbstractCommunication:public QObject
-{
+class AbstractCommunication{
 public:
     AbstractCommunication(){}
     virtual ~AbstractCommunication(){}
@@ -13,5 +10,4 @@ public:
     virtual void receiveMessage()=0;
     virtual bool close()=0;
 };
-
 #endif // ABSTRACTCOMMUNICATION_H

@@ -59,7 +59,10 @@ SOURCES += \
     LocationBufferConsumInitRouteThread.cpp \
     LocationInitRouteDialog.cpp \
     RosSettingDialog.cpp \
-    RosReceiveThread.cpp
+    RosReceiveThread.cpp \
+    LargeCarLinuxCommunication.cpp \
+    ultrasonic.cpp \
+    fileoperation.cpp
 
 HEADERS += \
         MainWindow.h \
@@ -89,7 +92,6 @@ HEADERS += \
     ControlOrderSendThread.h \
     AbstractCommunication.h \
     CommunicationFactory.h \
-    ControlCAN.h \
     LargeCarWindowsCommunication.h \
     TinyCarCommunication.h \
     TinyCarSerialPortDialog.h \
@@ -103,7 +105,12 @@ HEADERS += \
     LocationBufferConsumInitRouteThread.h \
     LocationInitRouteDialog.h \
     RosSettingDialog.h \
-    RosReceiveThread.h
+    RosReceiveThread.h \
+    ControlCAN_Win.h \
+    ControlCAN.h \
+    LargeCarLinuxCommunication.h \
+    ultrasonic.h \
+    fileoperation.h
 
 FORMS += \
         MainWindow.ui \
@@ -146,6 +153,9 @@ linux-g++*{
 
     LIBS += -L$$PWD/../../../../opt/ros/melodic/lib/ -lcpp_common
 
+    #CAN drivers
+    LIBS += -L$$PWD/../build-QtControl-Desktop_Qt_5_12_2_GCC_64bit-Debug/ -lcontrolcan
+
     INCLUDEPATH += $$PWD/../../../../opt/ros/melodic/include
     DEPENDPATH += $$PWD/../../../../opt/ros/melodic/include
 }
@@ -154,3 +164,4 @@ INCLUDEPATH += $$PWD/.
 DEPENDPATH += $$PWD/.
 
 #win32: LIBS += -L$$PWD/./ -llibboost_chrono-vc141-mt-gd-x64-1_67
+

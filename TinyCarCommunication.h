@@ -8,7 +8,7 @@
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
 #include "AbstractCommunication.h"
-class TinyCarCommunication:public AbstractCommunication
+class TinyCarCommunication:public QObject,public AbstractCommunication
 {
     Q_OBJECT
 private:

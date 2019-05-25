@@ -4,6 +4,7 @@
 
 #include "PreDefinition.h"
 #include "LocationPosition.h"
+#include "ultrasonic.h"
 #include<CommunicationFactory.h>
 #include<QThread>
 #include<QMutex>
@@ -23,11 +24,13 @@ private:
     bool m_isCanRun;//控制线程开闭
     bool m_enable;//是否开始RUN
     bool m_doNothing;//未接受到正确的数据(x=y=z=0)
+    bool m_radarDangerSignal;//true=stop;false=run
     ControlOrder doNothingControlOrder;
     ControlOrder runControlOrder;
     ControlOrder *current;
     CommunicationType communicationType;
     AbstractCommunication* communication;
+    Ultrasonic* radar;
     //TinyCarCommunication* communication;
     int systemType;
     int carType;//

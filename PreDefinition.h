@@ -5,7 +5,7 @@
 #define TINYCARTYPE 2
 
 #define PREDEFINITIONWINDOWS 1
-#define PREDEFINITIONLINUX 1
+#define PREDEFINITIONLINUX 2
 
 #include <QDebug>
 #include <QFile>
