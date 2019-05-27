@@ -2,11 +2,13 @@
 #include "GpsInfo.h"
 #include <QDateTime>
 #include <QObject>
-ControlOrderSendThread::ControlOrderSendThread(QObject *parent=0):QThread(parent){
+ControlOrderSendThread::ControlOrderSendThread(QObject *parent):QThread(parent){
     readConfig();
     m_enable=false;
     m_doNothing=false;
     m_radarDangerSignal=false;
+    m_perceptionDangerSignal=false;
+    //通过槽函数绑定雷达数据
     radar=new Ultrasonic;
     radar->openPort();
     connect(radar,&Ultrasonic::sendDistance,[this](bool flag,int distance){
@@ -15,11 +17,22 @@ ControlOrderSendThread::ControlOrderSendThread(QObject *parent=0):QThread(parent
             qDebug()<<"radar detect danger!!";
         this->m_radarDangerSignal=flag;
     });
+
+    //通过槽函数绑定感知
+    perceptionReceiveThread=new RosPerceptionReceiveThread(this);
+    connect(perceptionReceiveThread,&RosPerceptionReceiveThread::sendPerceptionSignal,[this](bool flag){
+         if(flag)
+             qDebug()<<"perception detect danger!!";
+         this->m_perceptionDangerSignal=flag;
+    });
 }
 
 ControlOrderSendThread::~ControlOrderSendThread(){
     //todo 关闭接口
     radar->closePort();
+    perceptionReceiveThread->stopImmediately();
+    perceptionReceiveThread->wait();
+
     qDebug()<<"ControlOrderSendThread for sending car's control orders has been destoried";
 }
 
@@ -80,11 +93,14 @@ void ControlOrderSendThread::run(){
     QTextStream out(&file);
     QTextStream out2(&file2);
     while(true){ 
-        if(m_enable&&!m_doNothing&&!m_radarDangerSignal){
+        if(m_enable&&!m_doNothing&&!m_radarDangerSignal&&m_perceptionDangerSignal){
             current=&runControlOrder;
         }else{
             current=&doNothingControlOrder;
-            qDebug()<<"do nothing"<<((m_doNothing)?"XYZ position is (0,0,0)":"XYZ position is nomal")<<((m_radarDangerSignal)?"radar detect dange":"radar is nomal");
+            qDebug()<<"do nothing"
+                   <<((m_doNothing)?"XYZ position is (0,0,0)":"XYZ position is nomal")
+                   <<((m_radarDangerSignal)?"radar detect dange":"radar is nomal")
+                   <<((m_perceptionDangerSignal)?"perception detect dange":"perception is nomal");
         }
         LargeCarCO largeCarCO;
         TinyCarCO tinyCarCO;

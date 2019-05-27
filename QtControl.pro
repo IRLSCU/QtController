@@ -62,7 +62,8 @@ SOURCES += \
     RosReceiveThread.cpp \
     LargeCarLinuxCommunication.cpp \
     ultrasonic.cpp \
-    fileoperation.cpp
+    fileoperation.cpp \
+    RosPerceptionReceiveThread.cpp
 
 HEADERS += \
         MainWindow.h \
@@ -110,7 +111,10 @@ HEADERS += \
     ControlCAN.h \
     LargeCarLinuxCommunication.h \
     ultrasonic.h \
-    fileoperation.h
+    fileoperation.h \
+    RosPerceptionReceiveThread.h \
+    distance.h \
+    distances.h
 
 FORMS += \
         MainWindow.ui \

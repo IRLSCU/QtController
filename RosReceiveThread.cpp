@@ -22,7 +22,7 @@ void RosReceiveThread::run(){
     //ros::init(argc,argv,"listener");
     int argc=0;
     char **argv={};
-    ros::init(argc, argv, "ControlListener");
+    ros::init(argc, argv, "location_listener");
     ros::NodeHandle n("~");
     ros::Subscriber sub = n.subscribe(ROSRECEIVENODENAME, 1, &RosReceiveThread::chatterCallback,this);
     ros::Rate loop_rate(20);

@@ -194,11 +194,12 @@ void MainWindow::openRouteSparseDialog(){
 }
 void MainWindow::openFile()
 {
-    gpsRouteList.clear();
     QString path = QFileDialog::getOpenFileName(this,
                                                 tr("Open File"),
                                                 "./../QtControl/route");
     if(!path.isEmpty()) {
+        gpsRouteList.clear();
+        paintWidget->clear();
         QFile file(path);
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
             QMessageBox::warning(this, tr("Read File"),
@@ -227,11 +228,13 @@ void MainWindow::openFile()
 }
 void MainWindow::openXYZFile()
 {
-    locationRouteList.clear();
+
     QString path = QFileDialog::getOpenFileName(this,
                                                 tr("Open File"),
                                                 "./../QtControl/routeXYZ");
     if(!path.isEmpty()) {
+        locationRouteList.clear();
+        paintWidget->clear();
         QFile file(path);
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
             QMessageBox::warning(this, tr("Read File"),
