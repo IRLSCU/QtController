@@ -143,48 +143,50 @@ linux-g++*{
     INCLUDEPATH += -I /opt/ros/kinetic/include
     DEPENDPATH +=  /opt/ros/kinetic/include
 
-#    #--add ros libs
-
-#    LIBS += -L /opt/ros/melodic/lib/ -lroscpp
-#    LIBS += -L /opt/ros/melodic/lib/ -lroslib
-#    LIBS += -L /opt/ros/melodic/lib/ -lpthread
-#    LIBS += -L /opt/ros/melodic/lib/ -lroscpp_serialization
-#    LIBS += -L /opt/ros/melodic/lib/ -lrostime
-#    LIBS += -L /opt/ros/melodic/lib/ -lrosconsole
-#    LIBS += -L /opt/ros/melodic/lib/ -lrosconsole_log4cxx
-#    LIBS += -L /opt/ros/melodic/lib/ -lrosconsole_backend_interface
-#    LIBS += -L /opt/ros/melodic/lib/ -lxmlrpcpp
-
-#    LIBS += -L$$PWD/../../../../opt/ros/melodic/lib/ -lcpp_common
-
-#    INCLUDEPATH += $$PWD/../../../../opt/ros/melodic/include
-#    DEPENDPATH += $$PWD/../../../../opt/ros/melodic/include
-
-    #IPC config
-    #--add ros include
-    INCLUDEPATH += -I /opt/ros/kinetic/include
-    DEPENDPATH +=  /opt/ros/kinetic/include
-
     #--add ros libs
 
-    LIBS += -L /opt/ros/kinetic/lib/ -lroscpp
-    LIBS += -L /opt/ros/kinetic/lib/ -lroslib
-    LIBS += -L /opt/ros/kinetic/lib/ -lpthread
-    LIBS += -L /opt/ros/kinetic/lib/ -lroscpp_serialization
-    LIBS += -L /opt/ros/kinetic/lib/ -lrostime
-    LIBS += -L /opt/ros/kinetic/lib/ -lrosconsole
-    LIBS += -L /opt/ros/kinetic/lib/ -lrosconsole_log4cxx
-    LIBS += -L /opt/ros/kinetic/lib/ -lrosconsole_backend_interface
-    LIBS += -L /opt/ros/kinetic/lib/ -lxmlrpcpp
+    LIBS += -L /opt/ros/melodic/lib/ -lroscpp
+    LIBS += -L /opt/ros/melodic/lib/ -lroslib
+    LIBS += -L /opt/ros/melodic/lib/ -lpthread
+    LIBS += -L /opt/ros/melodic/lib/ -lroscpp_serialization
+    LIBS += -L /opt/ros/melodic/lib/ -lrostime
+    LIBS += -L /opt/ros/melodic/lib/ -lrosconsole
+    LIBS += -L /opt/ros/melodic/lib/ -lrosconsole_log4cxx
+    LIBS += -L /opt/ros/melodic/lib/ -lrosconsole_backend_interface
+    LIBS += -L /opt/ros/melodic/lib/ -lxmlrpcpp
 
-    LIBS += -L$$PWD/../../../../opt/ros/kinetic/lib/ -lcpp_common
+    LIBS += -L$$PWD/../../../../opt/ros/melodic/lib/ -lcpp_common
 
-    INCLUDEPATH += $$PWD/../../../../opt/ros/kinetic/include
-    DEPENDPATH += $$PWD/../../../../opt/ros/kinetic/include
+    INCLUDEPATH += $$PWD/../../../../opt/ros/melodic/include
+    DEPENDPATH += $$PWD/../../../../opt/ros/melodic/include
 
-    #CAN drivers
-    LIBS += -L$$PWD/../build-QtControl-Desktop_Qt_5_11_2_GCC_64bit-Debug/ -lcontrolcan
+    LIBS += -L$$PWD/../build-QtControl-Desktop_Qt_5_12_2_GCC_64bit-Debug/ -lcontrolcan
+#    #IPC config start
+#    #--add ros include
+#    INCLUDEPATH += -I /opt/ros/kinetic/include
+#    DEPENDPATH +=  /opt/ros/kinetic/include
 
+#    #--add ros libs
+
+#    LIBS += -L /opt/ros/kinetic/lib/ -lroscpp
+#    LIBS += -L /opt/ros/kinetic/lib/ -lroslib
+#    LIBS += -L /opt/ros/kinetic/lib/ -lpthread
+#    LIBS += -L /opt/ros/kinetic/lib/ -lroscpp_serialization
+#    LIBS += -L /opt/ros/kinetic/lib/ -lrostime
+#    LIBS += -L /opt/ros/kinetic/lib/ -lrosconsole
+#    LIBS += -L /opt/ros/kinetic/lib/ -lrosconsole_log4cxx
+#    LIBS += -L /opt/ros/kinetic/lib/ -lrosconsole_backend_interface
+#    LIBS += -L /opt/ros/kinetic/lib/ -lxmlrpcpp
+
+#    LIBS += -L$$PWD/../../../../opt/ros/kinetic/lib/ -lcpp_common
+
+#    INCLUDEPATH += $$PWD/../../../../opt/ros/kinetic/include
+#    DEPENDPATH += $$PWD/../../../../opt/ros/kinetic/include
+
+#    #CAN drivers
+
+#    LIBS += -L$$PWD/../build-QtControl-Desktop_Qt_5_11_2_GCC_64bit-Debug/ -lcontrolcan
+#    #IPC config end
 
 }
 
