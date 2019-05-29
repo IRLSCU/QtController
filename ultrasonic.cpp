@@ -46,7 +46,6 @@ QString Ultrasonic::receiveInfo(){
     //qDebug()<<"receive data begain : ";
     QByteArray state = m_serialPort->readAll();
     stringInfo = QString(state.toHex());
-    //qDebug()<<"receive info:"<<stringInfo;
     emit sendStringInfo(stringInfo);
     return stringInfo;
 }
@@ -68,9 +67,10 @@ int Ultrasonic::calcDistance(){
         distance = d_byte_str.toInt(nullptr ,16);
         emit sendDistance(distance<=THRESHOLD,distance);
     }
-    else
+    else{
         qDebug()<<"data error!!!!:";
-    //qDebug()<<"distance: "<<distance;
+        qDebug()<<"distance: "<<distance;
+    }
     return distance;
 }
 
