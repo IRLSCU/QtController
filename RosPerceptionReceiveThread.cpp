@@ -73,3 +73,16 @@ bool RosPerceptionReceiveThread::judgeDanger(float distance,float xmin,float xma
     return false;
     //todo 判断物体是否在车辆的正前方
 }
+bool RosPerceptionReceiveThread::judgeDangerByLaser(float x,float y,float z){
+    if(x<=EMERGYCEDISTANCE&&y>(-SAFELENGTH/2.0)&&y<(SAFELENGTH/2.0)){
+        qDebug()<<"something in emergeyce distance!!!!!!!!!";
+        return true;
+    }
+    if(x<=DANGEDISTANCE&&y>(-SAFELENGTH/2.0)&&y<(SAFELENGTH/2.0)){
+        qDebug()<<"something in dangerous distance!!!";
+        //return true;
+        return false;
+    }
+    return false;
+    //todo 判断物体是否在车辆的正前方
+}

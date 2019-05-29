@@ -2,8 +2,9 @@
 #define ROSPERCEPTIONRECEIVETHREAD_H
 #define ROSPERCEPTIONRECEIVETHREAD_BOLCKTIME 50
 #define ROSPERCEPTIONRECEIVENODENAME "/cur_pose"
-#define DANGEDISTANCE 10
-#define EMERGYCEDISTANCE 7
+#define DANGEDISTANCE 2
+#define EMERGYCEDISTANCE 1
+#define SAFELENGTH 1
 #define IMAGEWIDTH 752
 #define IMAGEHEIGHT 480
 #include "distance.h"
@@ -30,6 +31,7 @@ private:
     std::vector<std::vector<float >> boxes_info;
     std::vector<float > dis;
     bool judgeDanger(float,float,float,float,float);
+    bool judgeDangerByLaser(float x,float y,float z);
 public:
     RosPerceptionReceiveThread(QObject *parent=0);
     ~RosPerceptionReceiveThread();
