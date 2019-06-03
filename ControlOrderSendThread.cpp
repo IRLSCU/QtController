@@ -13,8 +13,6 @@ ControlOrderSendThread::ControlOrderSendThread(QObject *parent):QThread(parent){
     radar->openPort();
     connect(radar,&Ultrasonic::sendDistance,[this](bool flag,int distance){
         //qDebug()<<"radar distance:"<<distance;
-        if(flag)
-            qDebug()<<"radar detect danger!!";
         this->m_radarDangerSignal=flag;
     });
 
@@ -93,11 +91,11 @@ void ControlOrderSendThread::run(){
     QTextStream out(&file);
     QTextStream out2(&file2);
     while(true){ 
-        if(m_enable&&!m_doNothing&&!m_radarDangerSignal&&m_perceptionDangerSignal){
+        if(m_enable&&!m_doNothing&&!m_radarDangerSignal&&!m_perceptionDangerSignal){
             current=&runControlOrder;
         }else{
             current=&doNothingControlOrder;
-            qDebug()<<"do nothing"
+            qDebug()<<"do nothing           "
                    <<((m_doNothing)?"XYZ position is (0,0,0)":"XYZ position is nomal")
                    <<((m_radarDangerSignal)?"radar detect dange":"radar is nomal")
                    <<((m_perceptionDangerSignal)?"perception detect dange":"perception is nomal");
@@ -113,7 +111,6 @@ void ControlOrderSendThread::run(){
         unsigned char * c=largeCarCO.getCharOrder();
         out<<current->getGpsInfo().toString()<<" ";
         out2<<current->getLocation().toString()<<" ";
-
         for(int i=0;i<LARGECARCO_LENGTH;i++){
             out<<QString::number(c[i],10)<<" ";
             out2<<QString::number(c[i],10)<<" ";
@@ -163,12 +160,14 @@ void ControlOrderSendThread::setSpeed(int speed){
 void ControlOrderSendThread::setGpsInfo(GpsInfo gpsInfo){
     QMutexLocker locker(&m_controlOrderLock);
     runControlOrder.setGpsInfo(gpsInfo);
+    doNothingControlOrder.setGpsInfo(gpsInfo);
     //qDebug()<<"gpsInfo change to "<<gpsInfo.toString();
     locker.unlock();
 }
 void ControlOrderSendThread::setLocationInfo(LocationPosition location){
     QMutexLocker locker(&m_controlOrderLock);
     runControlOrder.setLocation(location);
+    doNothingControlOrder.setLocation(location);
     locker.unlock();
 }
 void ControlOrderSendThread::setGear(int gear){
