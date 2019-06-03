@@ -139,9 +139,6 @@ win32:{
 linux-g++*{
     ##--add boost
     INCLUDEPATH += /home/zhb/Downloads/boost_1_67_0
-    #--add ros include
-    INCLUDEPATH += -I /opt/ros/kinetic/include
-    DEPENDPATH +=  /opt/ros/kinetic/include
 
     #--add ros libs
 
