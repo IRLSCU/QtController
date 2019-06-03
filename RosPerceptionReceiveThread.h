@@ -1,7 +1,7 @@
 #ifndef ROSPERCEPTIONRECEIVETHREAD_H
 #define ROSPERCEPTIONRECEIVETHREAD_H
 #define ROSPERCEPTIONRECEIVETHREAD_BOLCKTIME 50
-#define ROSPERCEPTIONRECEIVENODENAME "/cur_pose"
+#define ROSPERCEPTIONRECEIVENODENAME "/darknet_ros/distance"
 #define DANGEDISTANCE 2
 #define EMERGYCEDISTANCE 1
 #define SAFELENGTH 1
@@ -37,7 +37,7 @@ public:
     ~RosPerceptionReceiveThread();
     void stopImmediately();
     void run();
-    void box_info_callback(const fuse_all::distances::ConstPtr& msg);
+    void box_info_callback(const darknet_ros_msgs::distances::ConstPtr& msg);
 signals:
     void sendPerceptionSignal(bool);
 };

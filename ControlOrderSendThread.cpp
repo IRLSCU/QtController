@@ -65,7 +65,7 @@ void ControlOrderSendThread::run(){
     qDebug()<<"ControlOrderSendThread for sending car's control orders started";
     m_isCanRun=true;
     if(!communication->connect()){
-        //return;  todo
+        return;  //todo
     }
 
 //    unsigned char tt[10]={0xFF,0xFE,1,2,3,4,5,6,7,8};
