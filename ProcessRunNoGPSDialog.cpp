@@ -19,12 +19,15 @@ ProcessRunNoGPSDialog::ProcessRunNoGPSDialog(LocationRingBuffer* locationRingBuf
     connect(ui->startPointChoiceBT,&QPushButton::clicked,locationBufferConsumeRunThread,&LocationBufferConsumeRunThread::setSendStartLocationSignal);//开始消费者线程后，标识是否取一个值为车辆当前坐标
     qRegisterMetaType<LocationPosition>("LocationPosition");
     //若点击界面的重新开始或者继续按钮，消费者线程开始传递信号
-    connect(locationBufferConsumeRunThread,&LocationBufferConsumeRunThread::sendRunLocation,[&](LocationPosition location){
-        processLocation(location);//处理传过来的GPS,对车辆当前位置进行处理
+//    connect(locationBufferConsumeRunThread,&LocationBufferConsumeRunThread::sendRunLocation,[&](LocationPosition location){
+//        processLocation(location);//处理传过来的GPS,对车辆当前位置进行处理
 //        this->ui->speed->setText(QString::number(location.speed,'f',2));
 //        this->ui->course->setText(QString::number(location.course,'f',2));
-        updateBroswerText(location);//更新显示的text broswer
-    });//同时将数据发往ProcessRunDialog
+        //updateBroswerText(location);//更新显示的text broswer
+//    });//同时将数据发往ProcessRunDialog
+    connect(locationBufferConsumeRunThread,&LocationBufferConsumeRunThread::sendRunLocation,this,&ProcessRunNoGPSDialog::processLocation);
+    connect(locationBufferConsumeRunThread,&LocationBufferConsumeRunThread::sendRunLocation,this,&ProcessRunNoGPSDialog::updateBroswerText);
+
     connect(locationBufferConsumeRunThread,&LocationBufferConsumeRunThread::sendStartLocation,this,&ProcessRunNoGPSDialog::initStartPointByLocation);//接收从消费者线程传出的当前车辆坐标，直接初始化。
 
     //设置下一个目标点
@@ -146,9 +149,9 @@ ProcessRunNoGPSDialog::~ProcessRunNoGPSDialog()
     controlOrderSendThread->wait();
     delete ui;
 }
-void ProcessRunNoGPSDialog::processLocation(LocationPosition& location){
+void ProcessRunNoGPSDialog::processLocation(LocationPosition location){
     if(location.x==0&&location.y==0&&location.z==0){
-        qDebug()<<"do not accept correct ros data";
+        //qDebug()<<"do not accept correct ros data";
         emit sendDoNothingSignal(true);
         return;
     }else {
@@ -176,7 +179,7 @@ void ProcessRunNoGPSDialog::processLocation(LocationPosition& location){
         qDebug()<<QStringLiteral("已到终点");
     }
 }
-void ProcessRunNoGPSDialog::updateBroswerText(LocationPosition& location){
+void ProcessRunNoGPSDialog::updateBroswerText(LocationPosition location){
     ui->textBrowser->insertPlainText(location.toString().append("\n"));
     ui->textBrowser->moveCursor(QTextCursor::End);
 }

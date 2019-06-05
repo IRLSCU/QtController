@@ -47,14 +47,15 @@ void RosPerceptionReceiveThread::box_info_callback(const darknet_ros_msgs::dista
     dis.clear();
     bool danger=false;
     for(auto box : msg->distances){
-        std::vector<float> tmp_vec(7);
-        tmp_vec[1] = box.x;
-        tmp_vec[2] = box.y;
-        tmp_vec[3] = box.z;
-        //ROS_DEBUG("yolo_box_callback() dis: %lf, ", box.dis);
-        boxes_info.push_back(tmp_vec);
+//        std::vector<float> tmp_vec(7);
+//        tmp_vec[1] = box.x;
+//        tmp_vec[2] = box.y;
+//        tmp_vec[3] = box.z;
+//        //ROS_DEBUG("yolo_box_callback() dis: %lf, ", box.dis);
+//        boxes_info.push_back(tmp_vec);
 
         danger=danger||judgeDangerByLaser(box.x,box.y,box.z);
+        //qDebug()<<box.x<<box.y<<box.z;
     }
     emit sendPerceptionSignal(danger);
 }

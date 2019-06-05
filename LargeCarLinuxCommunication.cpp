@@ -1,4 +1,4 @@
-#define CONNECTSELFTEST
+//#define CONNECTSELFTEST
 #include "LargeCarLinuxCommunication.h"
 #include <QDebug>
 LargeCarLinuxCommunication::LargeCarLinuxCommunication()

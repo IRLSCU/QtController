@@ -29,7 +29,7 @@ public:
 
 signals:
     void sendLocationPointInfo(QPointF point);//发送给paintWeidge绘制
-    void sendInitLocationInfo(LocationPosition point);//开始初始化路径时，发送gps信息
+    void sendInitLocationInfo(QString point);//开始初始化路径时，发送gps信息
 };
 
 #endif // LOCATIONBUFFERCONSUMINITROUTETHREAD_H

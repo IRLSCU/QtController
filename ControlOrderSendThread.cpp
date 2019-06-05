@@ -19,10 +19,11 @@ ControlOrderSendThread::ControlOrderSendThread(QObject *parent):QThread(parent){
     //通过槽函数绑定感知
     perceptionReceiveThread=new RosPerceptionReceiveThread(this);
     connect(perceptionReceiveThread,&RosPerceptionReceiveThread::sendPerceptionSignal,[this](bool flag){
-         if(flag)
-             qDebug()<<"perception detect danger!!";
+//         if(flag)
+//             qDebug()<<"perception detect danger!!";
          this->m_perceptionDangerSignal=flag;
     });
+    perceptionReceiveThread->start();
 }
 
 ControlOrderSendThread::~ControlOrderSendThread(){
@@ -63,7 +64,7 @@ void ControlOrderSendThread::run(){
     qDebug()<<"ControlOrderSendThread for sending car's control orders started";
     m_isCanRun=true;
     if(!communication->connect()){
-        return;  //todo
+        //return;  //todo
     }
 
 //    unsigned char tt[10]={0xFF,0xFE,1,2,3,4,5,6,7,8};
@@ -119,10 +120,10 @@ void ControlOrderSendThread::run(){
         out<<localTime<<"\n";
         out2<<localTime<<"\n";
 
-        //todo
-        if(carType==LARGECARTYPE)
-//            largeCarCO.setSpeed(107);
+        if(carType==LARGECARTYPE){
             communication->sendMessage(largeCarCO.getCharOrder());
+        }
+
         if(carType==TINYCARTYPE){
 //            unsigned char tt[10]={0xFF,0xFE,1,2,3,4,5,6,7,8};
             communication->sendMessage(tinyCarCO.getCharOrder());
@@ -132,6 +133,15 @@ void ControlOrderSendThread::run(){
         QMutexLocker locker2(&m_threadRunLock);
         if(!m_isCanRun)//在每次循环判断是否可以运行，如果不行就退出循环
         {
+            //if disconnect ,setting car staying static
+            if(carType==LARGECARTYPE)
+                ControlOrder::NormalCO2LargeCarCO(doNothingControlOrder,largeCarCO);
+                communication->sendMessage(largeCarCO.getCharOrder());
+            if(carType==TINYCARTYPE){
+                ControlOrder::NormalCO2TinyCarCO(doNothingControlOrder,tinyCarCO);
+                communication->sendMessage(tinyCarCO.getCharOrder());
+            }
+            qDebug()<<"order has been init to zero!";
             locker2.unlock();
             break;
         }

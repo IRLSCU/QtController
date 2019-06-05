@@ -14,9 +14,8 @@ LocationInitRouteDialog::LocationInitRouteDialog(LocationRingBuffer*locationRing
     connect(this,&LocationInitRouteDialog::sendInitSignal,locationConsumThread,&LocationBufferConsumInitRouteThread::initSignal);
     qRegisterMetaType<GpsInfo>("GpsInfo");
     //将数据显示与获取Gps信息绑定
-    connect(locationConsumThread,&LocationBufferConsumInitRouteThread::sendInitLocationInfo,[&](LocationPosition location){
-        updateBroswerText(location);
-    });
+    connect(locationConsumThread,&LocationBufferConsumInitRouteThread::sendInitLocationInfo,this,&LocationInitRouteDialog::updateBroswerText);
+
 
     //控制读线程开始与暂停
     connect(ui->restartBT,&QPushButton::clicked,this,&LocationInitRouteDialog::startInit);
@@ -35,8 +34,8 @@ LocationInitRouteDialog::~LocationInitRouteDialog()
     delete ui;
 }
 
-void LocationInitRouteDialog::updateBroswerText(LocationPosition location){
-    ui->textBrowser->insertPlainText(location.toString().append('\n'));
+void LocationInitRouteDialog::updateBroswerText(QString location){
+    ui->textBrowser->insertPlainText(location.append('\n'));
     ui->textBrowser->moveCursor(QTextCursor::End);
 }
 

@@ -23,7 +23,7 @@ class ProcessRunNoGPSDialog : public QDialog
 public:
     explicit ProcessRunNoGPSDialog(LocationRingBuffer*, QWidget *parent = 0);
     void initStartPointByLocation(LocationPosition location);
-    void updateBroswerText(LocationPosition& location);
+    void updateBroswerText(LocationPosition location);
     void startProcess();
     void continueProcess();
     void endProcess();
@@ -31,7 +31,7 @@ public:
     void readFile();
     void copySetInitRouteList(QList<QPointF>);
     void setNextTargetPoint(int i);
-    void processLocation(LocationPosition& location);
+    void processLocation(LocationPosition location);
     void initStartPointToQLable(double,double,double);
     void initStartPoint(double x, double y, double z);
     Pid_control* getPid(){return PID;}

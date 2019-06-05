@@ -2,7 +2,7 @@
 
 #ifndef PROCESSER
 #define PROCESSER
-#define IN_DISTANCE 3
+#define IN_DISTANCE 1
 #define FIXED_SOLUTION 4
 #include<assert.h>
 #include<vector>
