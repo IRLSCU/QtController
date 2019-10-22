@@ -63,7 +63,8 @@ SOURCES += \
     LargeCarLinuxCommunication.cpp \
     ultrasonic.cpp \
     fileoperation.cpp \
-    RosPerceptionReceiveThread.cpp
+    RosPerceptionReceiveThread.cpp \
+    ControlOrderSendToRosThread.cpp
 
 HEADERS += \
         MainWindow.h \
@@ -114,7 +115,8 @@ HEADERS += \
     fileoperation.h \
     RosPerceptionReceiveThread.h \
     distance.h \
-    distances.h
+    distances.h \
+    ControlOrderSendToRosThread.h
 
 FORMS += \
         MainWindow.ui \
@@ -184,7 +186,7 @@ linux-g++*{
 
     #CAN drivers
 
-    LIBS += -L$$PWD/../build-QtControl-Desktop_Qt_5_11_2_GCC_64bit-Debug/ -lcontrolcan
+    LIBS += -L$$PWD/../build-QtControl-Desktop_Qt_5_9_0_GCC_64bit-Debug/ -lcontrolcan
     #IPC config end
 
 }

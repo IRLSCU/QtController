@@ -5,11 +5,17 @@
 #define STARTPOINTLATITUDE 30.783824800
 #define STARTPOINTALTITUDE 500
 
+#define SENDTOROS
+
 #include "RingBuffer.h"
 #include "Processer.h"
 #include "PID.h"
 #include "LocationBufferConsumeRunThread.h"
-#include "ControlOrderSendThread.h"
+#ifdef SENDTOROS
+    #include "ControlOrderSendToRosThread.h"
+#else
+    #include "ControlOrderSendThread.h"
+#endif
 #include <QDialog>
 
 namespace Ui {
@@ -41,7 +47,12 @@ public:
 private:
     Ui::ProcessRunDialog *ui;
     LocationBufferConsumeRunThread* locationBufferConsumeRunThread;
+
+#ifdef SENDTOROS
+    ControlOrderSendToRosThread* controlOrderSendThread;
+#else
     ControlOrderSendThread* controlOrderSendThread;
+#endif
     Processer* processer;
     Pid_control* PID;
     QList<QPointF> routePointList;//需要现在主界面加载路径后
