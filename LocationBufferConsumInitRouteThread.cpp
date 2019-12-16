@@ -35,7 +35,7 @@ void LocationBufferConsumInitRouteThread::run(){
                 QMutexLocker locker2(&m_Initlock);
                 if(m_startInit){//同时将数据发往初始化列表
 //                    qDebug()<<"start init route";
-                    emit sendInitLocationInfo(location);
+                    emit sendInitLocationInfo(location.toString());
                 }
                 locker2.unlock();
             }

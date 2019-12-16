@@ -40,24 +40,22 @@ void RosPerceptionReceiveThread::run(){
         }
     }
 }
-void RosPerceptionReceiveThread::box_info_callback(const fuse_all::distances::ConstPtr& msg)
+void RosPerceptionReceiveThread::box_info_callback(const darknet_ros_msgs::distances::ConstPtr& msg)
 {
     //double box_info_ts = msg->header.stamp.toSec();
     boxes_info.clear();
     dis.clear();
     bool danger=false;
     for(auto box : msg->distances){
-        std::vector<float> tmp_vec(5);
-        tmp_vec[0] = box.dis;
-        tmp_vec[1] = box.xmin;
-        tmp_vec[2] = box.xmax;
-        tmp_vec[3] = box.ymin;
-        tmp_vec[4] = box.ymax;
-        dis.push_back(box.dis);
-        //ROS_DEBUG("yolo_box_callback() dis: %lf, ", box.dis);
-        boxes_info.push_back(tmp_vec);
+//        std::vector<float> tmp_vec(7);
+//        tmp_vec[1] = box.x;
+//        tmp_vec[2] = box.y;
+//        tmp_vec[3] = box.z;
+//        //ROS_DEBUG("yolo_box_callback() dis: %lf, ", box.dis);
+//        boxes_info.push_back(tmp_vec);
 
-        danger=danger||judgeDanger(box.dis,box.xmin,box.xmax,box.ymin,box.ymax);
+        danger=danger||judgeDangerByLaser(box.x,box.y,box.z);
+        //qDebug()<<box.x<<box.y<<box.z;
     }
     emit sendPerceptionSignal(danger);
 }

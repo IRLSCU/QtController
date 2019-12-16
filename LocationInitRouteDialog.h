@@ -16,7 +16,7 @@ class LocationInitRouteDialog : public QDialog
 public:
     explicit LocationInitRouteDialog(LocationRingBuffer*,QWidget *parent = nullptr);
     void acceptGpsInfo(LocationPosition& location);
-    void updateBroswerText(LocationPosition location);
+    void updateBroswerText(QString location);
     void startInit();
     void continueInit();
     void endInit();

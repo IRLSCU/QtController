@@ -41,6 +41,27 @@ void RosReceiveThread::run(){
         }
     }
 }
+#ifdef ROSRADAR
+void RosReceiveThread::chatterCallback(const tf2_msgs::TFMessage::ConstPtr tfmsg){
+
+    tf2_msgs::TFMessage::_transforms_type  temp=tfmsg->transforms;
+    //typeof(temp) xyz;
+
+    for(int i=0;i<temp.size();i++){
+        if(temp.at(i).header.frame_id=="map_laser"){
+            geometry_msgs::TransformStamped a = temp.at(i);
+            auto xyz=a.transform;
+            // auto ttt=temp.at(i).geometry_msgs/Transform;
+            //ROS_INFO("I heard: [%f][%f][%f]", xyz.translation.x,xyz.translation.y,xyz.translation.z);
+            //qDebug()<<"I heard"<<xyz.translation.x<<xyz.translation.y<<xyz.translation.z;
+            LocationPosition position(xyz.translation.x,xyz.translation.y,xyz.translation.z);
+             locationRingBuffer->push(position);
+             sendMessage(position.toString().append("\n"));
+            break;
+        }
+    }
+}
+#else
 void RosReceiveThread::chatterCallback(const geometry_msgs::Pose xyz){
     //ROS_INFO("I heard: [%f][%f][%f]", xyz.position.x,xyz.position.y,xyz.position.z);
     //qDebug()<<"I heard"<<xyz.position.x<<xyz.position.y<<xyz.position.z;
@@ -48,3 +69,5 @@ void RosReceiveThread::chatterCallback(const geometry_msgs::Pose xyz){
     locationRingBuffer->push(position);
     sendMessage(position.toString().append("\n"));
 }
+
+#endif
