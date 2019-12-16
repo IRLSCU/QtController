@@ -81,11 +81,21 @@ ProcessRunNoGPSDialog::ProcessRunNoGPSDialog(LocationRingBuffer* locationRingBuf
 
 
     //send control order thread setting
+#ifdef SENDTOROS
+    controlOrderSendThread=new ControlOrderSendToRosThread(this);
+    connect(this,&ProcessRunNoGPSDialog::sendRange,controlOrderSendThread,&ControlOrderSendToRosThread::setRange);
+    connect(this,&ProcessRunNoGPSDialog::sendSpeed,controlOrderSendThread,&ControlOrderSendToRosThread::setSpeed);
+    connect(this,&ProcessRunNoGPSDialog::sendLocationInfo,controlOrderSendThread,&ControlOrderSendToRosThread::setLocationInfo);
+    connect(this,&ProcessRunNoGPSDialog::sendDoNothingSignal,controlOrderSendThread,&ControlOrderSendToRosThread::doNothing);
+#else
     controlOrderSendThread=new ControlOrderSendThread(this);
     connect(this,&ProcessRunNoGPSDialog::sendRange,controlOrderSendThread,&ControlOrderSendThread::setRange);
     connect(this,&ProcessRunNoGPSDialog::sendSpeed,controlOrderSendThread,&ControlOrderSendThread::setSpeed);
     connect(this,&ProcessRunNoGPSDialog::sendLocationInfo,controlOrderSendThread,&ControlOrderSendThread::setLocationInfo);
     connect(this,&ProcessRunNoGPSDialog::sendDoNothingSignal,controlOrderSendThread,&ControlOrderSendThread::doNothing);
+#endif
+
+
 
     connect(ui->start,&QPushButton::clicked,[&](){
         controlOrderSendThread->enableSignal(true);
