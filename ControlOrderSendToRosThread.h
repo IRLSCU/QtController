@@ -1,6 +1,6 @@
 ﻿#ifndef CONTROLORDERSENDTOROSTHREAD_H
 #define CONTROLORDERSENDTOROSTHREAD_H
-#define CONTROLORDERSENDTOROSTHREAD_BOLCKTIME 200
+#define CONTROLORDERSENDTOROSTHREAD_BOLCKTIME 50
 
 #include "PreDefinition.h"
 #include "LocationPosition.h"
@@ -28,7 +28,7 @@ private:
     bool m_enable;//是否开始RUN
     bool m_doNothing;//未接受到正确的数据(x=y=z=0)
     bool m_radarDangerSignal;//超声波雷达监测到前方某一距离有障碍物 true=stop;false=run
-    bool m_perceptionDangerSignal;//融合感知模块传递障碍物 true=stop;false=run
+    int m_perceptionDangerSignal;
     ControlOrder doNothingControlOrder;
     ControlOrder runControlOrder;
     ControlOrder *current;
@@ -40,6 +40,7 @@ private:
     int systemType;
     int carType;//
     void readConfig();
+    void sendTurnOrder(int ,ros::Publisher);
 public:
     ControlOrderSendToRosThread(QObject *parent);
     ~ControlOrderSendToRosThread();

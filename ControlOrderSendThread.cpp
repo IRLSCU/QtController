@@ -18,7 +18,7 @@ ControlOrderSendThread::ControlOrderSendThread(QObject *parent):QThread(parent){
 
     //通过槽函数绑定感知
     perceptionReceiveThread=new RosPerceptionReceiveThread(this);
-    connect(perceptionReceiveThread,&RosPerceptionReceiveThread::sendPerceptionSignal,[this](bool flag){
+    connect(perceptionReceiveThread,&RosPerceptionReceiveThread::sendPerceptionSignal,[this](int flag){
 //         if(flag)
 //             qDebug()<<"perception detect danger!!";
          this->m_perceptionDangerSignal=flag;
@@ -92,14 +92,22 @@ void ControlOrderSendThread::run(){
     QTextStream out(&file);
     QTextStream out2(&file2);
     while(true){ 
-        if(m_enable&&!m_doNothing&&!m_radarDangerSignal&&!m_perceptionDangerSignal){
+        if(m_enable&&!m_doNothing&&!m_radarDangerSignal&&m_perceptionDangerSignal==PRECEPTION_NOMAL){
             current=&runControlOrder;
-        }else{
-            current=&doNothingControlOrder;
-            qDebug()<<"do nothing           "
-                   <<((m_doNothing)?"XYZ position is (0,0,0)":"XYZ position is nomal")
-                   <<((m_radarDangerSignal)?"radar detect dange":"radar is nomal")
-                   <<((m_perceptionDangerSignal)?"perception detect dange":"perception is nomal");
+        }else {
+            if(!(m_enable&&!m_doNothing&&!m_radarDangerSignal)||m_perceptionDangerSignal==PRECEPTION_STOP){
+                current=&doNothingControlOrder;
+                qDebug()<<"do nothing           "
+                       <<((m_doNothing)?"XYZ position is (0,0,0)":"XYZ position is nomal")
+                       <<((m_radarDangerSignal)?"radar detect dange":"radar is nomal")
+                       <<((m_perceptionDangerSignal==PRECEPTION_STOP)?"perception detect dange":"perception is nomal");
+            }else if(m_perceptionDangerSignal==PRECEPTION_LEFT){
+                //TODO
+                qDebug()<<"AUTO DO RIGHT TURN";
+            }else if(m_perceptionDangerSignal==PRECEPTION_RIGHT){
+                //TODO
+                qDebug()<<"AUTO DO LEFT TURN";
+            }
         }
         LargeCarCO largeCarCO;
         TinyCarCO tinyCarCO;

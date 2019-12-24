@@ -1,6 +1,6 @@
 ﻿#ifndef CONTROLORDERSENDTHREAD_H
 #define CONTROLORDERSENDTHREAD_H
-#define CONTROLORDERSENDTHREAD_BOLCKTIME 200
+#define CONTROLORDERSENDTHREAD_BOLCKTIME 50
 
 #include "PreDefinition.h"
 #include "LocationPosition.h"
@@ -13,7 +13,7 @@
 #include<ControlOrder.h>
 
 /**
- * @brief 将开启一个线程，将汽车控制指令送往对应车辆
+ * @brief 将开启一个线程，将汽车控制指令送往对应车辆串口
  */
 class ControlOrderSendThread : public QThread
 {
@@ -26,7 +26,7 @@ private:
     bool m_enable;//是否开始RUN
     bool m_doNothing;//未接受到正确的数据(x=y=z=0)
     bool m_radarDangerSignal;//超声波雷达监测到前方某一距离有障碍物 true=stop;false=run
-    bool m_perceptionDangerSignal;//融合感知模块传递障碍物 true=stop;false=run
+    int m_perceptionDangerSignal;//融合感知模块传递障碍物
     ControlOrder doNothingControlOrder;
     ControlOrder runControlOrder;
     ControlOrder *current;

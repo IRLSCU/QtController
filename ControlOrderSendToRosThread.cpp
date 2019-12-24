@@ -18,7 +18,7 @@ ControlOrderSendToRosThread::ControlOrderSendToRosThread(QObject *parent):QThrea
 
     //通过槽函数绑定感知
     perceptionReceiveThread=new RosPerceptionReceiveThread(this);
-    connect(perceptionReceiveThread,&RosPerceptionReceiveThread::sendPerceptionSignal,[this](bool flag){
+    connect(perceptionReceiveThread,&RosPerceptionReceiveThread::sendPerceptionSignal,[this](int flag){
 //         if(flag)
 //             qDebug()<<"perception detect danger!!";
          this->m_perceptionDangerSignal=flag;
@@ -97,16 +97,30 @@ void ControlOrderSendToRosThread::run(){
     ros::NodeHandle n("~");
     ros::Publisher order_simulate_pub = n.advertise<geometry_msgs::QuaternionStamped>("/tiny_car_order", 1000);
     ros::Rate loop_rate(20);
+    //m_perceptionDangerSignal=PRECEPTION_LEFT;
     while(ros::ok()){
-
-        if(m_enable&&!m_doNothing&&!m_radarDangerSignal&&!m_perceptionDangerSignal){
+        if(m_enable&&!m_doNothing&&!m_radarDangerSignal&&m_perceptionDangerSignal==PRECEPTION_NOMAL){
             current=&runControlOrder;
-        }else{
-            current=&doNothingControlOrder;
-            qDebug()<<"do nothing           "
-                   <<((m_doNothing)?"XYZ position is (0,0,0)":"XYZ position is nomal")
-                   <<((m_radarDangerSignal)?"radar detect dange":"radar is nomal")
-                   <<((m_perceptionDangerSignal)?"perception detect dange":"perception is nomal");
+        }else {
+            if(!(m_enable&&!m_doNothing&&!m_radarDangerSignal)||m_perceptionDangerSignal==PRECEPTION_STOP){
+                current=&doNothingControlOrder;
+                qDebug()<<"do nothing           "
+                       <<((m_doNothing)?"XYZ position is (0,0,0)":"XYZ position is nomal")
+                       <<((m_radarDangerSignal)?"radar detect dange":"radar is nomal")
+                       <<((m_perceptionDangerSignal==PRECEPTION_STOP)?"perception detect dange":"perception is nomal");
+            }else if(m_perceptionDangerSignal==PRECEPTION_LEFT){
+                //TODO
+                qDebug()<<"AUTO DO RIGHT TURN";
+                sendTurnOrder(PRECEPTION_LEFT,order_simulate_pub);
+                m_perceptionDangerSignal=PRECEPTION_NOMAL;
+                continue;
+            }else if(m_perceptionDangerSignal==PRECEPTION_RIGHT){
+                //TODO
+                qDebug()<<"AUTO DO LEFT TURN";
+                sendTurnOrder(PRECEPTION_LEFT,order_simulate_pub);
+                m_perceptionDangerSignal=PRECEPTION_NOMAL;
+                continue;
+            }
         }
         LargeCarCO largeCarCO;
         TinyCarCO tinyCarCO;
@@ -231,4 +245,20 @@ void ControlOrderSendToRosThread::readConfig(){
     systemType=list[0].toInt();
     carType=list[1].toInt();
     file.close();
+}
+void ControlOrderSendToRosThread::sendTurnOrder(int ordientation,ros::Publisher order_simulate_pub){
+    int slow=8;
+    int fast=32;
+    int time=20*1000;
+    int i=0;
+    geometry_msgs::QuaternionStamped order;
+    while(i<(time/CONTROLORDERSENDTOROSTHREAD_BOLCKTIME)){
+        if(ordientation==PRECEPTION_LEFT){
+            order.quaternion.y=fast;
+            order.quaternion.z=slow;
+        }
+        order_simulate_pub.publish(order);
+        i++;
+        msleep(CONTROLORDERSENDTOROSTHREAD_BOLCKTIME);
+    }
 }

@@ -7,6 +7,10 @@
 #define SAFELENGTH 2
 #define IMAGEWIDTH 752
 #define IMAGEHEIGHT 480
+#define PRECEPTION_NOMAL 0
+#define PRECEPTION_STOP 1
+#define PRECEPTION_LEFT 2
+#define PRECEPTION_RIGHT 3
 #include "distance.h"
 #include "distances.h"
 #include "ros/ros.h"
@@ -39,6 +43,6 @@ public:
     void run();
     void box_info_callback(const darknet_ros_msgs::distances::ConstPtr& msg);
 signals:
-    void sendPerceptionSignal(bool);
+    void sendPerceptionSignal(int);
 };
 #endif // ROSPERCEPTIONRECEIVETHREAD_H

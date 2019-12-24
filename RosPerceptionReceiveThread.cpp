@@ -57,7 +57,7 @@ void RosPerceptionReceiveThread::box_info_callback(const darknet_ros_msgs::dista
         danger=danger||judgeDangerByLaser(box.x,box.y,box.z);
         //qDebug()<<box.x<<box.y<<box.z;
     }
-    emit sendPerceptionSignal(danger);
+    emit sendPerceptionSignal(PRECEPTION_NOMAL);
 }
 bool RosPerceptionReceiveThread::judgeDanger(float distance,float xmin,float xmax,float ymin,float ymax){
     if(distance<=EMERGYCEDISTANCE){

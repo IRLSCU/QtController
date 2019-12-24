@@ -96,8 +96,7 @@ double Processer::startProcess(GaussGPSData current,int* target,int* status) {
 	if (pointsInSameSide(current,current_route_gps , corssLine)) {
         //std::cout << "车辆未经过任意一高斯点(过垂线),"<<"上一个经过的高斯点为第" << current_point_count << "个\n";
         //qDebug()<< QStringLiteral("车辆未经过任意一高斯点(过垂线),上一个经过的高斯点为:")<< current_point_count;
-
-	}else {
+    }else {
 		current_point_count += 1;
         if (current_point_count >= sum_gps_point-1) {
             *status=1;
@@ -110,6 +109,8 @@ double Processer::startProcess(GaussGPSData current,int* target,int* status) {
         next_route_gps = gps_route[current_point_count + 1];
         qDebug()<< QStringLiteral("车辆已经过第")<<current_point_count<<QStringLiteral("个高斯点，车辆目标为第") << current_point_count+1 << QStringLiteral("个路径的GPS高斯点");
 	}
+    //TODO using GaussGPSData express the pre point
+    //TODO next_gps=getNextGps(current,current_route_gps,next_route_gps,current_point_count,*status);
     *target = current_point_count+1;
     double distance = calPointFromLineDistance(current, Line(current_route_gps, next_route_gps));
     double director = calPointFromLineDirector(current, Line(current_route_gps, next_route_gps));
