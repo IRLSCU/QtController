@@ -28,10 +28,10 @@ void TinyCarCommunication::initConfig(){
 
 bool TinyCarCommunication::connect(){
     if(serialPort->open(QSerialPort::OpenModeFlag::ReadWrite)){
-        qDebug()<<serialPort->portName()<<"TinyCarCommunication opened successd";
+        qDebug()<<serialPort->portName()<<" TinyCarCommunication opened successd";
         return true;
     }else{
-        qDebug()<<"TinyCarCommunication opened failed";
+        qDebug()<<serialPort->portName()<<"  TinyCarCommunication opened failed";
         return false;
     }
 

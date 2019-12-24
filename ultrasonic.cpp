@@ -65,6 +65,7 @@ int Ultrasonic::calcDistance(){
     bool pass = checkData(stringInfo);
     if(pass){
         distance = d_byte_str.toInt(nullptr ,16);
+        //qDebug(distance);
         emit sendDistance(distance<=THRESHOLD,distance);
     }
     else{

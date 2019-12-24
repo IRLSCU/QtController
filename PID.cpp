@@ -23,6 +23,7 @@ double Pid_control::PID_realize(double CTE){
 	//设置死区，防止抖动
 	if (fabs(pid.err)<= pid.deadZone) {
 		pid.voltage = 0;
+        pid.integral=0;
 	}
 	else {
 		pid.integral += pid.err;

@@ -52,9 +52,10 @@ void RosReceiveThread::chatterCallback(const tf2_msgs::TFMessage::ConstPtr tfmsg
             geometry_msgs::TransformStamped a = temp.at(i);
             auto xyz=a.transform;
             // auto ttt=temp.at(i).geometry_msgs/Transform;
-            ROS_INFO("I heard: [%f][%f][%f]", xyz.translation.x,xyz.translation.y,xyz.translation.z);
-            qDebug()<<"I heard"<<xyz.translation.x<<xyz.translation.y<<xyz.translation.z;
-            LocationPosition position(xyz.translation.x,xyz.translation.z,xyz.translation.y);
+
+            //ROS_INFO("I heard: [%f][%f][%f]", xyz.translation.x,xyz.translation.y,xyz.translation.z);
+            //qDebug()<<"I heard"<<xyz.translation.x<<xyz.translation.y<<xyz.translation.z;
+            LocationPosition position(xyz.translation.x,xyz.translation.y,xyz.translation.z);
              locationRingBuffer->push(position);
              sendMessage(position.toString().append("\n"));
             break;

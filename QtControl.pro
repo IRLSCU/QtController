@@ -141,9 +141,9 @@ win32:{
 linux-g++*{
 
     ##--add boost
-#    INCLUDEPATH += /home/zhb/Downloads/boost_1_67_0
+    #INCLUDEPATH += /home/zhb/Downloads/boost_1_67_0
 
-#    #--add ros libs
+    #--add ros libs
 
 #    LIBS += -L /opt/ros/melodic/lib/ -lroscpp
 #    LIBS += -L /opt/ros/melodic/lib/ -lroslib
@@ -186,7 +186,7 @@ linux-g++*{
 
     #CAN drivers
 
-    LIBS += -L$$PWD/../build-QtControl-Desktop_Qt_5_9_0_GCC_64bit-Debug/ -lcontrolcan
+    LIBS += -L$$PWD/../build-QtControl-Desktop_Qt_5_9_0_GCC_64bit-Debug -lcontrolcan
     #IPC config end
 
 }
