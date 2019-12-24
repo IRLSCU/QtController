@@ -1,11 +1,11 @@
 #ifndef ROSRECEIVETHREAD_H
 #define ROSRECEIVETHREAD_H
 #define ROSRECEIVETHREAD_BOLCKTIME 50
-//#define ROSRADAR
+#define ROSRADAR
 #ifdef ROSRADAR
 #define ROSRECEIVENODENAME "/tf"
 #else
-#define ROSRECEIVENODENAME "/curpose"
+#define ROSRECEIVENODENAME "/cur_pose"
 #endif
 #include "ros/ros.h"
 #include "std_msgs/String.h"

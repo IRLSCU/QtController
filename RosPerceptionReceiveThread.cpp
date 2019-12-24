@@ -24,6 +24,7 @@ void RosPerceptionReceiveThread::run(){
     ros::init(argc, argv, "perception_receiver");
     ros::NodeHandle n("~");
     ros::Subscriber sub = n.subscribe(ROSPERCEPTIONRECEIVENODENAME, 1, &RosPerceptionReceiveThread::box_info_callback,this);
+    ros::Subscriber sub_scan = n.subscribe(ROSSCANNAME, 1, &RosPerceptionReceiveThread::box_info_callback_laserscan,this);
     ros::Rate loop_rate(20);
     int count = 0;
     while(ros::ok()){
@@ -59,13 +60,26 @@ void RosPerceptionReceiveThread::box_info_callback(const darknet_ros_msgs::dista
     }
     emit sendPerceptionSignal(danger);
 }
+void RosPerceptionReceiveThread::box_info_callback_laserscan(const sensor_msgs::LaserScan::ConstPtr& msg)
+{
+    //todo
+    sensor_msgs::LaserScan::_ranges_type ranges=msg->ranges;
+    for(int i=0;i<360;i++){
+        if(ranges.at(i)<LASERDANGERDISTANCE){
+            qDebug()<<"[LaserScan]-->>>>>>something in emergeyce distance!!!!!!!!!";
+            emit sendPerceptionSignal(true);
+            return;
+        }
+    }
+    emit sendPerceptionSignal(false);
+}
 bool RosPerceptionReceiveThread::judgeDanger(float distance,float xmin,float xmax,float ymin,float ymax){
     if(distance<=EMERGYCEDISTANCE){
-        qDebug()<<"something in emergeyce distance!!!!!!!!!";
+        qDebug()<<"[Radar]-->>>>>>something in emergeyce distance!!!!!!!!!";
         return true;
     }
     if(distance<=DANGEDISTANCE){
-        qDebug()<<"something in dangerous distance!!!";
+        qDebug()<<"[Radar]-->>>>>>something in dangerous distance!!!";
         return true;
     }
     return false;

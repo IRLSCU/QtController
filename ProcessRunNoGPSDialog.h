@@ -5,7 +5,7 @@
 #define STARTPOINTLATITUDE 30.783824800
 #define STARTPOINTALTITUDE 500
 
-#define SENDTOROS
+//#define SENDTOROS
 
 #include "RingBuffer.h"
 #include "Processer.h"
