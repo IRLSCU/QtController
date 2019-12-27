@@ -174,7 +174,10 @@ void ProcessRunNoGPSDialog::processLocation(LocationPosition location){
     double actualCTE = processer->startProcess(GaussGPSData(location.x,location.y),&target,&status);
     setNextTargetPoint(target);
     //转化成车辆的转向
-    double range=PID->PID_realize(actualCTE);
+    double rangeCrossError=PID->PID_realize(actualCTE);
+    double rangeAngleError=processer->calTargetYawDiff(GaussGPSData(location.x,location.y));
+    qDebug()<<rangeAngleError;
+    double range=rangeCrossError;
     //todo 车辆速度PID
     //double speed=12;
     emit sendRange((int)range);
@@ -277,4 +280,7 @@ void ProcessRunNoGPSDialog::readFile()
         }
         file.close();
     }
+}
+double ProcessRunNoGPSDialog::calRange(double rangeCrossError,double rangeAngleError){
+    return rangeCrossError;
 }

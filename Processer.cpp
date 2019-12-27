@@ -248,3 +248,37 @@ double Processer::calLineK(Line line) {
 		return (line.m_end.m_y - line.m_start.m_y) / temp;
 	}
 }
+int Processer::getCurrentYawVector(GaussGPSData current,VectorG& v){
+    int i=current_point_count;
+    for(;i>=0;i--){
+        if(getPointDistance(current,gps_route[i])>=TARGETDISTANCE){
+            break;
+        }
+    }
+    if(i<0) return -1;
+    v.m_x=current.m_x-gps_route[i].m_x;
+    v.m_y=current.m_y-gps_route[i].m_y;
+    return 1;
+}
+
+int Processer::getNextYawVector(GaussGPSData current,VectorG& v){
+    int i=current_point_count;
+    for(;i<gps_route.size();i++){
+        if(getPointDistance(current,gps_route[i])>=TARGETDISTANCE){
+            break;
+        }
+    }
+    if(i<0) return -1;
+    v.m_x=gps_route[i].m_x-current.m_x;
+    v.m_y=gps_route[i].m_y-current.m_y;
+    return 1;
+}
+double Processer::calTargetYawDiff(GaussGPSData current){
+    VectorG currentYaw,targetYaw;
+    int flag=getCurrentYawVector(current,currentYaw);
+    if(flag<0) return -1;
+    flag=getNextYawVector(current,targetYaw);
+    if(flag<0) return -1;
+    double yaw=acos((currentYaw.m_x*targetYaw.m_x+currentYaw.m_y*targetYaw.m_y)/sqrt(currentYaw.m_x*currentYaw.m_x+currentYaw.m_y*currentYaw.m_y)/sqrt(targetYaw.m_x*targetYaw.m_x+targetYaw.m_y*targetYaw.m_y));
+    return yaw * 180.0 / 3.1415926;
+}

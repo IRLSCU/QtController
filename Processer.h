@@ -4,8 +4,10 @@
 #define PROCESSER
 #define IN_DISTANCE 1
 #define FIXED_SOLUTION 4
+#define TARGETDISTANCE 0.8
 #include<assert.h>
 #include<vector>
+#include<stack>
 #include<string.h>
 #include<fstream>
 #include<iostream>
@@ -35,7 +37,7 @@ struct Line {
 		m_end = end;
 	}
 };
-
+typedef GaussGPSData VectorG;
 class Processer{
 
 public:
@@ -47,6 +49,14 @@ public:
     int setNextTargetPoint(int i);
     double startProcess(GaussGPSData current,int* target,int* status);//通过当前点返回其离直线的距离，用来纠偏
     double startProcess2(GaussGPSData current);//通过当前点返回其离直线的距离，用来纠偏,目前未采用
+    /**
+     * @brief calTargetYawDiff 获取目标的姿态角和当前姿态角的差
+     * @param current
+     * @param dis 设定的当前和目标位置的距离(方便调试)
+     * @return 角度值,
+     * TODO 可通过slam获取？
+     */
+    double calTargetYawDiff(GaussGPSData current);
 
 private:
 	static double getPointDistance(const GaussGPSData, const GaussGPSData);
@@ -60,8 +70,17 @@ private:
 	static double calLinesAngle(Line line1, Line line2);
 	static double calLineK(Line);
     static double calLinesAngle(double k1, double k2);//通过斜率求
+    /**
+     * @brief getCurruntYawVector
+     * @param current
+     * @param vector
+     * @return -1表示当前方位角异常(计算方式取前一段距离的点可能取不到) 1表示正常
+     */
+    int getCurrentYawVector(GaussGPSData current,VectorG& vector);
+    int getNextYawVector(GaussGPSData current,VectorG& vector);
 
-	std::vector<GaussGPSData> gps_route;//固定路径的路径
+    std::vector<GaussGPSData> gps_route;//固定路径的路径
+    std::stack<GaussGPSData> passway;
 	GaussGPSData current_gps;//当前点
 	GaussGPSData last_gps;//上一个GPS点
 	GaussGPSData current_route_gps;//距离路径上最近的GPS点
