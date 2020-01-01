@@ -50,9 +50,9 @@ private:
     /**
      * @brief calRange 将当前横向偏差和当前与未来的姿态偏差(车辆方向)做一个加权平均
      * @param rangeCrossError 当前横向偏差
-     * @param rangeAngleError 未来的姿态偏差做一个加权平均
+     * @param 用来描述接下来是否是一个弯道程度
      */
-    double calRange(double rangeCrossError,double rangeAngleError);
+    double ProcessRunNoGPSDialog::calRange(double rangeCrossError,double targetDiffAngle);
 #ifdef SENDTOROS
     ControlOrderSendToRosThread* controlOrderSendThread;
 #else

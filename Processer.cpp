@@ -92,6 +92,7 @@ int Processer::initStartPoint(GaussGPSData current) {
 double Processer::startProcess(GaussGPSData current,int* target,int* status) {
 	last_gps = current_gps;
 	current_gps = current;
+    passwayBuffer.push_back(current);
 	Line corssLine = getCorssLine(Line(current_route_gps, next_route_gps), next_route_gps);
 	if (pointsInSameSide(current,current_route_gps , corssLine)) {
         //std::cout << "车辆未经过任意一高斯点(过垂线),"<<"上一个经过的高斯点为第" << current_point_count << "个\n";
@@ -119,6 +120,7 @@ double Processer::startProcess(GaussGPSData current,int* target,int* status) {
 double Processer::startProcess2(GaussGPSData current) {
 	last_gps = current_gps;
 	current_gps = current;
+    passwayBuffer.push_back(current);
 	int flag = 0;//记录是否移动了靠近点
 	for (int i = current_point_count; i < sum_gps_point; i++) {
 		if (isInArea(current, gps_route[i], IN_DISTANCE)) {//判断是否到了下一个GPSRoute上的点，方法一：通过是否靠近下个点IN_DISTANCE距离。
@@ -249,29 +251,45 @@ double Processer::calLineK(Line line) {
 	}
 }
 int Processer::getCurrentYawVector(GaussGPSData current,VectorG& v){
+//    int i=passwayBuffer.size();
+//    for(;i>=0;i--){
+//        if(getPointDistance(current,passwayBuffer[i])>=TARGETDISTANCE){
+//            break;
+//        }
+//    }
+//    if(i<0) {std::cout<<"current yaw can not get"<<std::endl;return -1;}
+//    v.m_x=current.m_x-passwayBuffer[i].m_x;
+//    v.m_y=current.m_y-passwayBuffer[i].m_y;
+    //std::cout<<"gps_route.size: "<<gps_route.size();
     int i=current_point_count;
-    for(;i>=0;i--){
-        if(getPointDistance(current,gps_route[i])>=TARGETDISTANCE){
-            break;
-        }
-    }
-    if(i<0) return -1;
-    v.m_x=current.m_x-gps_route[i].m_x;
-    v.m_y=current.m_y-gps_route[i].m_y;
+    if(i-1<0||i+1>=gps_route.size()) return -1;
+    v.m_x=gps_route[i+1].m_x-gps_route[i-1].m_x;
+    v.m_y=gps_route[i+1].m_y-gps_route[i-1].m_y;
     return 1;
 }
 
 int Processer::getNextYawVector(GaussGPSData current,VectorG& v){
-    int i=current_point_count;
+//    int i=current_point_count;
+//    for(;i<gps_route.size();i++){
+//        if(getPointDistance(current,gps_route[i])>=TARGETDISTANCE){
+//            break;
+//        }
+//    }
+//    if(i>gps_route.size()) {std::cout<<"target yaw can not get"<<std::endl;return -1;}
+//    v.m_x=gps_route[i].m_x-current.m_x;
+//    v.m_y=gps_route[i].m_y-current.m_y;
+//    return 1;
+    int i=current_point_count+1;
     for(;i<gps_route.size();i++){
-        if(getPointDistance(current,gps_route[i])>=TARGETDISTANCE){
+        if(getPointDistance(gps_route[current_point_count],gps_route[i])>=TARGETDISTANCE){
             break;
         }
     }
-    if(i<0) return -1;
-    v.m_x=gps_route[i].m_x-current.m_x;
-    v.m_y=gps_route[i].m_y-current.m_y;
+    if(i>=gps_route.size()) return -1;
+    v.m_x=gps_route[i+1].m_x-gps_route[i-1].m_x;
+    v.m_y=gps_route[i+1].m_y-gps_route[i-1].m_y;
     return 1;
+
 }
 double Processer::calTargetYawDiff(GaussGPSData current){
     VectorG currentYaw,targetYaw;
@@ -279,6 +297,18 @@ double Processer::calTargetYawDiff(GaussGPSData current){
     if(flag<0) return -1;
     flag=getNextYawVector(current,targetYaw);
     if(flag<0) return -1;
-    double yaw=acos((currentYaw.m_x*targetYaw.m_x+currentYaw.m_y*targetYaw.m_y)/sqrt(currentYaw.m_x*currentYaw.m_x+currentYaw.m_y*currentYaw.m_y)/sqrt(targetYaw.m_x*targetYaw.m_x+targetYaw.m_y*targetYaw.m_y));
+//    double angle=calAngle(currentYaw,VectorG(1,0));
+//    std::cout<<"("<<currentYaw.m_x<<","<<currentYaw.m_y<<") current yaw angle = "<<angle<<std::endl;
+
+//    angle=calAngle(targetYaw,VectorG(1,0));
+//    std::cout<<"("<<targetYaw.m_x<<","<<targetYaw.m_y<<") target yaw angle = "<<angle<<std::endl;
+
+//    angle=calAngle(currentYaw,targetYaw);
+//    std::cout<<"total angle:"<<angle<<std::endl;
+    return calAngle(currentYaw,targetYaw);
+}
+
+double Processer::calAngle(VectorG v1, VectorG v2){
+    double yaw=acos((v1.m_x*v2.m_x+v1.m_y*v2.m_y)/sqrt(v1.m_x*v1.m_x+v1.m_y*v1.m_y)/sqrt(v2.m_x*v2.m_x+v2.m_y*v2.m_y));
     return yaw * 180.0 / 3.1415926;
 }

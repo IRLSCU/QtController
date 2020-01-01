@@ -1,10 +1,10 @@
-﻿#pragma once
+﻿#pragma   once
 
 #ifndef PROCESSER
 #define PROCESSER
 #define IN_DISTANCE 1
 #define FIXED_SOLUTION 4
-#define TARGETDISTANCE 0.8
+#define TARGETDISTANCE 2
 #include<assert.h>
 #include<vector>
 #include<stack>
@@ -70,6 +70,7 @@ private:
 	static double calLinesAngle(Line line1, Line line2);
 	static double calLineK(Line);
     static double calLinesAngle(double k1, double k2);//通过斜率求
+    static double calAngle(VectorG v1,VectorG v2);
     /**
      * @brief getCurruntYawVector
      * @param current
@@ -80,7 +81,7 @@ private:
     int getNextYawVector(GaussGPSData current,VectorG& vector);
 
     std::vector<GaussGPSData> gps_route;//固定路径的路径
-    std::stack<GaussGPSData> passway;
+    std::vector<GaussGPSData> passwayBuffer;
 	GaussGPSData current_gps;//当前点
 	GaussGPSData last_gps;//上一个GPS点
 	GaussGPSData current_route_gps;//距离路径上最近的GPS点

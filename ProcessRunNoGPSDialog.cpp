@@ -11,7 +11,6 @@ ProcessRunNoGPSDialog::ProcessRunNoGPSDialog(LocationRingBuffer* locationRingBuf
     this->setWindowTitle(QStringLiteral("start running"));
     PID=new Pid_control;
     processer=new Processer();//需要初始化高斯坐标的终点gps信息，需要加载路径，需要设定初始点。
-
     //用消费者线程处理locationBuffer
     locationBufferConsumeRunThread=new LocationBufferConsumeRunThread(locationRingBuffer,this);//从ringbuffer中消费GPS坐标
     locationBufferConsumeRunThread->start();
@@ -167,17 +166,16 @@ void ProcessRunNoGPSDialog::processLocation(LocationPosition location){
     }else {
         emit sendDoNothingSignal(false);
     }
-
     int status;//状态，0未到终点，1到达终点
     int target;//下一个目标点
     //计算获得的偏离程度。r
-    double actualCTE = processer->startProcess(GaussGPSData(location.x,location.y),&target,&status);
+    GaussGPSData current(location.x,location.y);
+    double actualCTE = processer->startProcess(current,&target,&status);
     setNextTargetPoint(target);
     //转化成车辆的转向
     double rangeCrossError=PID->PID_realize(actualCTE);
-    double rangeAngleError=processer->calTargetYawDiff(GaussGPSData(location.x,location.y));
-    qDebug()<<rangeAngleError;
-    double range=rangeCrossError;
+    double targetDiffAngle=processer->calTargetYawDiff(current);
+    double range=calRange(rangeCrossError,targetDiffAngle);
     //todo 车辆速度PID
     //double speed=12;
     emit sendRange((int)range);
@@ -281,6 +279,12 @@ void ProcessRunNoGPSDialog::readFile()
         file.close();
     }
 }
-double ProcessRunNoGPSDialog::calRange(double rangeCrossError,double rangeAngleError){
-    return rangeCrossError;
+double ProcessRunNoGPSDialog::calRange(double rangeCrossError,double targetDiffAngle){
+    double range=rangeCrossError;
+    if(targetDiffAngle>20){
+        range+=2000;
+    }else{
+        range+=4000;
+    }
+    return range;
 }
