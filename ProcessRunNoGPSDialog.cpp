@@ -281,10 +281,15 @@ void ProcessRunNoGPSDialog::readFile()
 }
 double ProcessRunNoGPSDialog::calRange(double rangeCrossError,double targetDiffAngle){
     double range=rangeCrossError;
-    if(targetDiffAngle>20){
-        range+=2000;
-    }else{
-        range+=4000;
+    int add=1;
+    if(targetDiffAngle<0){
+        add=-1;
     }
-    return range;
+    if(fabs(targetDiffAngle)>20){
+        add*=2000;
+    }else{
+        add*=4000;
+    }
+//    qDebug()<<"add=:"<<add;
+    return range+add;
 }

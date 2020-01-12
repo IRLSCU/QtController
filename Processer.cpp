@@ -268,7 +268,7 @@ int Processer::getCurrentYawVector(GaussGPSData current,VectorG& v){
     return 1;
 }
 
-int Processer::getNextYawVector(GaussGPSData current,VectorG& v){
+int Processer::getNextYawVector(GaussGPSData current,VectorG& v,int& direction){
 //    int i=current_point_count;
 //    for(;i<gps_route.size();i++){
 //        if(getPointDistance(current,gps_route[i])>=TARGETDISTANCE){
@@ -288,14 +288,18 @@ int Processer::getNextYawVector(GaussGPSData current,VectorG& v){
     if(i>=gps_route.size()) return -1;
     v.m_x=gps_route[i+1].m_x-gps_route[i-1].m_x;
     v.m_y=gps_route[i+1].m_y-gps_route[i-1].m_y;
+    GaussGPSData A(current.m_x,current.m_y);
+    GaussGPSData B(gps_route[i-1].m_x,gps_route[i-1].m_y);
+    direction=calPointFromLineDirector(GaussGPSData(gps_route[i+1].m_x,gps_route[i+1].m_y),Line(A,B));
     return 1;
 
 }
 double Processer::calTargetYawDiff(GaussGPSData current){
     VectorG currentYaw,targetYaw;
+    int direction=0;
     int flag=getCurrentYawVector(current,currentYaw);
     if(flag<0) return -1;
-    flag=getNextYawVector(current,targetYaw);
+    flag=getNextYawVector(current,targetYaw,direction);
     if(flag<0) return -1;
 //    double angle=calAngle(currentYaw,VectorG(1,0));
 //    std::cout<<"("<<currentYaw.m_x<<","<<currentYaw.m_y<<") current yaw angle = "<<angle<<std::endl;
@@ -303,9 +307,9 @@ double Processer::calTargetYawDiff(GaussGPSData current){
 //    angle=calAngle(targetYaw,VectorG(1,0));
 //    std::cout<<"("<<targetYaw.m_x<<","<<targetYaw.m_y<<") target yaw angle = "<<angle<<std::endl;
 
-//    angle=calAngle(currentYaw,targetYaw);
-//    std::cout<<"total angle:"<<angle<<std::endl;
-    return calAngle(currentYaw,targetYaw);
+    double angle=calAngle(currentYaw,targetYaw);
+    std::cout<<"total angle:"<<angle<<"  direction:"<<direction<<std::endl;
+    return calAngle(currentYaw,targetYaw)*-1*direction;
 }
 
 double Processer::calAngle(VectorG v1, VectorG v2){
