@@ -4,7 +4,7 @@
 #define PROCESSER
 #define IN_DISTANCE 1
 #define FIXED_SOLUTION 4
-#define TARGETDISTANCE 2
+#define TARGETDISTANCE 1
 #include<assert.h>
 #include<vector>
 #include<stack>
@@ -77,8 +77,8 @@ private:
      * @param vector
      * @return -1表示当前方位角异常(计算方式取前一段距离的点可能取不到) 1表示正常
      */
-    int getCurrentYawVector(GaussGPSData current,VectorG& vector);
-    int getNextYawVector(GaussGPSData current,VectorG& vector);
+    int getCurrentYawVector(GaussGPSData current,VectorG& vector,int&curIdx);
+    int getNextYawVector(GaussGPSData current,VectorG& vector, int&nextIdx);
 
     std::vector<GaussGPSData> gps_route;//固定路径的路径
     std::vector<GaussGPSData> passwayBuffer;

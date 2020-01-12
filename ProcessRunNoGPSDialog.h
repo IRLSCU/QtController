@@ -52,7 +52,7 @@ private:
      * @param rangeCrossError 当前横向偏差
      * @param 用来描述接下来是否是一个弯道程度
      */
-    double ProcessRunNoGPSDialog::calRange(double rangeCrossError,double targetDiffAngle);
+    double calRange(double rangeCrossError,double targetDiffAngle);
 #ifdef SENDTOROS
     ControlOrderSendToRosThread* controlOrderSendThread;
 #else
