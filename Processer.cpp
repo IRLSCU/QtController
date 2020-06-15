@@ -307,12 +307,12 @@ double Processer::calTargetYawDiff(GaussGPSData current){
 //    angle=calAngle(targetYaw,VectorG(1,0));
 //    std::cout<<"("<<targetYaw.m_x<<","<<targetYaw.m_y<<") target yaw angle = "<<angle<<std::endl;
 
-    double angle=calAngle(currentYaw,targetYaw);
+    //double angle=calAngle(currentYaw,targetYaw);
     GaussGPSData next(gps_route[nextIdx].m_x,gps_route[nextIdx].m_y);
     GaussGPSData start(gps_route[curIdx-1].m_x,gps_route[curIdx-1].m_y);
     GaussGPSData end(gps_route[curIdx+1].m_x,gps_route[curIdx+1].m_y);
     direction=calPointFromLineDirector(next,Line(start,end));
-    std::cout<<"total angle:"<<angle<<"  direction:"<<direction<<std::endl;
+    //std::cout<<"total angle:"<<angle<<"  direction:"<<direction<<std::endl;
     return calAngle(currentYaw,targetYaw)*direction;
 }
 

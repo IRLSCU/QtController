@@ -176,9 +176,11 @@ void ProcessRunNoGPSDialog::processLocation(LocationPosition location){
     double rangeCrossError=PID->PID_realize(actualCTE);
     double targetDiffAngle=processer->calTargetYawDiff(current);
     double range=calRange(rangeCrossError,targetDiffAngle);
+    //double range=rangeCrossError;
     //todo 车辆速度PID
     //double speed=12;
     emit sendRange((int)range);
+    emit sendCurrentRangeToPaintWidget((int)range);
     emit sendLocationInfo(location);
     //emit sendSpeed((int)speed);
     ui->rangeCTE->setText(QString::number(actualCTE));
@@ -281,15 +283,16 @@ void ProcessRunNoGPSDialog::readFile()
 }
 double ProcessRunNoGPSDialog::calRange(double rangeCrossError,double targetDiffAngle){
     double range=rangeCrossError;
-    int add=1;
-    if(targetDiffAngle<0){
-        add=-1;
-    }
-    if(fabs(targetDiffAngle)>20){
-        add*=2000;
-    }else if(fabs(targetDiffAngle)>40){
-        add*=4000;
-    }
+    int add=0;
+//    if(targetDiffAngle<0){
+//        add=-1;
+//    }
+//    if(fabs(targetDiffAngle)>20){
+//        add*=4000;
+//    }else if(fabs(targetDiffAngle)>40){
+//        add*=8000;
+//    }
 //    qDebug()<<"add=:"<<add;
+//    qDebug()<<"range:"<<range<<"  add:"<<add;
     return range+add;
 }

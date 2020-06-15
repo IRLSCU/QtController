@@ -71,6 +71,12 @@ void PaintWidget::paintTargetPoint(int target){
     nextTargetPoint=routeLocationList.at(target%routeLocationList.size());
     update();
 }
+void PaintWidget::setRange(int range){
+    this->range=range;
+    //qDebug()<<range;
+    update();
+}
+
 void PaintWidget::paintEvent(QPaintEvent*)
 {
     QPainter painter(this);
@@ -128,6 +134,28 @@ void PaintWidget::paintEvent(QPaintEvent*)
         painter.drawPoint(temp);
         last=temp;
     }
+    if (passwayLocationList.size()>=2){
+        QPointF center=passwayLocationList.at(passwayLocationList.size()-1);
+        QPointF last=passwayLocationList.at(passwayLocationList.size()-2);
+        QPointF coursePoint=CalculateUtils::calCoursePoint(center,last,5);
+        QPointF  rangePoint=CalculateUtils::calRangePoint(center,coursePoint,range);
+        painter.save();
+        mypen.setColor(Qt::black);
+        mypen.setWidth(1);
+        painter.setPen(mypen);
+        painter.drawLine(coordinate.XY2Screen(center),coordinate.XY2Screen(coursePoint));
+        painter.restore();
+
+        painter.save();
+        mypen.setColor(Qt::blue);
+        mypen.setWidth(1);
+        painter.setPen(mypen);
+        painter.drawLine(coordinate.XY2Screen(center),coordinate.XY2Screen(rangePoint));
+        painter.restore();
+
+
+    }
+
 
     //绘制起始点。
     QPointF startScreenPoint=coordinate.XY2Screen(startPoint);

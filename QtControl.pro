@@ -64,7 +64,8 @@ SOURCES += \
     ultrasonic.cpp \
     fileoperation.cpp \
     RosPerceptionReceiveThread.cpp \
-    ControlOrderSendToRosThread.cpp
+    ControlOrderSendToRosThread.cpp \
+    CalculateUtils.cpp
 
 HEADERS += \
         MainWindow.h \
@@ -116,7 +117,8 @@ HEADERS += \
     RosPerceptionReceiveThread.h \
     distance.h \
     distances.h \
-    ControlOrderSendToRosThread.h
+    ControlOrderSendToRosThread.h \
+    CalculateUtils.h
 
 FORMS += \
         MainWindow.ui \

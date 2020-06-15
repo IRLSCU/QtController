@@ -4,7 +4,7 @@
 #define STARTPOINTLONGITUDE 103.958573205
 #define STARTPOINTLATITUDE 30.783824800
 #define STARTPOINTALTITUDE 500
-
+//send to ros control node
 //#define SENDTOROS
 
 #include "RingBuffer.h"
@@ -65,6 +65,7 @@ signals:
     void sendInitSignal(bool signal);
     void sendStartPointLocationToPaintWidget(QPointF location);
     void sendNextTargetPointToPaintWidget(int target);
+    void sendCurrentRangeToPaintWidget(int range);
     void sendRange(int range);//将车辆转向程度，送往车辆命令发送线程
     void sendSpeed(int speed);//将车辆速度，送往车辆命令发送线程
     void sendLocationInfo(LocationPosition location);

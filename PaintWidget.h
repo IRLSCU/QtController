@@ -5,6 +5,7 @@
 #define PAINTWIDGET_DELTA_MIN  0
 #include"CoTrans.h"
 #include "GpsInfo.h"
+#include "CalculateUtils.h"
 #include <QPoint>
 #include<QLabel>
 #include <QWidget>
@@ -33,7 +34,7 @@ private:
     QList<QPointF> routeLocationList;//存的XY
     QList<QPointF> passwayLocationList;//存的XY
     QPointF centerGPS;
-
+    int range;
 //    QPointF center;//高斯坐标表示
 //    QPointF centerScreen;//屏幕坐标表示
     qreal horizontalOffset;
@@ -71,6 +72,7 @@ protected:
 public:
     void paintStartPoint(QPointF GpsInfo);
     void paintTargetPoint(int target);
+    void setRange(int range);
 
 };
 #endif // PAINTWIDGET_H

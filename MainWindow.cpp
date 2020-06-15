@@ -95,11 +95,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QToolBar *toolBar = addToolBar(tr("&File"));
 
-    toolBar->addAction(setSerialAction);
-    toolBar->addAction(setSocketAction);
-    toolBar->addAction(initRouteAction);
-    toolBar->addAction(startRunningAction);
-    toolBar->addAction(loadGPSDataAction);
+//    toolBar->addAction(setSerialAction);
+//    toolBar->addAction(setSocketAction);
+//    toolBar->addAction(initRouteAction);
+//    toolBar->addAction(startRunningAction);
+//    toolBar->addAction(loadGPSDataAction);
     toolBar->addAction(routeSparseAction);
     //toolBar->addAction(setScaleAction);
     toolBar->addAction(setTinyCarComAction);
@@ -168,6 +168,7 @@ void MainWindow::openProcessRunNoGPS(){
     connect(dialog->getLocationBufferConsumeRunThread(),&LocationBufferConsumeRunThread::sendLocation,paintWidget,&PaintWidget::addQPoint);
     connect(dialog,&ProcessRunNoGPSDialog::sendStartPointLocationToPaintWidget,paintWidget,&PaintWidget::paintStartPoint);
     connect(dialog,&ProcessRunNoGPSDialog::sendNextTargetPointToPaintWidget,paintWidget,&PaintWidget::paintTargetPoint);
+    connect(dialog,&ProcessRunNoGPSDialog::sendCurrentRangeToPaintWidget,paintWidget,&PaintWidget::setRange);
 }
 void MainWindow::openInitRouteDialog(){
     InitRouteDialog* initRouteDialog=new InitRouteDialog(gpsRingBuffer,this);
