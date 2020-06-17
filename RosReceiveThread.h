@@ -2,9 +2,9 @@
 #define ROSRECEIVETHREAD_H
 #define ROSRECEIVETHREAD_BOLCKTIME 50
 //#define ROSRADAR
-#ifdef ROSRADAR
+#ifdef ROSRADAR  //接收单线激光雷达传的定位信息
 #define ROSRECEIVENODENAME "/tf"
-#else
+#else //接收双目视觉定位信息
 #define ROSRECEIVENODENAME "/cur_pose"
 #endif
 #include "ros/ros.h"
@@ -21,6 +21,7 @@
 
 /**
  * @brief The RosReceiveThread
+ * 接收ROS传过来的定位信息
  */
 class RosReceiveThread : public QThread
 {

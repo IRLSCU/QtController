@@ -8,7 +8,7 @@
 namespace Ui {
 class RosSettingDialog;
 }
-
+//可视化或保存ROS的定位信息
 class RosSettingDialog : public QDialog
 {
     Q_OBJECT

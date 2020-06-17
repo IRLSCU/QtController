@@ -98,7 +98,6 @@ HEADERS += \
     LargeCarWindowsCommunication.h \
     TinyCarCommunication.h \
     TinyCarSerialPortDialog.h \
-    PreDefinition.h \
     SocketSettingWidget.h \
     Processer.h \
     ProcessRunNoGPSDialog.h \
@@ -118,7 +117,8 @@ HEADERS += \
     distance.h \
     distances.h \
     ControlOrderSendToRosThread.h \
-    CalculateUtils.h
+    CalculateUtils.h \
+    PreDefinition.h
 
 FORMS += \
         MainWindow.ui \

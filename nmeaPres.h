@@ -1,6 +1,6 @@
 ﻿#ifndef __NMEAPRES_H__
 #define __NMEAPRES_H__
-
+//处理解析GPS数据
 #include "nmeaparser.h"
 
 #define SIMU_DIR "../"

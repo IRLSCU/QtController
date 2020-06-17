@@ -4,6 +4,7 @@
 #include <boost/atomic.hpp>
 #include "GpsInfo.h"
 #include "LocationPosition.h"
+//线程安全的环形缓冲区
 template<typename T, size_t Size>
 class RingBuffer {
 public:

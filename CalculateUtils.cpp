@@ -12,7 +12,7 @@ double CalculateUtils::distanceTwoPoint(QPointF p1, QPointF p2){
     double y2=p2.y();
     return pow(pow(x2-x1,2)+pow(y2-y1,2),0.5);
 }
-//逆时针旋转
+//逆时针旋转,center旋转中心,roratepoint旋转点,angle旋转角度
 QPointF CalculateUtils::roratePoint(QPointF center,QPointF roratePoint,double angle){
     double x = roratePoint.x(), y = roratePoint.y();//旋转的点
     double dx = center.x(), dy = center.y();//被绕着旋转的点
@@ -22,7 +22,7 @@ QPointF CalculateUtils::roratePoint(QPointF center,QPointF roratePoint,double an
     return targePoint;
 }
 /*
- * 根据上一个点和当前定位点，粗略地表示车辆的行驶方向
+ * 以center为起点表示当前车辆行驶方向,根据上一个点和当前定位点，粗略地表示车辆的行驶方向
  */
 QPointF CalculateUtils::calCoursePoint(QPointF center,QPointF last, double length){
     QPointF coursePoint;

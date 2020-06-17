@@ -9,7 +9,7 @@
 namespace Ui {
 class SocketSettingWidget;
 }
-
+//Socket设置,通过Tcp获取GPS的定位信息
 class SocketSettingWidget : public QWidget
 {
     Q_OBJECT

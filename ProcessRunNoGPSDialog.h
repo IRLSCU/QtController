@@ -17,7 +17,7 @@
     #include "ControlOrderSendThread.h"
 #endif
 #include <QDialog>
-
+//ProcessRunDialog处理GPS数据的界面,ProcessRunNoGPSDialog处理XYZ数据的界面
 namespace Ui {
 class ProcessRunDialog;
 }

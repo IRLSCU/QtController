@@ -26,7 +26,7 @@
 #include<QMutex>
 
 /**
- * @brief The RosReceiveThread
+ * @brief The RosReceiveThread,用于获得ROS中障碍物的信息之后进行处理,是简单粗糙的判断
  */
 class RosPerceptionReceiveThread : public QThread
 {

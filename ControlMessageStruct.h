@@ -2,6 +2,7 @@
 #define CONTROLMESSAGESTRUCT_H
 #define MESSAGETYPE_GPS 1
 #define MESSAGETYPE_CV 2
+//unused
 struct ControlMessageStruct
 {
     unsigned char id;

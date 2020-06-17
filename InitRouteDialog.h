@@ -5,7 +5,7 @@
 #include "GpsBufferReadInitRouteThread.h"
 #include "RingBuffer.h"
 #include <QDialog>
-
+//初始化路径界面
 namespace Ui {
 class InitRouteDialog;
 }

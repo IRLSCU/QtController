@@ -2,7 +2,7 @@
 #define __NMEA_UTILS_H__
 
 #define FeetsInMeter 3.2808399
-
+//处理解析GPS数据
 enum ConvertField {
 	CONV_LAT = 0,
 	CONV_LON,

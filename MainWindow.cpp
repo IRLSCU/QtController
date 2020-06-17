@@ -95,11 +95,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QToolBar *toolBar = addToolBar(tr("&File"));
 
-//    toolBar->addAction(setSerialAction);
-//    toolBar->addAction(setSocketAction);
-//    toolBar->addAction(initRouteAction);
-//    toolBar->addAction(startRunningAction);
-//    toolBar->addAction(loadGPSDataAction);
+    toolBar->addAction(setSerialAction);
+    toolBar->addAction(setSocketAction);
+    toolBar->addAction(initRouteAction);
+    toolBar->addAction(startRunningAction);
+    toolBar->addAction(loadGPSDataAction);
     toolBar->addAction(routeSparseAction);
     //toolBar->addAction(setScaleAction);
     toolBar->addAction(setTinyCarComAction);

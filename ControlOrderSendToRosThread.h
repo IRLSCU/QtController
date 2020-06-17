@@ -16,6 +16,7 @@
 #include "geometry_msgs/QuaternionStamped.h"
 /**
  * @brief 将开启一个线程，将汽车控制指令送往对应ROS
+ * ControlOrderSendToRosThread与ControlOrderSendThread二选一,ControlOrderSendToRosThread通过ROS节点将数据发往小车,ControlOrderSendThread直接通过串口发往小车.在ProcessRunNoGPSDialog中用宏定义选择
  */
 class ControlOrderSendToRosThread : public QThread
 {

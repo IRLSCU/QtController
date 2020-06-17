@@ -13,6 +13,7 @@
 #include <QLatin1String>
 /*
 Distance of Ultrasonic
+超声波雷达,用于超声波测距,小于某一个阈值则刹车
 */
 
 class Ultrasonic : public QObject

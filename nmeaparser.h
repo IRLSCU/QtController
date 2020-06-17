@@ -3,7 +3,7 @@
 
 #include <boost/tokenizer.hpp>
 #include "nmeautils.h"
-
+//处理解析GPS数据
 #define NMEAPARSER_MAX_SENTENCE_LENGTH 255 //MAX Sentence Length in bytes
 #define NMEAPARSER_MAX_TOKENS          24  //Max number of data fields in one GPS Sentence
 #define MAX_SATELLITES_IN_VIEW         64  //Max Number of Satellites In view

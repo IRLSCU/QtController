@@ -1,6 +1,6 @@
 ﻿#ifndef CONTROLCAN_H
 #define CONTROLCAN_H
-
+//大车CAN通信
 ////文件版本：v2.00 20150920
 //#include <cvidef.h>	//使用CVI平台开发，请使用该语句。
 #define _XKEYCHECK_H

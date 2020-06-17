@@ -1,6 +1,6 @@
 #ifndef CONTROLCAN1_H
 #define CONTROLCAN1_H
-
+//大车CAN通信
 //接口卡类型定义
 #define VCI_PCI5121		1
 #define VCI_PCI9810		2

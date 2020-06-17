@@ -10,6 +10,7 @@
 #include <QDebug>
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
+//GPS获取数据时串口设置,设置其中一个即可
 class SerialPortDialog : public QDialog{
     Q_OBJECT
 public:
