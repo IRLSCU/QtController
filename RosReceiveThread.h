@@ -1,7 +1,7 @@
 #ifndef ROSRECEIVETHREAD_H
 #define ROSRECEIVETHREAD_H
 #define ROSRECEIVETHREAD_BOLCKTIME 50
-//#define ROSRADAR
+#define ROSRADAR
 #ifdef ROSRADAR  //接收单线激光雷达传的定位信息
 #define ROSRECEIVENODENAME "/tf"
 #else //接收双目视觉定位信息
