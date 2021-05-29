@@ -1,5 +1,6 @@
 #ifndef TINYCARCO_H
 #define TINYCARCO_H
+#include <QObject>
 
 #define TINYCARCO_MAX_SPEED 0xFF
 #define TINYCARCO_MIN_SPEED 0
@@ -9,8 +10,20 @@
  * @brief The TinyCarCO class
  * tiny car control order
  */
-#include<QObject>
-class TinyCarCO{
+class TinyCarCO
+{
+public:
+    void init();
+    quint8 getLeftSpeed() { return leftSpeed; }
+    quint8 getRightSpeed() { return rightSpeed; }
+    qint8 getLeftOrientation() { return leftOrientation; }
+    qint8 getRightOrientation() { return rightOrientation; }
+    void printInfo();
+    TinyCarCO &setLeftSpeed(quint8);
+    TinyCarCO &setRightSpeed(quint8);
+    TinyCarCO &setLeftOrientation(qint8);
+    TinyCarCO &setRightOrientation(qint8);
+    quint8 *getCharOrder(); //转化成实际的指令
 private:
     /**
      * @brief leftSpeed
@@ -34,19 +47,6 @@ private:
      * 左轮转的方向 0表示向前，1表示向后
      */
     qint8 rightOrientation;
-    quint8 charOrder[10] = { 0xFF,0xFE,0,0,0,0,0,0,0,0 };
-public:
-    void init();
-    quint8 getLeftSpeed(){return leftSpeed;}
-    quint8 getRightSpeed(){return rightSpeed;}
-    qint8 getLeftOrientation(){return leftOrientation;}
-    qint8 getRightOrientation(){return rightOrientation;}
-    void printInfo();
-    TinyCarCO& setLeftSpeed(quint8);
-    TinyCarCO& setRightSpeed(quint8);
-    TinyCarCO& setLeftOrientation(qint8);
-    TinyCarCO& setRightOrientation(qint8);
-    quint8* getCharOrder();//转化成实际的指令
-
+    quint8 charOrder[10] = {0xFF, 0xFE, 0, 0, 0, 0, 0, 0, 0, 0};
 };
 #endif // TINYCARCO_H
