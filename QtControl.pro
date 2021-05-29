@@ -10,6 +10,14 @@ QT       += network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
+# Additional import path used to resolve QML modules in Qt Creator's code model
+QML_IMPORT_PATH =
+# config
+CONFIG   += c++11
+# coder
+CODECFORSRC = UTF-8
+
+# project name
 TARGET = QtControl
 TEMPLATE = app
 
@@ -24,7 +32,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-
+# project src
 SOURCES += \
         main.cpp \
         MainWindow.cpp \
@@ -66,7 +74,7 @@ SOURCES += \
     RosPerceptionReceiveThread.cpp \
     ControlOrderSendToRosThread.cpp \
     CalculateUtils.cpp
-
+# project include
 HEADERS += \
         MainWindow.h \
     SerialPortDialog.h \
@@ -108,8 +116,6 @@ HEADERS += \
     LocationInitRouteDialog.h \
     RosSettingDialog.h \
     RosReceiveThread.h \
-    ControlCAN_Win.h \
-    ControlCAN.h \
     LargeCarLinuxCommunication.h \
     ultrasonic.h \
     fileoperation.h \
@@ -120,6 +126,7 @@ HEADERS += \
     CalculateUtils.h \
     PreDefinition.h
 
+# ui
 FORMS += \
         MainWindow.ui \
     SerialInfoDialog.ui \
@@ -135,60 +142,49 @@ RESOURCES += \
     res.qrc
 
 win32:{
+
+    # add boost
     INCLUDEPATH+= D:\local\boost_1_67_0
-    LIBS += -L$$PWD/./ -lControlCAN
     LIBS += -L$$PWD/./ -llibboost_atomic-vc141-mt-gd-x64-1_67
+    CANCARD_DIR = $$PWD/3rdpart/ControlCAN
+    # add cancard
+    INCLUDEPATH += $$CANCARD_DIR/include
+    LIBS += -L$$CANCARD_DIR/lib/ControlCAN.lib
 }
 
-linux-g++*{
+unix:!macx: {
 
     ##--add boost
     #INCLUDEPATH += /home/zhb/Downloads/boost_1_67_0
 
-    #--add ros libs
-
-#    LIBS += -L /opt/ros/melodic/lib/ -lroscpp
-#    LIBS += -L /opt/ros/melodic/lib/ -lroslib
-#    LIBS += -L /opt/ros/melodic/lib/ -lpthread
-#    LIBS += -L /opt/ros/melodic/lib/ -lroscpp_serialization
-#    LIBS += -L /opt/ros/melodic/lib/ -lrostime
-#    LIBS += -L /opt/ros/melodic/lib/ -lrosconsole
-#    LIBS += -L /opt/ros/melodic/lib/ -lrosconsole_log4cxx
-#    LIBS += -L /opt/ros/melodic/lib/ -lrosconsole_backend_interface
-#    LIBS += -L /opt/ros/melodic/lib/ -lxmlrpcpp
-
-#    LIBS += -L$$PWD/../../../../opt/ros/melodic/lib/ -lcpp_common
-
-#    INCLUDEPATH += $$PWD/../../../../opt/ros/melodic/include
-#    DEPENDPATH += $$PWD/../../../../opt/ros/melodic/include
-
-#    LIBS += -L$$PWD/../build-QtControl-Desktop_Qt_5_12_2_GCC_64bit-Debug/ -lcontrolcan
 
     #IPC config start
     #--add ros include
     INCLUDEPATH += -I /opt/ros/kinetic/include
     DEPENDPATH +=  /opt/ros/kinetic/include
 
+
     #--add ros libs
+    LIBS += -L /opt/ros/kinetic/lib/ \
+                                    -lroscpp \
+                                    -lroslib \
+                                    -lroscpp_serialization \
+                                    -lrostime \
+                                    -lrosconsole \
+                                    -lrosconsole_log4cxx \
+                                    -lrosconsole_backend_interface \
+                                    -lxmlrpcpp \
+                                    -lcpp_common
 
-    LIBS += -L /opt/ros/kinetic/lib/ -lroscpp
-    LIBS += -L /opt/ros/kinetic/lib/ -lroslib
-    LIBS += -L /opt/ros/kinetic/lib/ -lpthread
-    LIBS += -L /opt/ros/kinetic/lib/ -lroscpp_serialization
-    LIBS += -L /opt/ros/kinetic/lib/ -lrostime
-    LIBS += -L /opt/ros/kinetic/lib/ -lrosconsole
-    LIBS += -L /opt/ros/kinetic/lib/ -lrosconsole_log4cxx
-    LIBS += -L /opt/ros/kinetic/lib/ -lrosconsole_backend_interface
-    LIBS += -L /opt/ros/kinetic/lib/ -lxmlrpcpp
+    LIBS += -L/lib/x86_64-linux-gnu/ -lpthread
+    # add boost
+    LIBS += -lboost_thread -lboost_system
+    #CAN drivers path
+    CANCARD_DIR = $$PWD/3rdpart/ControlCAN
 
-    LIBS += -L$$PWD/../../../../opt/ros/kinetic/lib/ -lcpp_common
+    INCLUDEPATH += $$CANCARD_DIR/include
+    LIBS += -L$$CANCARD_DIR/lib/ -lcontrolcan
 
-    INCLUDEPATH += $$PWD/../../../../opt/ros/kinetic/include
-    DEPENDPATH += $$PWD/../../../../opt/ros/kinetic/include
-
-    #CAN drivers
-
-    LIBS += -L$$PWD/../build-QtControl-Desktop_Qt_5_9_0_GCC_64bit-Debug -lcontrolcan
     #IPC config end
 
 }
@@ -197,4 +193,13 @@ INCLUDEPATH += $$PWD/.
 DEPENDPATH += $$PWD/.
 
 #win32: LIBS += -L$$PWD/./ -llibboost_chrono-vc141-mt-gd-x64-1_67
+
+# temp file dir
+
+
+MOC_DIR         = temp/moc
+RCC_DIR         = temp/rcc
+UI_DIR          = temp/ui
+OBJECTS_DIR     = temp/obj
+DESTDIR         = bin
 
