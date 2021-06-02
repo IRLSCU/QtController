@@ -30,9 +30,11 @@
 
 int main(int argc, char *argv[])
 {
+    // 主要程序
     QApplication a(argc, argv);
-    qDebug()<< "Hello word \n";
+    // 主窗口
     MainWindow w;
+    // 主窗口显示
     w.show();
     return a.exec();
 }

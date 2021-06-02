@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "*.md": "markdown",
+        "*.cu": "cpp",
+        "iostream": "cpp",
+        "qobject": "cpp"
+    }
+}

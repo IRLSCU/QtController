@@ -1,22 +1,25 @@
-﻿#include "SocketSettingWidget.h"
+#include <QFileDialog>
+#include <QMessageBox>
+
+#include "SocketSettingWidget.h"
 #include "ui_SocketSettingWidget.h"
 #include "GpsBufferWriteThread.h"
 
-#include<QFileDialog>
-#include<QMessageBox>
-SocketSettingWidget::SocketSettingWidget(GpsRingBuffer* gpsRingBuffer,LocationRingBuffer*locationRingBuffer,QWidget *parent) :
-    QWidget(parent,Qt::Window),
-    ui(new Ui::SocketSettingWidget)
+SocketSettingWidget::SocketSettingWidget(
+    GpsRingBuffer *gpsRingBuffer,
+    LocationRingBuffer *locationRingBuffer,
+    QWidget *parent
+    ) : QWidget(parent, Qt::Window),
+        ui(new Ui::SocketSettingWidget)
 {
     ui->setupUi(this);
     socket = new QTcpSocket();
-    this->gpsRingBuffer=gpsRingBuffer;
+    this->gpsRingBuffer = gpsRingBuffer;
 
     //for test
-    ringBuffer1=new CharRingBuffer;
-    gpsBufferWriteThread1=new GpsBufferWriteThread(ringBuffer1,this->gpsRingBuffer,this,"gpsBufferWriteThread1");
+    ringBuffer1 = new CharRingBuffer;
+    gpsBufferWriteThread1 = new GpsBufferWriteThread(ringBuffer1, this->gpsRingBuffer, this, "gpsBufferWriteThread1");
     //gpsBufferWriteThread1->start();
-
 
     //连接信号槽
     QObject::connect(socket, &QTcpSocket::readyRead, this, &SocketSettingWidget::socket_Read_Data);
@@ -25,8 +28,8 @@ SocketSettingWidget::SocketSettingWidget(GpsRingBuffer* gpsRingBuffer,LocationRi
     ui->lineEdit_IP->setText("127.0.0.1");
     ui->lineEdit_Port->setText("8765");
 
-    this->locationRingBuffer=locationRingBuffer;
-    locationBufferProduceThread=new LocationBufferProduceThread(ringBuffer1,this->locationRingBuffer,this,"locationBufferProduceThread");
+    this->locationRingBuffer = locationRingBuffer;
+    locationBufferProduceThread = new LocationBufferProduceThread(ringBuffer1, this->locationRingBuffer, this, "locationBufferProduceThread");
     locationBufferProduceThread->start();
 }
 
@@ -45,7 +48,7 @@ SocketSettingWidget::~SocketSettingWidget()
 }
 void SocketSettingWidget::on_pushButton_Connect_clicked()
 {
-    if(ui->pushButton_Connect->text() == tr("connect"))
+    if (ui->pushButton_Connect->text() == tr("connect"))
     {
         QString IP;
         int port;
@@ -61,7 +64,7 @@ void SocketSettingWidget::on_pushButton_Connect_clicked()
         socket->connectToHost(IP, port);
 
         //等待连接成功
-        if(!socket->waitForConnected(30000))
+        if (!socket->waitForConnected(30000))
         {
             qDebug() << "Connection failed!";
             return;
@@ -79,19 +82,23 @@ void SocketSettingWidget::on_pushButton_Connect_clicked()
         ui->pushButton_Connect->setText("connect");
     }
 }
-void SocketSettingWidget::on_pushButton_Clear_clicked(){
+void SocketSettingWidget::on_pushButton_Clear_clicked()
+{
     ui->textEdit_Recv->clear();
 }
-void SocketSettingWidget::on_pushButton_Save_clicked(){
+void SocketSettingWidget::on_pushButton_Save_clicked()
+{
     QString path = QFileDialog::getSaveFileName(this,
                                                 tr("Open File"),
                                                 "./../QtControl/GnnNema",
                                                 tr("Text Files(*.txt)"));
-    if(!path.isEmpty()) {
+    if (!path.isEmpty())
+    {
         QFile file(path);
-        if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+        {
             QMessageBox::warning(this, tr("Write File"),
-                                       tr("Cannot open file:\n%1").arg(path));
+                                 tr("Cannot open file:\n%1").arg(path));
             return;
         }
         QTextStream out(&file);
@@ -104,9 +111,10 @@ void SocketSettingWidget::socket_Read_Data()
     QByteArray buffer;
     //读取缓冲区数据
     buffer = socket->readAll();
-    if(!buffer.isEmpty())
+    if (!buffer.isEmpty())
     {
-        foreach (char c, buffer) {
+        foreach (char c, buffer)
+        {
             ringBuffer1->push(c);
         }
         //刷新显示
