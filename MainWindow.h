@@ -72,7 +72,7 @@ private:
      * @details 包含GPS全局坐标系的相关函数与成员变量
      * @{
      */
-    
+
     /**
      * @brief 主要按钮函数 
      */
@@ -137,10 +137,27 @@ private:
      */
     void openRosConnectionDialog();
     /**
-     * @brief 
+     * @brief 加载中心坐标点GPS位置坐标
+     * @details \n 
+     * 加载中心坐标系相对星火坐标系中心点，便于之后的计算 \n
+     * 中心坐标系关键坐标点存放在`Conf/CoordinateConf.txt`配置文件中，示例如下：
+     * |:---:|:---:|:---:|
+     * |经度|纬度|海拔高度|
+     * |104.0879699950|30.6324927133|500|
+     * 
      */
     void loadCenterGPS();
+    /**
+     * @brief 初始化相对做标的
+     */
     void initOrdinate();
+    /**
+     * @brief 打开ROS配置窗口页面
+     * @details ROS窗口配置页面，用于设置ROS相关参数 \n
+     * 详细内容见: \n 
+     * @see RosSettingDialog
+     * @note 在开启前，请确认ROS master节点的存在
+     */
     void openRosDialog();
     /**
      * @}
@@ -151,7 +168,7 @@ private:
      * @addtogroup GPS GPS操作相关事件响应成员类 
      * @{
      */
-    
+
     /**
      * @brief  打开串口设置,接收gps 
      */
@@ -162,8 +179,8 @@ private:
     QAction *setSocketAction;
     /**
      * @brief 初始化路径
+     * @details 动作事件监听UI成员
      */
-
     QAction *initRouteAction;
     /**
      * @brief 沿着路径行驶,输入数据为GPS
@@ -184,7 +201,7 @@ private:
      * @addtogroup XYZ SLAM 相对定位坐标系函数
      * @{
      */
-    
+
     /**
      * @brief ros设置动作按钮
      */

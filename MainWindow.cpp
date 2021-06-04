@@ -91,7 +91,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
     setScaleAction->setStatusTip(QStringLiteral("打开比例尺界面"));
     // 注意这里监听鼠标滑轮事件
     connect(setScaleAction, &QAction::triggered, this, &MainWindow::open);
-
+    // 设置串口模型
     setTinyCarComAction = new QAction(QStringLiteral("小车串口设置"), this);
     setTinyCarComAction->setShortcuts(QKeySequence::Open);
     setTinyCarComAction->setStatusTip(QStringLiteral("小车串口设置"));
@@ -104,7 +104,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
     connect(setRosAction, &QAction::triggered, this, &MainWindow::openRosDialog);
     // 设置主窗口条形界面栏目
     QToolBar *toolBar = addToolBar(tr("&File"));
-
+    // 主要条控制调整
     toolBar->addAction(setSerialAction);
     toolBar->addAction(setSocketAction);
     toolBar->addAction(initRouteAction);
@@ -127,11 +127,10 @@ MainWindow::~MainWindow()
     delete ui;
     DELETE_OBJECT(gpsRingBuffer)
     DELETE_OBJECT(locationRingBuffer)
-
 }
 void MainWindow::open()
 {
-    QDialog *dialog = new QDialog();
+    QDialog *dialog = new QDialog(this);
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->setWindowTitle(tr("Hello, dialog!"));
     dialog->show();
@@ -223,9 +222,10 @@ void MainWindow::openRouteSparseDialog()
 }
 void MainWindow::openFile()
 {
+    // 打开配置文件位置
     QString path = QFileDialog::getOpenFileName(this,
                                                 tr("Open File"),
-                                                "./../QtControl/route");
+                                                "./route");
     if (!path.isEmpty())
     {
         gpsRouteList.clear();
@@ -237,6 +237,7 @@ void MainWindow::openFile()
                                  tr("Cannot open file:\n%1").arg(path));
             return;
         }
+        // 读取文件流
         QTextStream in(&file);
         while (!in.atEnd())
         {
@@ -250,6 +251,7 @@ void MainWindow::openFile()
             //经纬度转化成XY
             gpsRouteList.append(QPointF(x, y));
             QPointF point = ordinate.LongLat2XY(x, y);
+            // 进行画图
             sendQPointToPaintWidget(point); //signal
         }
         file.close();
@@ -265,7 +267,7 @@ void MainWindow::openXYZFile()
 
     QString path = QFileDialog::getOpenFileName(this,
                                                 tr("Open File"),
-                                                "./../QtControl/routeXYZ");
+                                                "routeXYZ");
     if (!path.isEmpty())
     {
         locationRouteList.clear();

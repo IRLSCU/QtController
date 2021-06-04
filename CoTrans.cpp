@@ -6,13 +6,13 @@
 
 #include <math.h>
 
-const qreal   PI = 3.14159265;                          ///<圆周率
-const qreal   ErthR0 = 6378.137;                        ///<地球赤道参考半径（千米）//6371.116;
-const qreal   EARTH_RADIUS_METER = ErthR0*1000;         ///<地球赤道参考半径（米）
-const qreal   EibSiLon = 0.0818191;                     ///<地球第一偏心率
+const qreal   PI = 3.14159265;                          ///< 圆周率
+const qreal   ErthR0 = 6378.137;                        ///< 地球赤道参考半径（千米）//6371.116;
+const qreal   EARTH_RADIUS_METER = ErthR0*1000;         ///< 地球赤道参考半径（米）
+const qreal   EibSiLon = 0.0818191;                     ///< 地球第一偏心率
 
 #ifndef DBL_EPSILON
-#define DBL_EPSILON      (2.2204460492503131e-6)         ///实型最小值
+#define DBL_EPSILON      (2.2204460492503131e-6)         ///< 实型最小值
 #endif
 
 //	CCoordinate

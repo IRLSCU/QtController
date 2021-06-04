@@ -7,7 +7,6 @@
 #include<QFile>
 #include "RingBuffer.h"
 #include "nmeaPres.h"
-#include "ControlMessageStruct.h"
 #include "CoTrans.h"
 /**
  * @brief The GpsBufferWriteThread class

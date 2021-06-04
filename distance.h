@@ -5,7 +5,6 @@
 #ifndef DARKNET_ROS_MSGS_MESSAGE_DISTANCE_H
 #define DARKNET_ROS_MSGS_MESSAGE_DISTANCE_H
 
-
 #include <string>
 #include <vector>
 #include <map>
@@ -15,160 +14,141 @@
 #include <ros/builtin_message_traits.h>
 #include <ros/message_operations.h>
 
-
 namespace darknet_ros_msgs
 {
-template <class ContainerAllocator>
-struct distance_
-{
-  typedef distance_<ContainerAllocator> Type;
+    template <class ContainerAllocator>
+    struct distance_
+    {
+        typedef distance_<ContainerAllocator> Type;
 
-  distance_()
-    : x(0.0)
-    , y(0.0)
-    , z(0.0)
-    , xmin(0)
-    , ymin(0)
-    , xmax(0)
-    , ymax(0)  {
+        distance_()
+            : x(0.0), y(0.0), z(0.0), xmin(0), ymin(0), xmax(0), ymax(0)
+        {
+        }
+        distance_(const ContainerAllocator &_alloc)
+            : x(0.0), y(0.0), z(0.0), xmin(0), ymin(0), xmax(0), ymax(0)
+        {
+            (void)_alloc;
+        }
+
+        typedef double _x_type;
+        _x_type x;
+
+        typedef double _y_type;
+        _y_type y;
+
+        typedef double _z_type;
+        _z_type z;
+
+        typedef int64_t _xmin_type;
+        _xmin_type xmin;
+
+        typedef int64_t _ymin_type;
+        _ymin_type ymin;
+
+        typedef int64_t _xmax_type;
+        _xmax_type xmax;
+
+        typedef int64_t _ymax_type;
+        _ymax_type ymax;
+
+        typedef boost::shared_ptr<::darknet_ros_msgs::distance_<ContainerAllocator>> Ptr;
+        typedef boost::shared_ptr<::darknet_ros_msgs::distance_<ContainerAllocator> const> ConstPtr;
+
+    }; // struct distance_
+
+    typedef ::darknet_ros_msgs::distance_<std::allocator<void>> distance;
+
+    typedef boost::shared_ptr<::darknet_ros_msgs::distance> distancePtr;
+    typedef boost::shared_ptr<::darknet_ros_msgs::distance const> distanceConstPtr;
+
+    // constants requiring out of line definition
+
+    template <typename ContainerAllocator>
+    std::ostream &operator<<(std::ostream &s, const ::darknet_ros_msgs::distance_<ContainerAllocator> &v)
+    {
+        ros::message_operations::Printer<::darknet_ros_msgs::distance_<ContainerAllocator>>::stream(s, "", v);
+        return s;
     }
-  distance_(const ContainerAllocator& _alloc)
-    : x(0.0)
-    , y(0.0)
-    , z(0.0)
-    , xmin(0)
-    , ymin(0)
-    , xmax(0)
-    , ymax(0)  {
-  (void)_alloc;
-    }
-
-
-
-   typedef double _x_type;
-  _x_type x;
-
-   typedef double _y_type;
-  _y_type y;
-
-   typedef double _z_type;
-  _z_type z;
-
-   typedef int64_t _xmin_type;
-  _xmin_type xmin;
-
-   typedef int64_t _ymin_type;
-  _ymin_type ymin;
-
-   typedef int64_t _xmax_type;
-  _xmax_type xmax;
-
-   typedef int64_t _ymax_type;
-  _ymax_type ymax;
-
-
-
-
-
-  typedef boost::shared_ptr< ::darknet_ros_msgs::distance_<ContainerAllocator> > Ptr;
-  typedef boost::shared_ptr< ::darknet_ros_msgs::distance_<ContainerAllocator> const> ConstPtr;
-
-}; // struct distance_
-
-typedef ::darknet_ros_msgs::distance_<std::allocator<void> > distance;
-
-typedef boost::shared_ptr< ::darknet_ros_msgs::distance > distancePtr;
-typedef boost::shared_ptr< ::darknet_ros_msgs::distance const> distanceConstPtr;
-
-// constants requiring out of line definition
-
-
-
-template<typename ContainerAllocator>
-std::ostream& operator<<(std::ostream& s, const ::darknet_ros_msgs::distance_<ContainerAllocator> & v)
-{
-ros::message_operations::Printer< ::darknet_ros_msgs::distance_<ContainerAllocator> >::stream(s, "", v);
-return s;
-}
 
 } // namespace darknet_ros_msgs
 
 namespace ros
 {
-namespace message_traits
-{
+    namespace message_traits
+    {
 
+        // BOOLTRAITS {'IsFixedSize': True, 'IsMessage': True, 'HasHeader': False}
+        // {'sensor_msgs': ['/opt/ros/kinetic/share/sensor_msgs/cmake/../msg'], 'darknet_ros_msgs': ['/home/zhao/Data/Function/ROS_yolov3-coordinate/src/darknet_ros/darknet_ros_msgs/msg', '/home/zhao/Data/Function/ROS_yolov3-coordinate/devel/share/darknet_ros_msgs/msg'], 'actionlib_msgs': ['/opt/ros/kinetic/share/actionlib_msgs/cmake/../msg'], 'geometry_msgs': ['/opt/ros/kinetic/share/geometry_msgs/cmake/../msg'], 'std_msgs': ['/opt/ros/kinetic/share/std_msgs/cmake/../msg']}
 
+        // !!!!!!!!!!! ['__class__', '__delattr__', '__dict__', '__doc__', '__eq__', '__format__', '__getattribute__', '__hash__', '__init__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', '_parsed_fields', 'constants', 'fields', 'full_name', 'has_header', 'header_present', 'names', 'package', 'parsed_fields', 'short_name', 'text', 'types']
 
-// BOOLTRAITS {'IsFixedSize': True, 'IsMessage': True, 'HasHeader': False}
-// {'sensor_msgs': ['/opt/ros/kinetic/share/sensor_msgs/cmake/../msg'], 'darknet_ros_msgs': ['/home/zhao/Data/Function/ROS_yolov3-coordinate/src/darknet_ros/darknet_ros_msgs/msg', '/home/zhao/Data/Function/ROS_yolov3-coordinate/devel/share/darknet_ros_msgs/msg'], 'actionlib_msgs': ['/opt/ros/kinetic/share/actionlib_msgs/cmake/../msg'], 'geometry_msgs': ['/opt/ros/kinetic/share/geometry_msgs/cmake/../msg'], 'std_msgs': ['/opt/ros/kinetic/share/std_msgs/cmake/../msg']}
+        template <class ContainerAllocator>
+        struct IsFixedSize<::darknet_ros_msgs::distance_<ContainerAllocator>>
+            : TrueType
+        {
+        };
 
-// !!!!!!!!!!! ['__class__', '__delattr__', '__dict__', '__doc__', '__eq__', '__format__', '__getattribute__', '__hash__', '__init__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', '_parsed_fields', 'constants', 'fields', 'full_name', 'has_header', 'header_present', 'names', 'package', 'parsed_fields', 'short_name', 'text', 'types']
+        template <class ContainerAllocator>
+        struct IsFixedSize<::darknet_ros_msgs::distance_<ContainerAllocator> const>
+            : TrueType
+        {
+        };
 
+        template <class ContainerAllocator>
+        struct IsMessage<::darknet_ros_msgs::distance_<ContainerAllocator>>
+            : TrueType
+        {
+        };
 
+        template <class ContainerAllocator>
+        struct IsMessage<::darknet_ros_msgs::distance_<ContainerAllocator> const>
+            : TrueType
+        {
+        };
 
+        template <class ContainerAllocator>
+        struct HasHeader<::darknet_ros_msgs::distance_<ContainerAllocator>>
+            : FalseType
+        {
+        };
 
-template <class ContainerAllocator>
-struct IsFixedSize< ::darknet_ros_msgs::distance_<ContainerAllocator> >
-  : TrueType
-  { };
+        template <class ContainerAllocator>
+        struct HasHeader<::darknet_ros_msgs::distance_<ContainerAllocator> const>
+            : FalseType
+        {
+        };
 
-template <class ContainerAllocator>
-struct IsFixedSize< ::darknet_ros_msgs::distance_<ContainerAllocator> const>
-  : TrueType
-  { };
+        template <class ContainerAllocator>
+        struct MD5Sum<::darknet_ros_msgs::distance_<ContainerAllocator>>
+        {
+            static const char *value()
+            {
+                return "3670b61ddc9f23e24de45f3cec4d6da4";
+            }
 
-template <class ContainerAllocator>
-struct IsMessage< ::darknet_ros_msgs::distance_<ContainerAllocator> >
-  : TrueType
-  { };
+            static const char *value(const ::darknet_ros_msgs::distance_<ContainerAllocator> &) { return value(); }
+            static const uint64_t static_value1 = 0x3670b61ddc9f23e2ULL;
+            static const uint64_t static_value2 = 0x4de45f3cec4d6da4ULL;
+        };
 
-template <class ContainerAllocator>
-struct IsMessage< ::darknet_ros_msgs::distance_<ContainerAllocator> const>
-  : TrueType
-  { };
+        template <class ContainerAllocator>
+        struct DataType<::darknet_ros_msgs::distance_<ContainerAllocator>>
+        {
+            static const char *value()
+            {
+                return "darknet_ros_msgs/distance";
+            }
 
-template <class ContainerAllocator>
-struct HasHeader< ::darknet_ros_msgs::distance_<ContainerAllocator> >
-  : FalseType
-  { };
+            static const char *value(const ::darknet_ros_msgs::distance_<ContainerAllocator> &) { return value(); }
+        };
 
-template <class ContainerAllocator>
-struct HasHeader< ::darknet_ros_msgs::distance_<ContainerAllocator> const>
-  : FalseType
-  { };
-
-
-template<class ContainerAllocator>
-struct MD5Sum< ::darknet_ros_msgs::distance_<ContainerAllocator> >
-{
-  static const char* value()
-  {
-    return "3670b61ddc9f23e24de45f3cec4d6da4";
-  }
-
-  static const char* value(const ::darknet_ros_msgs::distance_<ContainerAllocator>&) { return value(); }
-  static const uint64_t static_value1 = 0x3670b61ddc9f23e2ULL;
-  static const uint64_t static_value2 = 0x4de45f3cec4d6da4ULL;
-};
-
-template<class ContainerAllocator>
-struct DataType< ::darknet_ros_msgs::distance_<ContainerAllocator> >
-{
-  static const char* value()
-  {
-    return "darknet_ros_msgs/distance";
-  }
-
-  static const char* value(const ::darknet_ros_msgs::distance_<ContainerAllocator>&) { return value(); }
-};
-
-template<class ContainerAllocator>
-struct Definition< ::darknet_ros_msgs::distance_<ContainerAllocator> >
-{
-  static const char* value()
-  {
-    return "float64 x\n\
+        template <class ContainerAllocator>
+        struct Definition<::darknet_ros_msgs::distance_<ContainerAllocator>>
+        {
+            static const char *value()
+            {
+                return "float64 x\n\
 float64 y\n\
 float64 z\n\
 int64 xmin\n\
@@ -176,66 +156,69 @@ int64 ymin\n\
 int64 xmax\n\
 int64 ymax\n\
 ";
-  }
+            }
 
-  static const char* value(const ::darknet_ros_msgs::distance_<ContainerAllocator>&) { return value(); }
-};
+            static const char *value(const ::darknet_ros_msgs::distance_<ContainerAllocator> &) { return value(); }
+        };
 
-} // namespace message_traits
+    } // namespace message_traits
 } // namespace ros
 
 namespace ros
 {
-namespace serialization
-{
-
-  template<class ContainerAllocator> struct Serializer< ::darknet_ros_msgs::distance_<ContainerAllocator> >
-  {
-    template<typename Stream, typename T> inline static void allInOne(Stream& stream, T m)
+    namespace serialization
     {
-      stream.next(m.x);
-      stream.next(m.y);
-      stream.next(m.z);
-      stream.next(m.xmin);
-      stream.next(m.ymin);
-      stream.next(m.xmax);
-      stream.next(m.ymax);
-    }
 
-    ROS_DECLARE_ALLINONE_SERIALIZER
-  }; // struct distance_
+        template <class ContainerAllocator>
+        struct Serializer<::darknet_ros_msgs::distance_<ContainerAllocator>>
+        {
+            template <typename Stream, typename T>
+            inline static void allInOne(Stream &stream, T m)
+            {
+                stream.next(m.x);
+                stream.next(m.y);
+                stream.next(m.z);
+                stream.next(m.xmin);
+                stream.next(m.ymin);
+                stream.next(m.xmax);
+                stream.next(m.ymax);
+            }
 
-} // namespace serialization
+            ROS_DECLARE_ALLINONE_SERIALIZER
+        }; // struct distance_
+
+    } // namespace serialization
 } // namespace ros
 
 namespace ros
 {
-namespace message_operations
-{
+    namespace message_operations
+    {
 
-template<class ContainerAllocator>
-struct Printer< ::darknet_ros_msgs::distance_<ContainerAllocator> >
-{
-  template<typename Stream> static void stream(Stream& s, const std::string& indent, const ::darknet_ros_msgs::distance_<ContainerAllocator>& v)
-  {
-    s << indent << "x: ";
-    Printer<double>::stream(s, indent + "  ", v.x);
-    s << indent << "y: ";
-    Printer<double>::stream(s, indent + "  ", v.y);
-    s << indent << "z: ";
-    Printer<double>::stream(s, indent + "  ", v.z);
-    s << indent << "xmin: ";
-    Printer<int64_t>::stream(s, indent + "  ", v.xmin);
-    s << indent << "ymin: ";
-    Printer<int64_t>::stream(s, indent + "  ", v.ymin);
-    s << indent << "xmax: ";
-    Printer<int64_t>::stream(s, indent + "  ", v.xmax);
-    s << indent << "ymax: ";
-    Printer<int64_t>::stream(s, indent + "  ", v.ymax);
-  }
-};
+        template <class ContainerAllocator>
+        struct Printer<::darknet_ros_msgs::distance_<ContainerAllocator>>
+        {
+            template <typename Stream>
+            static void stream(Stream &s, const std::string &indent, const ::darknet_ros_msgs::distance_<ContainerAllocator> &v)
+            {
+                s << indent << "x: ";
+                Printer<double>::stream(s, indent + "  ", v.x);
+                s << indent << "y: ";
+                Printer<double>::stream(s, indent + "  ", v.y);
+                s << indent << "z: ";
+                Printer<double>::stream(s, indent + "  ", v.z);
+                s << indent << "xmin: ";
+                Printer<int64_t>::stream(s, indent + "  ", v.xmin);
+                s << indent << "ymin: ";
+                Printer<int64_t>::stream(s, indent + "  ", v.ymin);
+                s << indent << "xmax: ";
+                Printer<int64_t>::stream(s, indent + "  ", v.xmax);
+                s << indent << "ymax: ";
+                Printer<int64_t>::stream(s, indent + "  ", v.ymax);
+            }
+        };
 
-} // namespace message_operations
+    } // namespace message_operations
 } // namespace ros
 
 #endif // DARKNET_ROS_MSGS_MESSAGE_DISTANCE_H

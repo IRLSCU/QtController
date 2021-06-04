@@ -2,11 +2,10 @@
 
 FileOperation::FileOperation()
 {
-
 }
 
-
-QString FileOperation::readFile(QString filePath){
+QString FileOperation::readFile(QString filePath)
+{
     QFile file(filePath);
     file.open(QIODevice::ReadOnly | QIODevice::Text);
     QByteArray t = file.readLine();

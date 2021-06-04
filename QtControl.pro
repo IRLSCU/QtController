@@ -88,7 +88,6 @@ HEADERS += \
     ControlOrder.h \
     TinyCarCO.h \
     LargeCarCO.h \
-    ControlMessageStruct.h \
     GpsInfo.h \
     GpsBufferWriteThread.h \
     GpsBufferReadInitRouteThread.h \

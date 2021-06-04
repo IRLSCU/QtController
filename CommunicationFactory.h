@@ -1,11 +1,14 @@
 ﻿#ifndef COMMUNICATIONFACTORY_H
 #define COMMUNICATIONFACTORY_H
 
+
+#include <memory>
+
 #include "AbstractCommunication.h"
 #include "TinyCarCommunication.h"
 #include "LargeCarWindowsCommunication.h"
 #include "LargeCarLinuxCommunication.h"
-#include <memory>
+
 enum CommunicationType{LargeCarWindows,TinyCarWindows,LargeCarLinux,TinyCarLinux};
 
 class CommunicationFactory{

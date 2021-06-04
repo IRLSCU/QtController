@@ -9,7 +9,9 @@ ControlOrderSendToRosThread::ControlOrderSendToRosThread(QObject *parent):QThrea
     m_radarDangerSignal=false;
     m_perceptionDangerSignal=false;
     //通过槽函数绑定雷达数据
-    radar=new Ultrasonic;
+    radar=new Ultrasonic();
+    // 设置配置文件名称
+    radar->portConfigFileName = "ultrasonicPortNameConfig.txt"
     radar->openPort();
     connect(radar,&Ultrasonic::sendDistance,[this](bool flag,int distance){
         //qDebug()<<"radar distance:"<<distance;

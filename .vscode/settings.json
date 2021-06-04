@@ -3,6 +3,7 @@
         "*.md": "markdown",
         "*.cu": "cpp",
         "iostream": "cpp",
-        "qobject": "cpp"
+        "qobject": "cpp",
+        "qlatin1string": "cpp"
     }
 }

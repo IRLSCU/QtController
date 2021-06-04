@@ -1,5 +1,21 @@
 #ifndef ROSPERCEPTIONRECEIVETHREAD_H
 #define ROSPERCEPTIONRECEIVETHREAD_H
+
+
+#include <nav_msgs/Odometry.h>
+#include <sensor_msgs/LaserScan.h>
+#include <sstream>
+#include <QThread>
+#include <QMutex>
+
+#include "RingBuffer.h"
+#include "ros/ros.h"
+#include "std_msgs/String.h"
+#include "std_msgs/Int8.h"
+
+#include "distance.h"
+#include "distances.h"
+
 #define ROSPERCEPTIONRECEIVETHREAD_BOLCKTIME 50
 #define ROSPERCEPTIONRECEIVENODENAME "/darknet_ros/distance"
 #define ROSSCANNAME "/scan"
@@ -13,17 +29,6 @@
 #define PRECEPTION_STOP 1
 #define PRECEPTION_LEFT 2
 #define PRECEPTION_RIGHT 3
-#include "distance.h"
-#include "distances.h"
-#include "ros/ros.h"
-#include "std_msgs/String.h"
-#include "std_msgs/Int8.h"
-#include <nav_msgs/Odometry.h>
-#include <sensor_msgs/LaserScan.h>
-#include "RingBuffer.h"
-#include <sstream>
-#include<QThread>
-#include<QMutex>
 
 /**
  * @brief The RosReceiveThread,用于获得ROS中障碍物的信息之后进行处理,是简单粗糙的判断
