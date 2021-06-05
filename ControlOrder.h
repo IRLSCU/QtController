@@ -166,12 +166,40 @@ public:
      * @return qint16 speed
      */
     inline qint16 getSpeed() { return speed; }
+    /**
+     * @brief Get the Last Turn Range object
+     * @return qint16 
+     */
     inline qint16 getLastTurnRange() { return lastTurnRange; }
+    /**
+     * @brief Get the Turn Range object
+     * @return qint16 
+     */
     inline qint16 getTurnRange() { return turnRange; }
+    /**
+     * @brief Get the Gear object
+     * @return qint8 
+     */
     inline qint8 getGear() { return gear; }
+    /**
+     * @brief Get the Light Signal object
+     * @return qint8 
+     */
     inline qint8 getLightSignal() { return lightSignal; }
+    /**
+     * @brief Get the Horn object
+     * @return qint8 
+     */
     inline qint8 getHorn() { return horn; }
+    /**
+     * @brief Get the Gps Info object
+     * @return GpsInfo 
+     */
     inline GpsInfo getGpsInfo() { return gpsInfo; }
+    /**
+     * @brief Get the Location object
+     * @return LocationPosition 
+     */
     inline LocationPosition getLocation() { return location; }
     /**
      * @brief 打印指令信息

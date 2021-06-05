@@ -41,6 +41,13 @@ public:
     bool initRoute(QList<QPointF>);                        //初始化gps_route QPointF(longitude,latitude)
     int initStartPoint(double longitude, double latitude); //通过当前位置设定起始点，返回在固定路径中最近的位置,若无则返回0;
     int setNextTargetPoint(int i);
+    /**
+     * @brief GPSProcesser::startProcess
+     * @param current 传入当前gps坐标
+     * @param target 传出目标点坐标
+     * @param status 传出状态(1：到达终点；0：未达终点)
+     * @return
+     */
     double startProcess(GpsInfo current, int *target, int *status); //通过当前点返回其离直线的距离，用来纠偏
     GaussGPSData gpsData2Gauss(double gpslongitude, double gpslatitude, int quality);
     GaussGPSData gpsData2Gauss(GpsInfo gpsInfo);

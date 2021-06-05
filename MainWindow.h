@@ -170,11 +170,13 @@ private:
      */
 
     /**
-     * @brief  打开串口设置,接收gps 
+     * @brief  打开串口设置,接收gps
+     * @details 动作事件监听UI成员
      */
     QAction *setSerialAction;
     /**
      * @brief 打开Socket设置，接收gps
+     * @details 动作事件监听UI成员
      */
     QAction *setSocketAction;
     /**
@@ -184,14 +186,17 @@ private:
     QAction *initRouteAction;
     /**
      * @brief 沿着路径行驶,输入数据为GPS
+     * @details 动作事件监听UI成员
      */
     QAction *startRunningAction;
     /**
      * @brief 加载GPS数据到界面，并且作为初始化路径
+     * @details 动作事件监听UI成员
      */
     QAction *loadGPSDataAction;
     /**
      * @brief 稀疏GPS点迹
+     * @details 动作事件监听UI成员
      */
     QAction *routeSparseAction;
     /**
@@ -204,18 +209,22 @@ private:
 
     /**
      * @brief ros设置动作按钮
+     * @details 动作事件监听UI成员
      */
     QAction *setRosAction;
     /**
      * @brief 初始化路径
+     * @details 动作事件监听UI成员
      */
     QAction *initXYZRouteAction;
     /**
      * @brief 沿着路径行驶,输入数据为高斯坐标系
+     * @details 动作事件监听UI成员
      */
     QAction *startRunningXYZAction;
     /**
      * @brief 加载XYZ数据到界面，并且作为初始化路径
+     * @details 动作事件监听UI成员
      */
     QAction *loadXYZDataAction;
     /**
@@ -224,10 +233,12 @@ private:
     //common
     /**
      * @brief 设置比例尺
+     * @details 动作事件监听UI成员
      */
     QAction *setScaleAction;
     /**
      * @brief 设置比例尺
+     * @details 动作事件监听UI成员
      */
     QAction *setTinyCarComAction;
     /**

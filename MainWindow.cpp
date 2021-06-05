@@ -194,6 +194,7 @@ void MainWindow::openProcessRunNoGPS()
     connect(dialog, &ProcessRunNoGPSDialog::sendNextTargetPointToPaintWidget, paintWidget, &PaintWidget::paintTargetPoint);
     connect(dialog, &ProcessRunNoGPSDialog::sendCurrentRangeToPaintWidget, paintWidget, &PaintWidget::setRange);
 }
+
 void MainWindow::openInitRouteDialog()
 {
     InitRouteDialog *initRouteDialog = new InitRouteDialog(gpsRingBuffer, this);

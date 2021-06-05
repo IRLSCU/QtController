@@ -6,7 +6,6 @@
 #include<QMutex>
 #include "RingBuffer.h"
 #include "nmeaPres.h"
-#include "ControlMessageStruct.h"
 /**
  * @brief The GpsBufferWriteThread class
  * receive the character from gps info ringBuffer

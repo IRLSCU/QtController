@@ -14,7 +14,7 @@ class RosSettingDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit RosSettingDialog(LocationRingBuffer*,QWidget *parent = nullptr);
+    explicit RosSettingDialog(LocationRingBuffer*, QWidget *parent = nullptr);
     ~RosSettingDialog();
     void clear();
     void save();
