@@ -73,6 +73,7 @@ public:
      * @brief Destroy the CCoordinate object
      */
     ~CCoordinate() {}
+
 public:
     /**
      * @brief  初始化位置中心 
@@ -105,36 +106,70 @@ public:
     QPointF LongLat2XY(const qreal &lon, const qreal &lat);
     /**
      * @brief 
-     * @param  pos              My Param doc
+     * @param  pos              相对坐标系
      * @return LongLat 
      */
     LongLat XY2LongLat(QPointF pos);
+    /**
+     * @brief  相对位置坐标转换为经纬度
+     * @param  x                
+     * @param  y                
+     * @return LongLat          经纬度坐标点
+     */
     LongLat XY2LongLat(const qreal &x, const qreal &y);
-
+    /**
+     * @brief  相对坐标到屏幕坐标系
+     * @param  pos              相对坐标
+     * @return QPointF          屏幕坐标相对点
+     */
     QPointF XY2Screen(QPointF pos);
+    /**
+     * @brief  屏幕坐标系向相对坐标系进行转换
+     * @param  pos              相对坐标点
+     * @return QPointF          屏幕做指标点
+     */
     QPointF Screen2XY(QPointF pos);
+    /**
+     * @brief  屏幕坐标点输出为x,y值
+     * @param  x                相对坐标值 x
+     * @param  y                相对坐标值 y
+     * @return QPointF          输出坐标值
+     */
     QPointF Screen2XY(const qlonglong &x, const qlonglong &y);
+    /**
+     * @brief  
+     * @param  pos              经纬度转换为屏幕坐标点
+     * @return QPointF          最终屏幕绘图坐标点
+     */
     QPointF LongLat2Screen(LongLat pos);
+    /**
+     * @brief  屏幕坐标点到经纬度坐标系转换
+     * @param  pos              屏幕上坐标点
+     * @return LongLat          最终经纬度上坐标点
+     */
     LongLat Screen2LongLat(QPointF pos);
+    /**
+     * @brief  屏幕绘图坐标系向经纬度坐标系进行转换
+     * @param  x                屏幕上坐标点x
+     * @param  y                屏幕上坐标点y
+     * @return LongLat          最终经纬度坐标点
+     */
     LongLat Screen2LongLat(const qlonglong &x, const qlonglong &y);
 
 public:
-    qreal m_fixedScale;  ///< 固定放大倍数
-    qreal m_scale;       ///< 屏幕显示放大倍数
-    QPointF m_DspCenter; ///< 显示中心
+    qreal m_fixedScale;                             ///< 固定放大倍数
+    qreal m_scale;                                  ///< 屏幕显示放大倍数
+    QPointF m_DspCenter;                            ///< 显示中心
 private:
-    //斜距-方位角-高度 coordinate
     qreal m_Hei;                                    ///< Height	海拔高度
     qreal m_Lon;                                    ///< Longitude 经度 度
     qreal m_Lat;                                    ///< Latitude	纬度 度
     qreal m_longsin, m_longcos, m_latsin, m_latcos; ///< 经纬度的三角函数
     qreal m_Radius;                                 ///< 地球等效半径
     qreal m_RadarHei;                               ///< 目标距球心距离
-    LongLat m_LLPos;  ///< 绝对坐标，经纬度，1/10^4 度
-    QPointF m_XYPos;  ///< 相对于中心点的平面坐标，米
-    QPointF m_screen; ///< UI桌面控制对象
-
-
+    LongLat m_LLPos;                                ///< 绝对坐标，经纬度，1/10^4 度
+    QPointF m_XYPos;                                ///< 相对于中心点的平面坐标，米
+    QPointF m_screen;                               ///< UI桌面控制对象
 };
 
 #endif

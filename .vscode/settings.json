@@ -4,6 +4,7 @@
         "*.cu": "cpp",
         "iostream": "cpp",
         "qobject": "cpp",
-        "qlatin1string": "cpp"
+        "qlatin1string": "cpp",
+        "qmutex": "cpp"
     }
 }
