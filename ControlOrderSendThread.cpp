@@ -8,7 +8,7 @@ ControlOrderSendThread::ControlOrderSendThread(QObject *parent) : QThread(parent
 {
     // 读取配置文件
     readConfig();
-    
+
     m_enable = false;
     m_doNothing = false;
     m_radarDangerSignal = false;
@@ -42,7 +42,7 @@ ControlOrderSendThread::~ControlOrderSendThread()
     radar->closePort();
     perceptionReceiveThread->stopImmediately();
     perceptionReceiveThread->wait();
-    
+
     qDebug() << "ControlOrderSendThread for sending car's control orders has been destoried";
 }
 
@@ -79,6 +79,7 @@ void ControlOrderSendThread::run()
     {
         communicationType = TinyCarLinux;
     }
+    // 策略工厂创建交流类
     communication = CommunicationFactory::createCommunication(communicationType);
     //todo 打开接口
     qDebug() << "ControlOrderSendThread for sending car's control orders started";
@@ -86,14 +87,18 @@ void ControlOrderSendThread::run()
     if (!communication->connect())
     {
         //return;  //todo
+        qDebug() << "connect error"
     }
 
     //    unsigned char tt[10]={0xFF,0xFE,1,2,3,4,5,6,7,8};
     //    communication->sendMessage(tt);
 
     QString time = QDateTime::currentDateTime().toString("yyyyddMM_hhmmss");
-    QFile file("./../QtControl/largeCarOrder/GPS" + time + ".txt");
-    QFile file2("./../QtControl/largeCarOrder/XYZ" + time + ".txt");
+    /**
+     * @todo 改性相关数据存储位置
+     */
+    QFile file("largeCarOrder/GPS" + time + ".txt");
+    QFile file2("largeCarOrder/XYZ" + time + ".txt");
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
         qDebug() << QString("GPSlargeCarOrder.txt Open failed.");
@@ -192,7 +197,12 @@ void ControlOrderSendThread::run()
             break;
         }
         locker2.unlock();
-        this->msleep(CONTROLORDERSENDTHREAD_BOLCKTIME); //阻塞否则cpu占用太高
+        /**
+         * @brief 发送频率过低可能存在问题
+         * @bug 阻塞否则cpu占用太高
+         * @todo 进行修复
+         */
+        this->msleep(CONTROLORDERSENDTHREAD_BOLCKTIME);
     }
     file.close();
     file2.close();

@@ -111,12 +111,12 @@ public:
      * @brief Set the ConfigFilePath object
      * @param  new_file_path    新配置文件地址
      */
-    inline void setConfigFilePath(QString new_file_path) { m_orderConfigFilePath = new_file_path;}
+    inline void setConfigFilePath(QString new_file_path) { m_orderConfigFilePath = new_file_path; }
     /**
      * @brief Get the ConfigFilePath object
      * @return QString 获取配置文件地址
      */
-    inline QString getConfigFilePath() {return m_orderConfigFilePath;}
+    inline QString getConfigFilePath() { return m_orderConfigFilePath; }
 
 private:
     /**
@@ -124,26 +124,24 @@ private:
      */
     void readConfig();
 
-    QMutex m_threadRunLock;
-    QMutex m_enableLock;
-    QMutex m_controlOrderLock;
-    bool m_isCanRun;              ///< 控制线程开闭
-    bool m_enable;                ///< 是否开始RUN
-    bool m_doNothing;             ///< 未接受到正确的数据(x=y=z=0)
-    bool m_radarDangerSignal;     ///< 超声波雷达监测到前方某一距离有障碍物 true=stop;false=run
-    int m_perceptionDangerSignal; ///< 融合感知模块传递障碍物
-    ControlOrder doNothingControlOrder;
-    ControlOrder runControlOrder;
-    ControlOrder *current;
-    CommunicationType communicationType;
-    AbstractCommunication *communication;
-    Ultrasonic *radar;
-    RosPerceptionReceiveThread *perceptionReceiveThread;
-
+    QMutex m_threadRunLock;                                      ///< m_isCanRun数据读取线程保护信号量
+    QMutex m_enableLock;                                         ///< m_enable 数据保护锁信号量
+    QMutex m_controlOrderLock;                                   ///< runControlOrder 数据读取保护信号量
+    bool m_isCanRun;                                             ///< 控制线程开闭
+    bool m_enable;                                               ///< 是否开始RUN
+    bool m_doNothing;                                            ///< 未接受到正确的数据(x=y=z=0)
+    bool m_radarDangerSignal;                                    ///< 超声波雷达监测到前方某一距离有障碍物 true=stop;false=run
+    int m_perceptionDangerSignal;                                ///< 融合感知模块传递障碍物
+    ControlOrder doNothingControlOrder;                          ///< 非运动状态下(没有开始运动时)控制指令，配合发送指令按钮决定是运行还是非运行指令
+    ControlOrder runControlOrder;                                ///< 运动控制指令
+    ControlOrder *current;                                       ///< 当前的指令抽象
+    CommunicationType communicationType;                         ///< 指令发送类型，由此通过格式工厂进行对应控制类的创建
+    AbstractCommunication *communication;                        ///< 最终生成的指令创建类
+    Ultrasonic *radar;                                           ///< 超声波雷达指针
+    RosPerceptionReceiveThread *perceptionReceiveThread;         ///< 障碍物距离接收的判断线程
     QString m_orderConfigFilePath = "softwareConfig/config.txt"; ///< 配置文件路径
-    //TinyCarCommunication* communication;
-    int systemType;
-    int carType; //
+    int systemType;                                              ///< 系统类型
+    int carType;                                                 ///< CAN 口类型(大车还是小车)
 };
 
 #endif // CONTROLORDERSENDTHREAD_H

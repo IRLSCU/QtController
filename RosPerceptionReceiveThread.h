@@ -1,7 +1,6 @@
 #ifndef ROSPERCEPTIONRECEIVETHREAD_H
 #define ROSPERCEPTIONRECEIVETHREAD_H
 
-
 #include <nav_msgs/Odometry.h>
 #include <sensor_msgs/LaserScan.h>
 #include <sstream>
@@ -82,7 +81,7 @@ public:
      * @brief Construct a new RosPerceptionReceiveThread object
      * @param  parent           父类指针
      */
-    RosPerceptionReceiveThread(QObject *parent=0);
+    RosPerceptionReceiveThread(QObject *parent = 0);
     /**
      * @brief Destroy the RosPerceptionReceiveThread object
      */
@@ -92,22 +91,51 @@ public:
      */
     void stopImmediately();
     /**
-     * @brief 开始进行
+     * @brief 开始进行，主要是使用ROS节点进行消息订阅
      */
     void run();
-    void box_info_callback(const darknet_ros_msgs::distances::ConstPtr& msg);
-    void box_info_callback_laserscan(const sensor_msgs::LaserScan::ConstPtr& msg);
+    /**
+     * @brief  darknet_ros感知紧急制动判断
+     * @bug 紧急制动信号抛出异常
+     * @param  msg             
+     */
+    void box_info_callback(const darknet_ros_msgs::distances::ConstPtr &msg);
+    /**
+     * @brief  通过单线激光雷达扫描信息进行小车的紧急制动判断
+     * @param  msg              小车紧急制动判断
+     */
+    void box_info_callback_laserscan(const sensor_msgs::LaserScan::ConstPtr &msg);
 signals:
-    void sendPerceptionSignal(int);
+    /**
+     * @brief  发送预判断主要信号
+     * @param  sendSingnal      主要信号
+     */
+    void sendPerceptionSignal(int sendSingnal);
 
 private:
-    bool judgeDanger(float,float,float,float,float);
-    bool judgeDangerByLaser(float x,float y,float z);
-    QMutex m_lock;
-    bool m_isCanRun;
-    //string box_info_topic, distances_flag_topic;
-    std::vector<std::vector<float >> boxes_info;
-    std::vector<float > dis;
-   
+    /**
+     * @brief  判断是否在紧急距离或者危险距离，并输出日志信息
+     * @param  distance         My Param doc
+     * @param  xmin             My Param doc
+     * @param  xmax             My Param doc
+     * @param  ymin             My Param doc
+     * @param  ymax             My Param doc
+     * @return true 
+     * @return false 
+     */
+    bool judgeDanger(float distance, float xmin, float xmax, float ymin, float ymax);
+    /**
+     * @brief  是否在雷达范围内发生紧急制动
+     * @param  x                My Param doc
+     * @param  y                My Param doc
+     * @param  z                My Param doc
+     * @return true 
+     * @return false 
+     */
+    bool judgeDangerByLaser(float x, float y, float z);
+    QMutex m_lock;                              ///< 线程所
+    bool m_isCanRun;                            ///< USB控制接口是否正在正常运行
+    std::vector<std::vector<float>> boxes_info; ///< dark_net接收到的目标信息
+    std::vector<float> dis;                     ///< 对应文本框的目标检测距离函数
 };
 #endif // ROSPERCEPTIONRECEIVETHREAD_H

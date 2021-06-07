@@ -1,7 +1,6 @@
 ﻿#ifndef COMMUNICATIONFACTORY_H
 #define COMMUNICATIONFACTORY_H
 
-
 #include <memory>
 
 #include "AbstractCommunication.h"
@@ -9,25 +8,35 @@
 #include "LargeCarWindowsCommunication.h"
 #include "LargeCarLinuxCommunication.h"
 
-enum CommunicationType{LargeCarWindows,TinyCarWindows,LargeCarLinux,TinyCarLinux};
+enum CommunicationType
+{
+    LargeCarWindows,
+    TinyCarWindows,
+    LargeCarLinux,
+    TinyCarLinux
+};
 
-class CommunicationFactory{
+class CommunicationFactory
+{
 public:
-    static AbstractCommunication* createCommunication(CommunicationType type){
-        switch (type){
+    static AbstractCommunication *createCommunication(CommunicationType type)
+    {
+        switch (type)
+        {
         case LargeCarWindows:
-            qDebug()<<"LargeCarWindowsCommunication open";
+            qDebug() << "LargeCarWindowsCommunication open";
             //return new LargeCarWindowsCommunication();break;
         case TinyCarLinux:
-            qDebug()<<"TinyCarCommunication open";
+            qDebug() << "TinyCarCommunication open";
             return new TinyCarCommunication();
         case TinyCarWindows:
-            qDebug()<<"TinyCarCommunication open";
+            qDebug() << "TinyCarCommunication open";
             return new TinyCarCommunication();
         case LargeCarLinux:
-            qDebug()<<"LargeCarLinuxCommunication open";
+            qDebug() << "LargeCarLinuxCommunication open";
             return new LargeCarLinuxCommunication();
-        default: return NULL;
+        default:
+            return NULL;
         }
     }
 };

@@ -240,7 +240,7 @@ void ControlOrderSendToRosThread::doNothing(bool signal){
     this->m_doNothing=signal;
 }
 void ControlOrderSendToRosThread::readConfig(){
-    QFile file("./../QtControl/softwareConfig/config.txt");
+    QFile file(m_orderConfigFilePath);
     file.open(QIODevice::ReadOnly | QIODevice::Text);
     QByteArray t = file.readAll();
     QList<QByteArray>list =t.split(' ');
